@@ -1,0 +1,16 @@
+class InvoiceItem < ApplicationRecord
+  belongs_to :invoice
+
+  validates :description, presence: true
+  validates :quantity, presence: true, numericality: { greater_than: 0 }
+  validates :unit_price, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :amount, presence: true, numericality: { greater_than_or_equal_to: 0 }
+
+  before_validation :compute_amount
+
+  private
+
+  def compute_amount
+    self.amount = (quantity || 0) * (unit_price || 0)
+  end
+end

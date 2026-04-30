@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  request: one
+  kind: MyString
+  distance_meters: 1
+  duration_seconds: 1
+  polyline: MyText
+
+two:
+  request: two
+  kind: MyString
+  distance_meters: 1
+  duration_seconds: 1
+  polyline: MyText

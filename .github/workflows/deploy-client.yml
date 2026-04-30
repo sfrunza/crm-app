@@ -1,0 +1,10 @@
+on:
+  push:
+    paths:
+      - 'client/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deploy Client"

@@ -1,0 +1,19 @@
+# .github/workflows/deploy-api.yml
+name: Deploy API
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'api/**'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy API
+        run: |
+          echo "Deploying Rails API..."
