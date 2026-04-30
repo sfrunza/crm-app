@@ -1,0 +1,21 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# This script installs foreman (if needed) and then runs it with Procfile.dev.
+# It is intentionally written in Ruby so Ruby LSP / VS Code / other tools treat it nicely.
+
+if !system("gem list foreman -i --silent")
+  puts "Installing foreman..."
+  system("gem install foreman") || abort("Failed to install foreman")
+end
+
+# Default to port 3000 if not specified
+ENV["PORT"] ||= "3000"
+
+# Let the debug gem allow remote connections,
+# but avoid loading until `debugger` is called
+ENV["RUBY_DEBUG_OPEN"] = "true"
+ENV["RUBY_DEBUG_LAZY"] = "true"
+
+# Forward any extra arguments to foreman
+exec "foreman", "start", "-f", "Procfile.dev", *ARGV
