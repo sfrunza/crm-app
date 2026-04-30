@@ -388,7 +388,7 @@ DEPENDENCIES
   brakeman
   browser
   debug
-  dotenv-rails (~> 3.2)
+  dotenv-rails
   faker
   faraday
   image_processing (~> 1.2)
