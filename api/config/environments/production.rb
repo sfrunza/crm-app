@@ -60,7 +60,7 @@ Rails.application.configure do
     protocol: "https"
   }
 
-  # Rails.application.routes.default_url_options = { host: ENV["MAILER_HOST"], protocol: "https" }
+  Rails.application.routes.default_url_options = { host: ENV["APP_HOST"], protocol: "https" }
 
   config.action_mailer.delivery_method = :smtp
 
