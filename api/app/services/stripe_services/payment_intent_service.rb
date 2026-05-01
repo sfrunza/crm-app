@@ -36,7 +36,7 @@ module StripeServices
         intent_params[:payment_method] = payment_method_id
         intent_params[:confirm] = true
         intent_params[:off_session] = true
-        intent_params[:return_url] = "#{ENV["APP_URL"]}/account/requests/#{request.id}"
+        intent_params[:return_url] = "#{ENV["FRONTEND_URL"]}/account/requests/#{request.id}"
       elsif save_card
         # New card: tell Stripe to save it for future off-session use
         intent_params[:setup_future_usage] = "off_session"
