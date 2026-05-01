@@ -59,14 +59,21 @@ module StripeServices
     #
     # @param payment_method [PaymentMethod]
     def self.detach(payment_method)
+      id = payment_method.stripe_payment_method_id
+
       begin
-        ::Stripe::PaymentMethod.detach(payment_method.stripe_payment_method_id)
+        pm = ::Stripe::PaymentMethod.retrieve(id)
+        # Detach only when Stripe has this PM on a customer; otherwise skip API (avoids invalid_request noise).
+        if pm.customer.present?
+          ::Stripe::PaymentMethod.detach(id)
+        end
       rescue ::Stripe::InvalidRequestError => e
         msg = e.message.to_s
-        # Already detached, or never attached to a customer (stale local row) - still clean up locally
-        raise unless msg.include?("detached") || msg.include?("not attached to a customer")
-        Rails.logger.info "[Stripe] PaymentMethod #{payment_method.stripe_payment_method_id} detach skipped: #{msg}"
+        # Concurrent detach or race - still clean up locally
+        raise unless msg.include?("detached") || msg.include?("not attached to a customer") || msg.match?(/no such payment[_ ]?method/i)
+        Rails.logger.debug { "[Stripe] PaymentMethod #{id} detach skipped: #{msg}" }
       end
+
       payment_method.destroy!
     end
 
