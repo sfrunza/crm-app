@@ -1,33 +1,33 @@
-import { AmountInput } from "@/components/inputs/amount-input";
+import { AmountInput } from '@/components/inputs/amount-input';
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Field, FieldLabel } from "@/components/ui/field";
-import { useRefundPayment } from "@/domains/payments/payment.mutations";
-import { paymentKeys } from "@/domains/payments/payment.keys";
-import { requestKeys } from "@/domains/requests/request.keys";
+} from '@/components/ui/accordion';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Field, FieldLabel } from '@/components/ui/field';
+import { useRefundPayment } from '@/domains/payments/payment.mutations';
+import { paymentKeys } from '@/domains/payments/payment.keys';
+import { requestKeys } from '@/domains/requests/request.keys';
 import type {
   Invoice,
   Payment,
   SavedPaymentMethod,
-} from "@/domains/payments/payment.types";
-import { formatCentsToDollarsString } from "@/lib/helpers";
+} from '@/domains/payments/payment.types';
+import { formatCentsToDollarsString } from '@/lib/helpers';
 import {
   CreditCardIcon,
   FileTextIcon,
   BanknoteIcon,
   WalletIcon,
   RotateCcwIcon,
-} from "@/components/icons";
-import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { paymentStatusVariant, paymentTypeLabel, parseCents } from "./utils";
-import { formatDate } from "@/lib/format-date";
+} from '@/components/icons';
+import { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
+import { paymentStatusVariant, paymentTypeLabel, parseCents } from './utils';
+import { formatDate } from '@/lib/format-date';
 
 // ─── Payments List View ──────────────────────────────────────────
 
@@ -121,7 +121,7 @@ export function PaymentsListView({
                     </div>
                   </div>
                 </AccordionTrigger>
-                <AccordionContent>
+                <AccordionContent className="h-auto">
                   <PaymentDetails payment={p} requestId={requestId} />
                 </AccordionContent>
               </AccordionItem>
@@ -152,7 +152,7 @@ export function PaymentsListView({
                     {inv.invoice_number || `#${inv.id}`}
                   </span>
                   <span className="text-muted-foreground max-w-[200px] truncate">
-                    {inv.client_name || inv.description || "Invoice"}
+                    {inv.client_name || inv.description || 'Invoice'}
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
@@ -224,8 +224,8 @@ function PaymentDetails({
   const refundable = payment.amount - payment.refunded_amount;
   const canRefund =
     isStripePayment &&
-    (payment.status === "succeeded" ||
-      (payment.status === "refunded" && refundable > 0));
+    (payment.status === 'succeeded' ||
+      (payment.status === 'refunded' && refundable > 0));
 
   return (
     <div className="space-y-3 pt-1 pb-1">
@@ -252,7 +252,7 @@ function PaymentDetails({
         </div>
         <div>
           <span className="text-muted-foreground text-xs">Date</span>
-          <p>{formatDate(payment.created_at, "PPp")}</p>
+          <p>{formatDate(payment.created_at, 'PPp')}</p>
         </div>
 
         {payment.card_brand && payment.card_last_four && (
@@ -329,7 +329,7 @@ function RefundForm({
   const queryClient = useQueryClient();
   const [showForm, setShowForm] = useState(false);
   const [refundAmount, setRefundAmount] = useState(
-    (maxRefundable / 100).toString(),
+    (maxRefundable / 100).toString()
   );
   const [error, setError] = useState<string | null>(null);
 
@@ -344,14 +344,13 @@ function RefundForm({
       setShowForm(false);
       setError(null);
     },
-    onError: (err) => setError(err.message || "Refund failed"),
+    onError: (err) => setError(err.message || 'Refund failed'),
   });
 
   if (!showForm) {
     return (
       <Button
         variant="outline"
-        size="sm"
         type="button"
         onClick={() => setShowForm(true)}
         className="text-destructive hover:text-destructive"
@@ -368,12 +367,12 @@ function RefundForm({
 
     const cents = parseCents(refundAmount);
     if (cents === null) {
-      setError("Please enter a valid amount");
+      setError('Please enter a valid amount');
       return;
     }
     if (cents > maxRefundable) {
       setError(
-        `Maximum refundable is ${formatCentsToDollarsString(maxRefundable)}`,
+        `Maximum refundable is ${formatCentsToDollarsString(maxRefundable)}`
       );
       return;
     }
@@ -399,15 +398,13 @@ function RefundForm({
         </Field>
         <Button
           type="submit"
-          size="sm"
           variant="destructive"
           disabled={refundMutation.isPending}
         >
-          {refundMutation.isPending ? "Refunding..." : "Confirm Refund"}
+          {refundMutation.isPending ? 'Refunding...' : 'Confirm Refund'}
         </Button>
         <Button
           type="button"
-          size="sm"
           variant="outline"
           onClick={() => {
             setShowForm(false);
