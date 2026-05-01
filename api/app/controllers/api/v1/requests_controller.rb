@@ -187,12 +187,15 @@ class Api::V1::RequestsController < ApplicationController
     authorize @request
     image = @request.images.find(params[:image_id])
 
-    if image.purge
+    begin
+      image.purge
+
       RequestLoggingService.call(@request, :update, @request.changes)
       RequestBroadcastService.call(@request, :update)
+
       render json: @request, status: :ok
-    else
-      render json: { error: "Failed to delete image" }, status: :unprocessable_entity
+    rescue => e
+      render json: { error: e.message }, status: :unprocessable_entity
     end
   end
 
