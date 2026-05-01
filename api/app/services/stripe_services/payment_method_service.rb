@@ -62,9 +62,10 @@ module StripeServices
       begin
         ::Stripe::PaymentMethod.detach(payment_method.stripe_payment_method_id)
       rescue ::Stripe::InvalidRequestError => e
-        # Already detached by concurrent webhook - still clean up locally
-        raise unless e.message.to_s.include?("detached")
-        Rails.logger.info "[Stripe] PaymentMethod #{payment_method.stripe_payment_method_id} already detached"
+        msg = e.message.to_s
+        # Already detached, or never attached to a customer (stale local row) - still clean up locally
+        raise unless msg.include?("detached") || msg.include?("not attached to a customer")
+        Rails.logger.info "[Stripe] PaymentMethod #{payment_method.stripe_payment_method_id} detach skipped: #{msg}"
       end
       payment_method.destroy!
     end
