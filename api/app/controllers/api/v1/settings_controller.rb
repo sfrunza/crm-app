@@ -9,7 +9,7 @@ class Api::V1::SettingsController < ApplicationController
   def show
     # Rails.cache.delete(CACHE_KEY)
     settings_json = Rails.cache.fetch(CACHE_KEY, expires_in: 1.year) do
-      Rails.logger.info "[CACHE MISS] company settings"
+      Rails.logger.info "[CACHE] MISS: loading fresh company settings"
 
       global = GlobalSetting.instance
 
@@ -25,6 +25,7 @@ class Api::V1::SettingsController < ApplicationController
       }
     end
 
+    Rails.logger.info "[CACHE] HIT: returning cached company settings"
     render json: settings_json, status: :ok
   end
 
