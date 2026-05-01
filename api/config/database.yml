@@ -91,7 +91,7 @@ test:
 production:
   primary: &primary_production
     <<: *default
-    url: <%= ENV.fetch("DATABASE_URL") %>
+    url: <%= ENV["DATABASE_URL"] %>
 
   # All Solid components use the same database
   cache:
