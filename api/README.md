@@ -7,6 +7,8 @@ RAILS_ENV="production"
 RAILS_MASTER_KEY=""
 DATABASE_URL=""
 SOLID_QUEUE_IN_PUMA="true"
+APP_HOST="api url"
+
 
 SENTRY_DSN=""
 
