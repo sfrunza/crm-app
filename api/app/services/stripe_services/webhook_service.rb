@@ -28,11 +28,16 @@ module StripeServices
       card_brand = nil
       card_last_four = nil
       begin
-        # Use PaymentIntent.retrieve with expand instead of Charge.retrieve (avoid Charges API per Stripe best practices)
+        # Use PaymentIntent.retrieve with expand instead of Charge.retrieve (avoid Charges API per Stripe best practices).
+        # Hash form is required: a lone second Hash is RequestOptions, not query params (stripe-ruby 19+).
         if intent.latest_charge.blank? || intent.latest_charge.is_a?(String)
-          intent = ::Stripe::PaymentIntent.retrieve(intent.id, expand: [ "latest_charge" ])
+          intent = ::Stripe::PaymentIntent.retrieve({
+            id: intent.id,
+            expand: [ "latest_charge" ]
+          })
         end
         charge = intent.latest_charge
+        charge = charge.last if charge.is_a?(Array)
         if charge.present? && !charge.is_a?(String)
           card_brand = charge.payment_method_details&.card&.brand
           card_last_four = charge.payment_method_details&.card&.last4
@@ -128,15 +133,25 @@ module StripeServices
     end
 
     def self.save_card_from_intent(intent, user)
-      return unless intent.payment_method.present?
+      pm_id = payment_method_id_from_intent(intent)
+      return if pm_id.blank?
 
       PaymentMethodService.save(
         user: user,
-        stripe_payment_method_id: intent.payment_method.is_a?(String) ? intent.payment_method : intent.payment_method.id,
+        stripe_payment_method_id: pm_id,
         is_default: true
       )
     rescue => e
       Rails.logger.error "[Stripe Webhook] Failed to save card from intent: #{e.message}"
+    end
+
+    def self.payment_method_id_from_intent(intent)
+      pm = intent.payment_method
+      return nil if pm.blank?
+      return pm if pm.is_a?(String)
+      return pm.first if pm.is_a?(Array) && pm.first.is_a?(String)
+
+      pm.respond_to?(:id) ? pm.id : nil
     end
 
     def self.find_user_by_stripe_customer(stripe_customer_id)
