@@ -1,37 +1,18 @@
-// import { createConsumer, type Consumer } from "@rails/actioncable"
+const SESSION_STORAGE_KEY = "session_token";
 
-// // Vite provides these types, but TS sometimes needs the hint
-// /// <reference types="vite/client" />
-
-// declare global {
-//   // eslint-disable-next-line no-var
-//   var __actionCableConsumer: Consumer | undefined
-// }
-
-// const WS_URL = import.meta.env.VITE_WS_URL
-
-// if (!WS_URL) {
-//   throw new Error("VITE_WS_URL is not defined")
-// }
-
-// const consumer: Consumer =
-//   globalThis.__actionCableConsumer ??
-//   (globalThis.__actionCableConsumer = createConsumer(WS_URL))
-
-// // Prevent duplicate websocket connections during Vite HMR
-// if (import.meta.hot) {
-//   import.meta.hot.dispose(() => {
-//     consumer.disconnect()
-//     globalThis.__actionCableConsumer = undefined
-//   })
-// }
-
-// export default consumer
-
-
-// cable.ts
-import { createConsumer } from "@rails/actioncable"
-
-const consumer = createConsumer(import.meta.env.VITE_WS_URL)
-
-export default consumer
+/** WebSocket URLs cannot send `Authorization` in the browser; append token like the cable server expects. */
+export function buildActionCableUrl(authenticated: boolean): string {
+  const base = import.meta.env.VITE_WS_URL;
+  if (!base) {
+    throw new Error("VITE_WS_URL is not defined");
+  }
+  if (!authenticated) {
+    return base;
+  }
+  const token = localStorage.getItem(SESSION_STORAGE_KEY);
+  if (!token) {
+    return base;
+  }
+  const sep = base.includes("?") ? "&" : "?";
+  return `${base}${sep}token=${encodeURIComponent(token)}`;
+}
