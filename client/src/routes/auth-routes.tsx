@@ -34,22 +34,15 @@ export const authRoutes = [
   {
     path: '/auth/auto-login',
     hydrateFallbackElement: <GlobalFallback />,
-    loader: async ({ params, request }: LoaderFunctionArgs) => {
-      console.log('params', params);
-      console.log('request', request);
+    loader: async ({ request }: LoaderFunctionArgs) => {
       const url = new URL(request.url);
       const searchParams = url.searchParams;
       const token = searchParams.get('token');
       const returnTo = searchParams.get('return_to') ?? '/';
 
-      console.log('token', token);
-      console.log('searchParams', searchParams);
-      console.log('returnTo', returnTo);
       if (!token) {
         return redirect('/auth/login');
       }
-
-      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       try {
         const data = await autoLogin(token);
@@ -58,10 +51,9 @@ export const authRoutes = [
         const currentUser = await getCurrentUser();
         useAuthStore.getState().setUser(currentUser);
         return redirect(returnTo);
-      } catch (error) {
-        return redirect('/auth/login');
-      } finally {
+      } catch {
         useAuthStore.getState().clearAuth();
+        return redirect('/auth/login');
       }
     },
   },

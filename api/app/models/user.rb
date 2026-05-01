@@ -56,21 +56,14 @@ class User < ApplicationRecord
   # Scopes
   scope :active, -> { where(active: true) }
 
-  # Invalidate current token (single-use)
-  def invalidate_login_token!
-    regenerate_login_token
+  # Signed magic-login tokens (see SessionsController#auto_login + generates_token_for docs).
+  generates_token_for :magic_login, expires_in: 2.days do
+    password_digest
   end
 
-  # Set token with expiration
+  # Returns a token for {{auto_login_url}} and similar. Expiry matches :magic_login (2 days).
   def generate_magic_link!(expires_in: 2.days)
-    regenerate_login_token
-    update!(login_token_expires_at: Time.current + expires_in)
-    login_token
-  end
-
-  # Check if token is still valid
-  def login_token_valid?(token)
-    login_token == token && login_token_expires_at && login_token_expires_at > Time.current
+    generate_token_for(:magic_login)
   end
 
   private

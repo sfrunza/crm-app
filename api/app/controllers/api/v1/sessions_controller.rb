@@ -17,13 +17,16 @@ class Api::V1::SessionsController < ApplicationController
   end
 
   def auto_login
-    user = User.find_by_token_for!(:magic_login, params.require(:magic_token))
+    token = params[:magic_token].presence || params[:token].presence
+    if token.blank?
+      return render json: { error: "token is required" }, status: :unprocessable_content
+    end
+
+    user = User.find_by_token_for!(:magic_login, token)
     return render_inactive_account unless user.active?
 
     start_new_session_for(user)
     render_session_success
-  rescue ActionController::ParameterMissing
-    render json: { error: "magic_token is required" }, status: :unprocessable_content
   rescue ActiveRecord::RecordNotFound, ActiveSupport::MessageVerifier::InvalidSignature
     render json: { error: "Invalid or expired link" }, status: :unauthorized
   end
