@@ -181,7 +181,7 @@ export type ParklotSlot = {
 
 export type CustomerRequest = Pick<Request, 'id' | 'moving_date' | 'start_time_window' | 'end_time_window' | 'service_id' | 'status' | 'move_size_id' | 'crew_size' | 'origin' | 'destination'>;
 
-export type Status = "pending" | "pending_info" | "pending_date" | "hold" | "not_confirmed" | "confirmed" | "not_available" | "completed" | "spam" | "canceled" | "refused" | "closed" | "expired" | "archived" | "reserved";
+export type Status = "pending" | "pending_info" | "pending_date" | "hold" | "unconfirmed" | "confirmed" | "not_available" | "completed" | "spam" | "canceled" | "refused" | "closed" | "expired" | "archived" | "reserved";
 
 export type Address = {
   type?: AddressType;

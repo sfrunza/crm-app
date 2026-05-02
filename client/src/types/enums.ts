@@ -21,7 +21,7 @@ export type RequestStatus =
   | "pending_info"
   | "pending_date"
   | "hold"
-  | "not_confirmed"
+  | "unconfirmed"
   | "confirmed"
   | "not_available"
   | "completed"

@@ -1,6 +1,6 @@
 class RequestScheduleValidator
   def self.call!(request)
-    return unless request.status.in?(%w[confirmed not_confirmed])
+    return unless request.status.in?(%w[confirmed unconfirmed])
 
     check_truck_required!(request)
     check_pickup_conflicts!(request)
@@ -8,7 +8,7 @@ class RequestScheduleValidator
   end
 
   # ====================================================================
-  # A confirmed/not_confirmed request must have at least one pickup truck assigned.
+  # A confirmed/unconfirmed request must have at least one pickup truck assigned.
   # ====================================================================
 
   def self.check_truck_required!(request)
@@ -81,7 +81,7 @@ class RequestScheduleValidator
 
   # Check existing ParklotSlots for overlapping time on the same truck/date.
   # Only slots belonging to CONFIRMED requests count as conflicts, so multiple
-  # not_confirmed requests can share the same spot. Excludes the current request's own slots.
+  # unconfirmed requests can share the same spot. Excludes the current request's own slots.
   def self.slot_overlap?(request, truck_id, date, start_min, end_min)
     scope = ParklotSlot
       .joins(:request)

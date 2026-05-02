@@ -9,7 +9,8 @@ class Api::V1::MoveSizesController < ApplicationController
     @move_sizes = Rails.cache.fetch(CACHE_KEY, expires_in: 1.minute) do
       Rails.logger.info "[CACHE] MISS: loading fresh move sizes"
       # MoveSize.order(:position).to_a
-      MoveSize.includes(default_rooms: :room, suggested_rooms: :room)
+      MoveSize.with_attached_image
+              .includes(default_rooms: :room, suggested_rooms: :room)
               .order(:position)
               .to_a
     end
