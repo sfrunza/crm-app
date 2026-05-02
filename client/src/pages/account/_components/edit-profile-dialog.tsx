@@ -1,5 +1,5 @@
-import { PhoneInput } from "@/components/inputs/phone-input";
-import { Button } from "@/components/ui/button";
+import { PhoneInput } from '@/components/inputs/phone-input';
+import { Button } from '@/components/ui/button';
 import {
   Dialog,
   DialogClose,
@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   Field,
   FieldContent,
@@ -17,46 +17,46 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { PencilLineIcon } from "@/components/icons";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { requestKeys } from "@/domains/requests/request.keys";
-import { useUpdateUser, useUser } from "@/hooks/api/use-users";
-import { useAuth } from "@/hooks/use-auth";
-import { extractError } from "@/lib/axios";
-import { formatPhone } from "@/lib/format-phone";
-import { queryClient } from "@/lib/query-client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { isValidPhoneNumber } from "libphonenumber-js";
-import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { useParams } from "react-router";
-import { toast } from "sonner";
-import z from "zod";
+} from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { LoadingSwap } from '@/components/ui/loading-swap';
+import { PencilLineIcon } from '@/components/icons';
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+import { requestKeys } from '@/domains/requests/request.keys';
+import { useUpdateUser, useUser } from '@/hooks/api/use-users';
+import { useAuth } from '@/hooks/use-auth';
+import { extractError } from '@/lib/axios';
+import { formatPhone } from '@/lib/format-phone';
+import { queryClient } from '@/lib/query-client';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { isValidPhoneNumber } from 'libphonenumber-js';
+import { useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { useParams } from 'react-router';
+import { toast } from 'sonner';
+import z from 'zod';
 
 const formSchema = z.object({
-  first_name: z.string().min(1, { message: "First name is required" }),
-  last_name: z.string().min(1, { message: "Last name is required" }),
+  first_name: z.string().min(1, { message: 'First name is required' }),
+  last_name: z.string().min(1, { message: 'Last name is required' }),
   email_address: z.email(),
-  additional_email: z.email().or(z.literal("")),
+  additional_email: z.email().or(z.literal('')),
   phone: z
     .string()
-    .refine((phoneNumber) => isValidPhoneNumber(phoneNumber, "US"), {
-      message: "Invalid phone number",
+    .refine((phoneNumber) => isValidPhoneNumber(phoneNumber, 'US'), {
+      message: 'Invalid phone number',
     }),
   additional_phone: z
     .string()
     .optional()
     .refine(
       (phoneNumber) =>
-        phoneNumber && isValidPhoneNumber(phoneNumber ?? "", "US"),
+        phoneNumber && isValidPhoneNumber(phoneNumber ?? '', 'US'),
       {
-        message: "Invalid phone number",
+        message: 'Invalid phone number',
       }
     )
-    .or(z.literal("")),
+    .or(z.literal('')),
 });
 
 type Inputs = z.infer<typeof formSchema>;
@@ -72,7 +72,7 @@ export function EditProfileDialog() {
   const { mutate: updateProfileMutation, isPending: isUpdating } =
     useUpdateUser({
       onSuccess: () => {
-        toast.success("Profile updated");
+        toast.success('Profile updated');
         handleCancel();
 
         if (requestId) {
@@ -88,15 +88,15 @@ export function EditProfileDialog() {
 
   const form = useForm<Inputs>({
     resolver: zodResolver(formSchema),
-    mode: "onChange",
-    reValidateMode: "onChange",
+    mode: 'onChange',
+    reValidateMode: 'onChange',
     values: {
-      first_name: user?.first_name ?? "",
-      last_name: user?.last_name ?? "",
-      email_address: user?.email_address ?? "",
-      phone: user?.phone ?? "",
-      additional_phone: user?.additional_phone ?? "",
-      additional_email: user?.additional_email ?? "",
+      first_name: user?.first_name ?? '',
+      last_name: user?.last_name ?? '',
+      email_address: user?.email_address ?? '',
+      phone: user?.phone ?? '',
+      additional_phone: user?.additional_phone ?? '',
+      additional_email: user?.additional_email ?? '',
     },
   });
 
@@ -121,7 +121,7 @@ export function EditProfileDialog() {
             <DialogTitle>My profile</DialogTitle>
             <DialogDescription className="hidden"></DialogDescription>
           </DialogHeader>
-          <ScrollArea className="max-h-[calc(100vh-14rem)] px-4">
+          <ScrollArea className="max-h-[calc(100dvh-14rem)] px-4">
             <FieldGroup className="grid gap-6 p-2 md:grid-cols-2">
               <Controller
                 name="first_name"
@@ -192,7 +192,7 @@ export function EditProfileDialog() {
                     <PhoneInput
                       {...field}
                       id={field.name}
-                      value={formatPhone(field.value ?? "")}
+                      value={formatPhone(field.value ?? '')}
                       handleValueChange={field.onChange}
                       aria-invalid={fieldState.invalid}
                     />
@@ -240,7 +240,7 @@ export function EditProfileDialog() {
                     <PhoneInput
                       {...field}
                       id={field.name}
-                      value={formatPhone(field.value ?? "")}
+                      value={formatPhone(field.value ?? '')}
                       handleValueChange={field.onChange}
                       aria-invalid={fieldState.invalid}
                     />
