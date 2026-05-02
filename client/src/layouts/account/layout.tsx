@@ -1,16 +1,16 @@
-import { LogoutButton } from "@/components/logout-button"
-import { ModeToggle } from "@/components/mode-toggle"
-import { PageContainer, PageContent } from "@/components/page-component"
-import { Button } from "@/components/ui/button"
-import { useSettings } from "@/hooks/api/use-settings"
+import { LogoutButton } from '@/components/logout-button';
+import { ModeToggle } from '@/components/mode-toggle';
+import { PageContainer, PageContent } from '@/components/page-component';
+import { Button } from '@/components/ui/button';
+import { useSettings } from '@/hooks/api/use-settings';
 // import { useEffect, useRef } from "react";
-import { Link, Outlet } from "react-router"
+import { Link, Outlet } from 'react-router';
 
 export function AccountLayout() {
   // const containerRef = useRef<HTMLDivElement>(null);
   // const { pathname } = useLocation();
 
-  const { data: settings } = useSettings()
+  const { data: settings } = useSettings();
 
   // useEffect(() => {
   //   containerRef.current?.scrollTo({
@@ -21,8 +21,8 @@ export function AccountLayout() {
 
   return (
     <PageContainer
-      className="min-h-screen overflow-y-scroll bg-muted dark:bg-background"
-      classNameInner="pb-0 h-screen flex flex-col max-w-5xl"
+      className="min-h-dvh bg-muted dark:bg-background"
+      classNameInner="pb-0 h-full flex flex-col max-w-5xl"
       // ref={containerRef}
     >
       {/* Header */}
@@ -63,5 +63,5 @@ export function AccountLayout() {
         </div>
       </footer>
     </PageContainer>
-  )
+  );
 }

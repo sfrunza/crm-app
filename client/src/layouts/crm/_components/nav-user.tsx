@@ -1,24 +1,24 @@
-import { ChevronsUpDownIcon, LogOutIcon } from "@/components/icons";
+import { ChevronsUpDownIcon, LogOutIcon } from '@/components/icons';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import { useAuth } from "@/hooks/use-auth";
-import { useMemo } from "react";
-import { ChatInfoAvatar } from "@/components/chat-info/chat-info";
+} from '@/components/ui/sidebar';
+import { useAuth } from '@/hooks/use-auth';
+import { useMemo } from 'react';
+import { ChatInfoAvatar } from '@/components/chat-info/chat-info';
 
 export function NavUser() {
   const { user, logout, isPendingLogout } = useAuth();
 
   const initials = useMemo(() => {
-    return `${user?.first_name?.[0] ?? ""}${user?.last_name?.[0] ?? ""}`;
+    return `${user?.first_name?.[0] ?? ''}${user?.last_name?.[0] ?? ''}`;
   }, [user]);
 
   return (
@@ -44,6 +44,7 @@ export function NavUser() {
             <DropdownMenuItem
               onClick={() => logout()}
               disabled={isPendingLogout}
+              variant="destructive"
             >
               <LogOutIcon />
               Log out

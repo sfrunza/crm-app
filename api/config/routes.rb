@@ -117,8 +117,4 @@ Rails.application.routes.draw do
   end
 
   get "up" => "rails/health#show", as: :rails_health_check
-
-  get "*path",
-    to: "fallback#index",
-    constraints: ->(request) { !request.xhr? && request.format.html? }
 end

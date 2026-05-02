@@ -1,19 +1,19 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
 @plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
 
 @font-face {
-  font-family: "DMSans";
+  font-family: 'DMSans';
   font-weight: 200 900;
   font-display: swap;
-  src: url("/fonts/DMSans-VariableFont.ttf") format("truetype");
+  src: url('/fonts/DMSans-VariableFont.ttf') format('truetype');
 }
 
 @theme inline {
-  --font-sans: "DMSans", sans-serif;
+  --font-sans: 'DMSans', sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -167,8 +167,9 @@
     @apply bg-background font-sans text-foreground;
   }
   html {
-    @apply overflow-hidden font-sans;
+    @apply font-sans;
     color-scheme: light dark;
+    overscroll-behavior-y: none;
   }
   .maplibregl-popup-content {
     @apply rounded-none! bg-transparent! p-0! shadow-none!;

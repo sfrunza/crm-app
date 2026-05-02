@@ -12,6 +12,18 @@ class Message < ApplicationRecord
   scope :ordered, -> { order(created_at: :asc) }
   scope :recent, -> { order(created_at: :desc) }
 
+  # Notify admins, managers, and the request customer to refresh unread counts.
+  def self.broadcast_unread_notifications_for_request(request)
+    user_ids = User.where(role: [ :admin, :manager ]).pluck(:id)
+    user_ids << request.customer_id if request.customer_id.present?
+
+    user_ids.uniq.each do |uid|
+      ActionCable.server.broadcast("notifications_user_#{uid}", {
+        type: "unread_messages_changed"
+      })
+    end
+  end
+
   # Callbacks
   after_create_commit :broadcast_message
   after_create_commit :log_message_sent
@@ -57,16 +69,7 @@ class Message < ApplicationRecord
   end
 
   def broadcast_unread_notifications
-    # Signal relevant users to refetch their unread count.
-    # Covers: the request's customer + all admin/manager users.
-    user_ids = User.where(role: [ :admin, :manager ]).pluck(:id)
-    user_ids << request.customer_id if request.customer_id.present?
-
-    user_ids.uniq.each do |uid|
-      ActionCable.server.broadcast("notifications_user_#{uid}", {
-        type: "unread_messages_changed"
-      })
-    end
+    self.class.broadcast_unread_notifications_for_request(request)
   end
 
   def log_message_sent
