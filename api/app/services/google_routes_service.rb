@@ -13,7 +13,7 @@ class GoogleRoutesService
   end
 
   def call
-    api_key = Rails.application.credentials.google_maps_api_key
+    api_key = ENV["GOOGLE_MAPS_API_KEY"]
 
     response = connection.post do |req|
       req.headers["X-Goog-Api-Key"] = api_key
