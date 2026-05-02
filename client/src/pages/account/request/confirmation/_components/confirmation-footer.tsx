@@ -8,7 +8,7 @@ import {
   TERMS_AND_CONDITIONS_TEXT,
 } from "../_content/confirmation-content";
 
-const ALLOWED_STATUSES: Status[] = ["not_confirmed"];
+const ALLOWED_STATUSES: Status[] = ["unconfirmed"];
 
 interface ConfirmationFooterProps {
   request: Request;

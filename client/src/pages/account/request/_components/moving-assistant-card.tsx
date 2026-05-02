@@ -21,7 +21,7 @@ import { Link } from "react-router"
 import { MessagesDialog } from "./dialogs/messages-dialog"
 import { useSettings } from "@/hooks/api/use-settings"
 
-const ALLOWED_STATUSES: Status[] = ["confirmed", "not_confirmed", "reserved"]
+const ALLOWED_STATUSES: Status[] = ["confirmed", "unconfirmed", "reserved"]
 
 const STATUS_MESSAGES: Record<Status, ReactNode> = {
   pending: (
@@ -51,7 +51,7 @@ const STATUS_MESSAGES: Record<Status, ReactNode> = {
       <p>If you have any questions, feel free to send us a message.</p>
     </>
   ),
-  not_confirmed: (
+  unconfirmed: (
     <>
       <p>Great news — your quote is ready!</p>
       <p>Please review it and proceed to confirmation when you're ready.</p>

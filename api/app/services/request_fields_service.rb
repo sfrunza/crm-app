@@ -18,7 +18,7 @@ class RequestFieldsService
   attr_reader :request
 
   def update_can_edit_request
-    allowed_statuses = %w[pending pending_info pending_date hold not_confirmed]
+    allowed_statuses = %w[pending pending_info pending_date hold unconfirmed]
     request.can_edit_request = allowed_statuses.include?(request.status)
   end
 
