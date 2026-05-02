@@ -3,6 +3,7 @@ import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import path from "path"
 import tailwindcss from '@tailwindcss/vite'
 import babel from '@rolldown/plugin-babel'
+import { VitePWA } from 'vite-plugin-pwa'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -11,21 +12,24 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] }),
     tailwindcss(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      manifest: {
+        name: 'Crm App',
+        display: 'standalone', // removes browser chrome
+        scope: '/',
+        start_url: '/',
+        icons: [
+          { src: '/images/powered-by-stripe.png', sizes: '192x192', type: 'image/png' },
+        ]
+      },
+    })
   ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
-  // server: {
-  //   port: 3000,
-  //   proxy: {
-  //     "/api/v1": {
-  //       target: process.env.VITE_API_URL,
-  //       changeOrigin: true,
-  //     },
-  //   },
-  // },
   build: {
     rollupOptions: {
       output: {

@@ -86,9 +86,31 @@ class Api::V1::RequestMessagesController < ApplicationController
                      .where.not(user_id: user_id)
                      .where.not("viewed_by @> ?", [ user_id ].to_json)
 
-    unread.find_each do |message|
-      message.mark_as_viewed_by(Current.user)
+    rows = unread.pluck(:id, :viewed_by)
+    if rows.empty?
+      head :ok
+      return
     end
+
+    message_ids = rows.map(&:first)
+    Message.where(id: message_ids).update_all(
+      [
+        "viewed_by = viewed_by || jsonb_build_array(?), updated_at = ?",
+        user_id,
+        Time.current
+      ]
+    )
+
+    channel = "request_#{@request.id}_messages"
+    rows.each do |msg_id, viewed_before|
+      viewed = Array(viewed_before) + [ user_id ]
+      ActionCable.server.broadcast(channel, {
+        type: "message_viewed",
+        message: { id: msg_id, viewed_by: viewed }
+      })
+    end
+
+    Message.broadcast_unread_notifications_for_request(@request)
 
     head :ok
   end
