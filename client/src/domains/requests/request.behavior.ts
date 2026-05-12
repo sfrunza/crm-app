@@ -65,9 +65,8 @@ export const SERVICE_BEHAVIOR_MAP = {
 } satisfies Record<ServiceCode, ServiceBehavior>
 
 function isServiceCode(code: unknown): code is ServiceCode {
-  return typeof code === 'string' && code in SERVICE_BEHAVIOR_MAP
+  return typeof code === "string" && code in SERVICE_BEHAVIOR_MAP
 }
-
 
 export function getServiceBehavior(code?: unknown): ServiceBehavior {
   if (isServiceCode(code)) return SERVICE_BEHAVIOR_MAP[code]
@@ -98,14 +97,13 @@ const DEFAULT_REQUEST_UI_BEHAVIOR: RequestUIBehavior = {
 
 type RequestLikeForUIBehavior = Pick<
   Request,
-  'paired_request_id' | 'is_moving_from_storage' | 'is_same_day_delivery'
+  "paired_request_id" | "is_moving_from_storage" | "is_same_day_delivery"
 > & {
   service?: { code?: unknown } | null
 }
 
-
 export function getRequestUIBehavior(
-  request: RequestLikeForUIBehavior | null | undefined,
+  request: RequestLikeForUIBehavior | null | undefined
 ): RequestUIBehavior {
   if (!request?.service) return DEFAULT_REQUEST_UI_BEHAVIOR
 
@@ -127,8 +125,9 @@ export function getRequestUIBehavior(
     ? is_moving_from_storage
     : behavior.hasDestination
 
-  const showDeliveryDateTime = behavior.isFlatRate && !is_same_day_delivery || hasPairedRequest && !is_moving_from_storage
-
+  const showDeliveryDateTime =
+    (behavior.isFlatRate && !is_same_day_delivery) ||
+    (hasPairedRequest && !is_moving_from_storage)
 
   return {
     showOrigin,
@@ -137,8 +136,7 @@ export function getRequestUIBehavior(
       behavior.isStorage && is_moving_from_storage && hasPairedRequest,
     showStorageDestination:
       behavior.isStorage && !is_moving_from_storage && hasPairedRequest,
-    showPairRequestsButtons:
-      behavior.isStorage && !hasPairedRequest,
+    showPairRequestsButtons: behavior.isStorage && !hasPairedRequest,
     showDeliveryDateTime: showDeliveryDateTime,
     showTransitDateTime: showDeliveryDateTime,
     showIfFlatRate: behavior.isFlatRate,

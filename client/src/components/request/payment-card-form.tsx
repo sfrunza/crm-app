@@ -1,32 +1,32 @@
-import { Button } from '@/components/ui/button';
-import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
+import { Button } from "@/components/ui/button"
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
 import {
   useConfirmPayment,
   useCreatePayment,
-} from '@/domains/payments/payment.mutations';
-import type { PaymentType } from '@/domains/payments/payment.types';
-import { formatCentsToDollarsString } from '@/lib/helpers';
+} from "@/domains/payments/payment.mutations"
+import type { PaymentType } from "@/domains/payments/payment.types"
+import { formatCentsToDollarsString } from "@/lib/helpers"
 import {
   CardCvcElement,
   CardExpiryElement,
   CardNumberElement,
   useElements,
   useStripe,
-} from '@stripe/react-stripe-js';
-import { useCallback, useState, useEffect } from 'react';
-import { useGetStripeConfig } from '@/domains/payments/payment.queries';
-import { getStripe } from '@/lib/stripe';
-import { Elements } from '@stripe/react-stripe-js';
-import type { Stripe } from '@stripe/stripe-js';
+} from "@stripe/react-stripe-js"
+import { useCallback, useState, useEffect } from "react"
+import { useGetStripeConfig } from "@/domains/payments/payment.queries"
+import { getStripe } from "@/lib/stripe"
+import { Elements } from "@stripe/react-stripe-js"
+import type { Stripe } from "@stripe/stripe-js"
 
 interface PaymentCardFormProps {
-  requestId: number;
-  invoiceId?: number;
-  amount: number;
-  paymentType: PaymentType;
-  saveCard?: boolean;
-  onSuccess: () => void;
+  requestId: number
+  invoiceId?: number
+  amount: number
+  paymentType: PaymentType
+  saveCard?: boolean
+  onSuccess: () => void
 }
 
 export function PaymentCardForm({
@@ -48,20 +48,20 @@ export function PaymentCardForm({
         onSuccess={onSuccess}
       />
     </PaymentCardFormWrapper>
-  );
+  )
 }
 
 function PaymentCardFormWrapper({ children }: { children: React.ReactNode }) {
-  const { data: stripeConfig } = useGetStripeConfig();
-  const [stripeInstance, setStripeInstance] = useState<Stripe | null>(null);
+  const { data: stripeConfig } = useGetStripeConfig()
+  const [stripeInstance, setStripeInstance] = useState<Stripe | null>(null)
 
   useEffect(() => {
     if (stripeConfig?.publishable_key) {
-      getStripe(stripeConfig.publishable_key).then(setStripeInstance);
+      getStripe(stripeConfig.publishable_key).then(setStripeInstance)
     }
-  }, [stripeConfig?.publishable_key]);
+  }, [stripeConfig?.publishable_key])
 
-  return <Elements stripe={stripeInstance}>{children}</Elements>;
+  return <Elements stripe={stripeInstance}>{children}</Elements>
 }
 
 function PaymentCardFormContent({
@@ -72,39 +72,39 @@ function PaymentCardFormContent({
   saveCard,
   onSuccess,
 }: PaymentCardFormProps) {
-  const stripe = useStripe();
-  const elements = useElements();
+  const stripe = useStripe()
+  const elements = useElements()
 
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [zip, setZip] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [zip, setZip] = useState("")
   const [cardComplete, setCardComplete] = useState({
     number: false,
     expiry: false,
     cvc: false,
-  });
+  })
 
-  const createPayment = useCreatePayment();
-  const confirmPaymentMutation = useConfirmPayment();
+  const createPayment = useCreatePayment()
+  const confirmPaymentMutation = useConfirmPayment()
 
   const isComplete =
     cardComplete.number &&
     cardComplete.expiry &&
     cardComplete.cvc &&
-    zip.length >= 3;
+    zip.length >= 3
 
-  const isDeposit = paymentType === 'deposit';
+  const isDeposit = paymentType === "deposit"
 
   const handleSubmit = useCallback(
     async (e: React.SubmitEvent) => {
-      e.preventDefault();
-      if (!stripe || !elements) return;
+      e.preventDefault()
+      if (!stripe || !elements) return
 
-      const cardNumber = elements.getElement(CardNumberElement);
-      if (!cardNumber) return;
+      const cardNumber = elements.getElement(CardNumberElement)
+      if (!cardNumber) return
 
-      setIsProcessing(true);
-      setError(null);
+      setIsProcessing(true)
+      setError(null)
 
       try {
         // 1. Create PaymentIntent
@@ -116,12 +116,12 @@ function PaymentCardFormContent({
             payment_type: paymentType,
             save_card: saveCard,
           },
-        });
+        })
 
-        const clientSecret = res.client_secret;
-        const paymentId = res.payment.id;
+        const clientSecret = res.client_secret
+        const paymentId = res.payment.id
 
-        if (!clientSecret) throw new Error('Missing client secret');
+        if (!clientSecret) throw new Error("Missing client secret")
 
         // 2. Confirm payment with Stripe
         const { error: stripeError } = await stripe.confirmCardPayment(
@@ -134,24 +134,24 @@ function PaymentCardFormContent({
               },
             },
           }
-        );
+        )
 
         if (stripeError) {
-          throw new Error(stripeError.message || 'Payment failed');
+          throw new Error(stripeError.message || "Payment failed")
         }
 
         // 3. Sync backend immediately (webhook still fallback)
         try {
-          await confirmPaymentMutation.mutateAsync({ requestId, paymentId });
+          await confirmPaymentMutation.mutateAsync({ requestId, paymentId })
         } catch {
           // webhook handles final state if this fails
         }
 
-        onSuccess();
+        onSuccess()
       } catch (err: any) {
-        setError(err.message ?? 'Payment failed');
+        setError(err.message ?? "Payment failed")
       } finally {
-        setIsProcessing(false);
+        setIsProcessing(false)
       }
     },
     [
@@ -167,12 +167,12 @@ function PaymentCardFormContent({
       saveCard,
       invoiceId,
     ]
-  );
+  )
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="bg-muted rounded-md px-3 py-2 text-sm">
-        Charging{' '}
+      <div className="rounded-md bg-muted px-3 py-2 text-sm">
+        Charging{" "}
         <span className="font-semibold">
           {formatCentsToDollarsString(amount ?? 0)}
         </span>
@@ -181,7 +181,7 @@ function PaymentCardFormContent({
       <FieldGroup>
         <Field>
           <FieldLabel htmlFor="card-number">Card Number</FieldLabel>
-          <div className="dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 file:text-foreground placeholder:text-muted-foreground h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-[3px] md:text-sm">
+          <div className="h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40">
             <CardNumberElement
               id="card-number"
               options={{
@@ -198,7 +198,7 @@ function PaymentCardFormContent({
         <div className="grid grid-cols-3 gap-3">
           <Field>
             <FieldLabel>Expiration</FieldLabel>
-            <div className="dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 file:text-foreground placeholder:text-muted-foreground h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-[3px] md:text-sm">
+            <div className="h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40">
               <CardExpiryElement
                 onChange={(e) =>
                   setCardComplete((p) => ({ ...p, expiry: e.complete }))
@@ -209,7 +209,7 @@ function PaymentCardFormContent({
 
           <Field>
             <FieldLabel htmlFor="cvc">CVC</FieldLabel>
-            <div className="dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 file:text-foreground placeholder:text-muted-foreground h-9 w-full min-w-0 rounded-md border bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-[3px] disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:ring-[3px] md:text-sm">
+            <div className="h-9 w-full min-w-0 rounded-md border border-input bg-transparent px-3 py-2 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium file:text-foreground placeholder:text-muted-foreground focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-[3px] aria-invalid:ring-destructive/20 md:text-sm dark:bg-input/30 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40">
               <CardCvcElement
                 id="cvc"
                 onChange={(e) =>
@@ -233,9 +233,9 @@ function PaymentCardFormContent({
         </div>
       </FieldGroup>
 
-      {error && <p className="text-destructive text-sm">{error}</p>}
+      {error && <p className="text-sm text-destructive">{error}</p>}
 
-      <div className="bg-muted/30 mt-6 rounded-md border px-4 py-3">
+      <div className="mt-6 rounded-md border bg-muted/30 px-4 py-3">
         <div className="flex items-center justify-center">
           <img
             src="/images/powered-by-stripe.png"
@@ -249,8 +249,8 @@ function PaymentCardFormContent({
         disabled={!stripe || !isComplete || isProcessing}
         className="w-full"
       >
-        {isProcessing ? 'Processing...' : isDeposit ? 'Pay Deposit' : 'Pay Now'}
+        {isProcessing ? "Processing..." : isDeposit ? "Pay Deposit" : "Pay Now"}
       </Button>
     </form>
-  );
+  )
 }

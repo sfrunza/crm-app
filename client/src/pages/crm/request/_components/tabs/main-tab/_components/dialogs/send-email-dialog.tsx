@@ -1,10 +1,10 @@
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+} from "@/components/ui/collapsible"
 import {
   Dialog,
   DialogClose,
@@ -13,18 +13,18 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
   Empty,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
-} from "@/components/ui/empty";
-import { Input } from "@/components/ui/input";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { useRequest } from "@/hooks/use-request";
-import { cn } from "@/lib/utils";
+} from "@/components/ui/empty"
+import { Input } from "@/components/ui/input"
+import { LoadingSwap } from "@/components/ui/loading-swap"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { useRequest } from "@/hooks/use-request"
+import { cn } from "@/lib/utils"
 import {
   ChevronRightIcon,
   FileTextIcon,
@@ -32,147 +32,147 @@ import {
   FolderOpenIcon,
   MailIcon,
   XIcon,
-} from "@/components/icons";
+} from "@/components/icons"
 import {
   type KeyboardEvent,
   useCallback,
   useEffect,
   useMemo,
   useState,
-} from "react";
-import { useSearchParams } from "react-router";
-import { toast } from "sonner";
-import type { EmailTemplate, Folder } from "@/types/index";
-import { useFolders } from "@/hooks/api/use-folders";
+} from "react"
+import { useSearchParams } from "react-router"
+import { toast } from "sonner"
+import type { EmailTemplate, Folder } from "@/types/index"
+import { useFolders } from "@/hooks/api/use-folders"
 import {
   useEmailTemplates,
   useSendEmails,
-} from "@/hooks/api/use-email-templates";
+} from "@/hooks/api/use-email-templates"
 
 export function SendEmailDialog() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [isOpen, setIsOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [isOpen, setIsOpen] = useState(false)
 
-  const [emails, setEmails] = useState<string[]>([]);
-  const [emailInput, setEmailInput] = useState("");
+  const [emails, setEmails] = useState<string[]>([])
+  const [emailInput, setEmailInput] = useState("")
   const [selectedTemplates, setSelectedTemplates] = useState<EmailTemplate[]>(
     []
-  );
+  )
 
-  const { request } = useRequest();
-  const { data: folders } = useFolders();
-  const { data: emailTemplates } = useEmailTemplates();
+  const { request } = useRequest()
+  const { data: folders } = useFolders()
+  const { data: emailTemplates } = useEmailTemplates()
 
   const { mutate: sendEmailsMutation, isPending: isSending } = useSendEmails({
     onSuccess: () => {
-      toast.success("Emails queued for delivery");
-      handleClose();
+      toast.success("Emails queued for delivery")
+      handleClose()
     },
     onError: (error) => {
-      toast.error(error.message || "Failed to send emails");
+      toast.error(error.message || "Failed to send emails")
     },
-  });
+  })
 
   // Group templates by folder
   const templatesByFolder = useMemo(() => {
-    if (!emailTemplates || !folders) return new Map<number, EmailTemplate[]>();
-    const map = new Map<number, EmailTemplate[]>();
+    if (!emailTemplates || !folders) return new Map<number, EmailTemplate[]>()
+    const map = new Map<number, EmailTemplate[]>()
     for (const folder of folders) {
       const folderTemplates = emailTemplates
         .filter((t) => t.folder_id === folder.id)
-        .sort((a, b) => a.position - b.position);
+        .sort((a, b) => a.position - b.position)
       if (folderTemplates.length > 0) {
-        map.set(folder.id, folderTemplates);
+        map.set(folder.id, folderTemplates)
       }
     }
-    return map;
-  }, [emailTemplates, folders]);
+    return map
+  }, [emailTemplates, folders])
 
   // Open dialog when search param is set and pre-populate customer emails
   useEffect(() => {
     if (searchParams.get("send_email") === "true") {
-      setIsOpen(true);
+      setIsOpen(true)
 
-      const customer = request?.customer;
+      const customer = request?.customer
       if (customer) {
-        const customerEmails: string[] = [];
+        const customerEmails: string[] = []
         if (customer.email_address) {
-          customerEmails.push(customer.email_address);
+          customerEmails.push(customer.email_address)
         }
         if (customer.additional_email) {
-          customerEmails.push(customer.additional_email);
+          customerEmails.push(customer.additional_email)
         }
-        setEmails(customerEmails);
+        setEmails(customerEmails)
       }
     }
-  }, [searchParams, request?.customer]);
+  }, [searchParams, request?.customer])
 
   function handleClose() {
-    setIsOpen(false);
-    setEmails([]);
-    setEmailInput("");
-    setSelectedTemplates([]);
+    setIsOpen(false)
+    setEmails([])
+    setEmailInput("")
+    setSelectedTemplates([])
     setSearchParams((prev) => {
-      prev.delete("send_email");
-      return prev;
-    });
+      prev.delete("send_email")
+      return prev
+    })
   }
 
   // Email input handling
   function handleEmailKeyDown(e: KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter" || e.key === ",") {
-      e.preventDefault();
-      addEmail();
+      e.preventDefault()
+      addEmail()
     }
     if (e.key === "Backspace" && emailInput === "" && emails.length > 0) {
-      setEmails((prev) => prev.slice(0, -1));
+      setEmails((prev) => prev.slice(0, -1))
     }
   }
 
   function addEmail() {
-    const trimmed = emailInput.trim().replace(/,+$/, "");
+    const trimmed = emailInput.trim().replace(/,+$/, "")
     if (trimmed && isValidEmail(trimmed) && !emails.includes(trimmed)) {
-      setEmails((prev) => [...prev, trimmed]);
-      setEmailInput("");
+      setEmails((prev) => [...prev, trimmed])
+      setEmailInput("")
     }
   }
 
   function removeEmail(email: string) {
-    setEmails((prev) => prev.filter((e) => e !== email));
+    setEmails((prev) => prev.filter((e) => e !== email))
   }
 
   // Template selection
   const toggleTemplate = useCallback((template: EmailTemplate) => {
     setSelectedTemplates((prev) => {
-      const exists = prev.find((t) => t.id === template.id);
+      const exists = prev.find((t) => t.id === template.id)
       if (exists) {
-        return prev.filter((t) => t.id !== template.id);
+        return prev.filter((t) => t.id !== template.id)
       }
-      return [...prev, template];
-    });
-  }, []);
+      return [...prev, template]
+    })
+  }, [])
 
   function removeTemplate(templateId: number) {
-    setSelectedTemplates((prev) => prev.filter((t) => t.id !== templateId));
+    setSelectedTemplates((prev) => prev.filter((t) => t.id !== templateId))
   }
 
   const isTemplateSelected = useCallback(
     (templateId: number) => selectedTemplates.some((t) => t.id === templateId),
     [selectedTemplates]
-  );
+  )
 
   function handleSend() {
-    if (!request?.id) return;
+    if (!request?.id) return
 
     sendEmailsMutation({
       recipients: emails,
       template_ids: selectedTemplates.map((t) => t.id),
       request_id: request.id,
-    });
+    })
   }
 
   const canSend =
-    emails.length > 0 && selectedTemplates.length > 0 && !isSending;
+    emails.length > 0 && selectedTemplates.length > 0 && !isSending
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
@@ -348,7 +348,7 @@ export function SendEmailDialog() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
 
 // --- Sub-components ---
@@ -359,10 +359,10 @@ function FolderSection({
   isTemplateSelected,
   onToggleTemplate,
 }: {
-  folder: Folder;
-  templates: EmailTemplate[];
-  isTemplateSelected: (id: number) => boolean;
-  onToggleTemplate: (template: EmailTemplate) => void;
+  folder: Folder
+  templates: EmailTemplate[]
+  isTemplateSelected: (id: number) => boolean
+  onToggleTemplate: (template: EmailTemplate) => void
 }) {
   return (
     <Collapsible>
@@ -379,7 +379,7 @@ function FolderSection({
       <CollapsibleContent>
         <div className="ml-4 border-l pl-2">
           {templates.map((template) => {
-            const selected = isTemplateSelected(template.id);
+            const selected = isTemplateSelected(template.id)
             return (
               <button
                 key={template.id}
@@ -393,14 +393,14 @@ function FolderSection({
                 <FileTextIcon className="size-3.5 shrink-0" />
                 <span className="truncate">{template.name}</span>
               </button>
-            );
+            )
           })}
         </div>
       </CollapsibleContent>
     </Collapsible>
-  );
+  )
 }
 
 function isValidEmail(email: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 }

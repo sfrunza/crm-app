@@ -4,6 +4,17 @@ export const paymentKeys = {
   forRequest: (requestId: number) =>
     [...paymentKeys.all, "request", requestId] as const,
 
+  adminPaymentList: (params: Record<string, unknown>) =>
+    [...paymentKeys.all, "adminList", params] as const,
+
+  paymentStatusCounts: (params: { start_date?: string; end_date?: string }) =>
+    [
+      ...paymentKeys.all,
+      "paymentStatusCounts",
+      params.start_date ?? "",
+      params.end_date ?? "",
+    ] as const,
+
   invoices: ["invoices"] as const,
 
   invoicesForRequest: (requestId: number) =>
@@ -29,4 +40,4 @@ export const paymentKeys = {
     [...paymentKeys.paymentMethods, "user", userId] as const,
 
   stripeConfig: ["stripeConfig"] as const,
-};
+}

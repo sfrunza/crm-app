@@ -1,4 +1,4 @@
-import { requestKeys } from "@/domains/requests/request.keys";
+import { requestKeys } from "@/domains/requests/request.keys"
 
 export const requestItemKeys = {
   all: (requestId: number, requestRoomId: number) =>
@@ -8,4 +8,4 @@ export const requestItemKeys = {
       requestRoomId,
       "request_items",
     ] as const,
-};
+}

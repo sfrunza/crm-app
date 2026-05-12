@@ -1,8 +1,8 @@
-import { PaymentCardForm } from "@/components/request/payment-card-form";
-import { FieldGroup } from "@/components/ui/field";
-import type { PaymentType } from "@/domains/payments/payment.types";
-import { useState } from "react";
-import { AmountField } from "./amount-field";
+import { PaymentCardForm } from "@/components/request/payment-card-form"
+import { FieldGroup } from "@/components/ui/field"
+import type { PaymentType } from "@/domains/payments/payment.types"
+import { useState } from "react"
+import { AmountField } from "./amount-field"
 
 // const stripeElementStyle = {
 //   base: {
@@ -22,19 +22,19 @@ export function NewCardTab({
   defaultAmount,
   onSuccess,
 }: {
-  requestId: number;
-  paymentType: PaymentType;
-  defaultAmount: number;
-  onSuccess: () => void;
+  requestId: number
+  paymentType: PaymentType
+  defaultAmount: number
+  onSuccess: () => void
 }) {
-  const [amount, setAmount] = useState(defaultAmount.toString());
+  const [amount, setAmount] = useState(defaultAmount.toString())
   return (
     <div className="space-y-4">
       <FieldGroup>
         <AmountField
           amount={(Number(amount) / 100).toString()}
           setAmount={(value) => {
-            setAmount((Number(value) * 100).toString());
+            setAmount((Number(value) * 100).toString())
           }}
         />
       </FieldGroup>
@@ -46,7 +46,7 @@ export function NewCardTab({
         onSuccess={onSuccess}
       />
     </div>
-  );
+  )
 }
 
 // ─── Card Fields Form (inside Elements) ──────────────────────────

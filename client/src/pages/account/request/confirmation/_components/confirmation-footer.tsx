@@ -1,17 +1,17 @@
-import { formatCentsToDollarsString } from "@/lib/helpers";
-import { formatDate } from "@/lib/format-date";
-import type { Request, Status } from "@/domains/requests/request.types";
-import { DepositPaymentDialog } from "./deposit-payment-dialog";
-import { PolicySheet } from "./policy-sheet";
+import { formatCentsToDollarsString } from "@/lib/helpers"
+import { formatDate } from "@/lib/format-date"
+import type { Request, Status } from "@/domains/requests/request.types"
+import { DepositPaymentDialog } from "./deposit-payment-dialog"
+import { PolicySheet } from "./policy-sheet"
 import {
   CANCELLATION_POLICY_ITEMS,
   TERMS_AND_CONDITIONS_TEXT,
-} from "../_content/confirmation-content";
+} from "../_content/confirmation-content"
 
-const ALLOWED_STATUSES: Status[] = ["unconfirmed"];
+const ALLOWED_STATUSES: Status[] = ["unconfirmed"]
 
 interface ConfirmationFooterProps {
-  request: Request;
+  request: Request
 }
 
 function CancellationPolicySheet() {
@@ -23,7 +23,7 @@ function CancellationPolicySheet() {
         ))}
       </ol>
     </PolicySheet>
-  );
+  )
 }
 
 function TermsAndConditionsSheet() {
@@ -31,16 +31,16 @@ function TermsAndConditionsSheet() {
     <PolicySheet title="Terms & Conditions" trigger="Terms & Conditions">
       <p>{TERMS_AND_CONDITIONS_TEXT}</p>
     </PolicySheet>
-  );
+  )
 }
 
 export function ConfirmationFooter({ request }: ConfirmationFooterProps) {
   const showSignature =
     request.customer_signature_url &&
     request.signed_at &&
-    request.is_deposit_accepted;
+    request.is_deposit_accepted
 
-  const isDepositAccepted = request.is_deposit_accepted;
+  const isDepositAccepted = request.is_deposit_accepted
 
   return (
     <div className="space-y-4 p-6">
@@ -48,7 +48,7 @@ export function ConfirmationFooter({ request }: ConfirmationFooterProps) {
       <div className="grid grid-cols-[auto_max-content] items-center gap-2">
         <div>
           <p>Reservation deposit</p>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-sm text-muted-foreground">
             Reservation will be deducted from the move cost
           </p>
         </div>
@@ -72,16 +72,16 @@ export function ConfirmationFooter({ request }: ConfirmationFooterProps) {
 
       {/* Signature display */}
       {showSignature && (
-        <div className="bg-muted/30 flex flex-col items-center justify-center rounded-lg border p-4">
+        <div className="flex flex-col items-center justify-center rounded-lg border bg-muted/30 p-4">
           <img
             src={request.customer_signature_url ?? ""}
             alt="Customer signature"
             className="max-h-24 w-auto object-contain"
           />
-          <p className="text-muted-foreground text-sm">
+          <p className="text-sm text-muted-foreground">
             {`${request.customer?.first_name} ${request.customer?.last_name}`}
           </p>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-sm text-muted-foreground">
             {formatDate(request.signed_at, "PPPpp")}
           </p>
         </div>
@@ -99,5 +99,5 @@ export function ConfirmationFooter({ request }: ConfirmationFooterProps) {
         </div>
       )}
     </div>
-  );
+  )
 }

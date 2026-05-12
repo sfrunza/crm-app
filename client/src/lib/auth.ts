@@ -1,29 +1,29 @@
-import { useAuthStore } from '@/stores/auth-store';
-import { redirect } from 'react-router';
-import { queryClient } from './query-client';
-import { getPortalForRole } from '@/lib/role-guards';
-import { getSettings } from '@/api/endpoints/settings';
-import { queryKeys } from './query-keys';
-import { getCurrentUser } from '@/api/endpoints/users';
+import { useAuthStore } from "@/stores/auth-store"
+import { redirect } from "react-router"
+import { queryClient } from "./query-client"
+import { getPortalForRole } from "@/lib/role-guards"
+import { getSettings } from "@/api/endpoints/settings"
+import { queryKeys } from "./query-keys"
+import { getCurrentUser } from "@/api/endpoints/users"
 
 export interface AuthLoaderParams {
-  request: Request;
-  redirectTo?: string;
+  request: Request
+  redirectTo?: string
 }
 
 /**
  * Creates a redirect response to login page
  */
 export const createLoginRedirect = (returnTo: string) => {
-  return redirect(`/auth/login?return_to=${encodeURIComponent(returnTo)}`);
-};
+  return redirect(`/auth/login?return_to=${encodeURIComponent(returnTo)}`)
+}
 
 /**
  * Creates a redirect response to home page
  */
 export const createHomeRedirect = () => {
-  return redirect('/');
-};
+  return redirect("/")
+}
 
 /**
  * Prefetches settings data for auth pages with error handling
@@ -34,7 +34,7 @@ export const prefetchSettings = async (): Promise<void> => {
       queryKey: queryKeys.settings.all,
       queryFn: getSettings,
       staleTime: Infinity,
-    });
+    })
 
     // await queryClient.prefetchQuery({
     //   queryKey: ['trucks'],
@@ -89,67 +89,63 @@ export const prefetchSettings = async (): Promise<void> => {
     //   queryFn: getEmails,
     //   staleTime: Infinity,
     // });
-
-
-
   } catch (error) {
-    console.error('Failed to prefetch settings:', error);
+    console.error("Failed to prefetch settings:", error)
     // Don't throw here as settings are not critical for auth pages
   }
-};
+}
 
 /**
  * Root `/` route loader — redirects to the user's portal or login.
  * Redirect happens in the loader so the component never renders with stale store state.
  */
 export const rootLoader = async () => {
-  prefetchSettings();
+  prefetchSettings()
 
   try {
-    const user = await getCurrentUser();
-    useAuthStore.getState().setUser(user);
+    const user = await getCurrentUser()
+    useAuthStore.getState().setUser(user)
   } catch {
-    useAuthStore.getState().clearAuth();
+    useAuthStore.getState().clearAuth()
   }
 
-  return null;
-};
+  return null
+}
 
 /**
  * CRM, Acc route loader
  */
 export const appLoader = async ({ request }: AuthLoaderParams) => {
-  const url = new URL(request.url);
-  const returnTo = `${url.pathname}${url.search}`;
+  const url = new URL(request.url)
+  const returnTo = `${url.pathname}${url.search}`
 
-  prefetchSettings();
+  prefetchSettings()
 
   try {
-    const user = await getCurrentUser();
-    useAuthStore.getState().setUser(user);
-    return null;
+    const user = await getCurrentUser()
+    useAuthStore.getState().setUser(user)
+    return null
   } catch {
-    useAuthStore.getState().clearAuth();
-    return createLoginRedirect(returnTo);
+    useAuthStore.getState().clearAuth()
+    return createLoginRedirect(returnTo)
   }
-};
-
+}
 
 /**
  * Auth route loader
  */
 export const authLoader = async () => {
-  prefetchSettings();
+  prefetchSettings()
 
   try {
-    const user = await getCurrentUser();
-    useAuthStore.getState().setUser(user);
-    return redirect(getPortalForRole(user.role));
+    const user = await getCurrentUser()
+    useAuthStore.getState().setUser(user)
+    return redirect(getPortalForRole(user.role))
   } catch {
-    useAuthStore.getState().clearAuth();
-    return null;
+    useAuthStore.getState().clearAuth()
+    return null
   }
-};
+}
 
 /**
  * Should revalidate the app loader
@@ -158,8 +154,8 @@ export function shouldRevalidate({
   currentUrl,
   nextUrl,
 }: {
-  currentUrl: URL;
-  nextUrl: URL;
+  currentUrl: URL
+  nextUrl: URL
 }) {
-  return currentUrl.pathname !== nextUrl.pathname;
+  return currentUrl.pathname !== nextUrl.pathname
 }

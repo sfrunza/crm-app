@@ -1,26 +1,26 @@
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { GripVerticalIcon, MoreHorizontalIcon } from "@/components/icons";
+import { useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
+import { GripVerticalIcon, MoreHorizontalIcon } from "@/components/icons"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { TableCell, TableRow } from "@/components/ui/table";
-import { cn } from "@/lib/utils";
-import { useSearchParams } from "react-router";
-import { Badge } from "@/components/ui/badge";
-import type { PackingType } from "@/types/index";
+} from "@/components/ui/dropdown-menu"
+import { TableCell, TableRow } from "@/components/ui/table"
+import { cn } from "@/lib/utils"
+import { useSearchParams } from "react-router"
+import { Badge } from "@/components/ui/badge"
+import type { PackingType } from "@/types/index"
 
 export function PackingTypeRow({
   id,
   item,
 }: {
-  id: number;
-  item: PackingType;
+  id: number
+  item: PackingType
 }) {
   const {
     attributes,
@@ -29,7 +29,7 @@ export function PackingTypeRow({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: id });
+  } = useSortable({ id: id })
 
   return (
     <TableRow
@@ -65,11 +65,11 @@ export function PackingTypeRow({
         <Actions packingType={item} />
       </TableCell>
     </TableRow>
-  );
+  )
 }
 
 function Actions({ packingType }: { packingType: PackingType }) {
-  const [_, setSearchParams] = useSearchParams();
+  const [_, setSearchParams] = useSearchParams()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -83,7 +83,7 @@ function Actions({ packingType }: { packingType: PackingType }) {
           onClick={() => {
             setSearchParams({
               edit_packing_service: packingType.id.toString(),
-            });
+            })
           }}
         >
           Edit packing service
@@ -92,7 +92,7 @@ function Actions({ packingType }: { packingType: PackingType }) {
           onClick={() => {
             setSearchParams({
               delete_packing_service: packingType.id.toString(),
-            });
+            })
           }}
           disabled={packingType.is_default}
           className="flex-col items-start gap-0"
@@ -107,5 +107,5 @@ function Actions({ packingType }: { packingType: PackingType }) {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

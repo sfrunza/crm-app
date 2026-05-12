@@ -1,23 +1,23 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Switch } from "@/components/ui/switch";
-import { TableCell, TableRow } from "@/components/ui/table";
-import { MoreHorizontalIcon } from "@/components/icons";
-import { useSearchParams } from "react-router";
-import { VALUATION_OPTIONS_MAP } from "@/lib/constants";
-import type { Valuation } from "@/types/index";
+} from "@/components/ui/dropdown-menu"
+import { Switch } from "@/components/ui/switch"
+import { TableCell, TableRow } from "@/components/ui/table"
+import { MoreHorizontalIcon } from "@/components/icons"
+import { useSearchParams } from "react-router"
+import { VALUATION_OPTIONS_MAP } from "@/lib/constants"
+import type { Valuation } from "@/types/index"
 
 export function ValuationRow({
   item,
   index,
 }: {
-  item: Valuation;
-  index: number;
+  item: Valuation
+  index: number
 }) {
   return (
     <TableRow>
@@ -34,11 +34,11 @@ export function ValuationRow({
         <Actions valuation={item} />
       </TableCell>
     </TableRow>
-  );
+  )
 }
 
 function Actions({ valuation }: { valuation: Valuation }) {
-  const [_, setSearchParams] = useSearchParams();
+  const [_, setSearchParams] = useSearchParams()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -56,7 +56,7 @@ function Actions({ valuation }: { valuation: Valuation }) {
           onClick={() => {
             setSearchParams({
               edit_valuation: valuation.id.toString(),
-            });
+            })
           }}
         >
           Edit valuation
@@ -65,7 +65,7 @@ function Actions({ valuation }: { valuation: Valuation }) {
           onClick={() => {
             setSearchParams({
               delete_valuation: valuation.id.toString(),
-            });
+            })
           }}
           disabled={valuation.is_default}
           className="flex-col items-start gap-0"
@@ -80,5 +80,5 @@ function Actions({ valuation }: { valuation: Valuation }) {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

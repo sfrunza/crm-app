@@ -1,5 +1,5 @@
-import { CheckCircleIcon, ClipboardListIcon } from '@/components/icons';
-import { Button } from '@/components/ui/button';
+import { CheckCircleIcon, ClipboardListIcon } from "@/components/icons"
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardAction,
@@ -7,29 +7,29 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { useRequest } from '@/hooks/use-request';
-import { Link } from 'react-router';
-import { MoveSizeDialog } from './dialogs/move-size-dialog';
+} from "@/components/ui/card"
+import { useRequest } from "@/hooks/use-request"
+import { Link } from "react-router"
+import { MoveSizeDialog } from "./dialogs/move-size-dialog"
 
 export function MoveSizeCard() {
-  const { request } = useRequest();
+  const { request } = useRequest()
 
-  if (!request) return null;
+  if (!request) return null
 
-  const moveSize = request.move_size_snapshot;
-  const canEdit = request.can_edit_request;
-  const requestId = request.id;
+  const moveSize = request.move_size_snapshot
+  const canEdit = request.can_edit_request
+  const requestId = request.id
   const hasClientInventory = (request?.request_rooms ?? []).some(
     (room) => (room.request_items?.length ?? 0) > 0
-  );
+  )
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{moveSize?.name ?? 'No move size'}</CardTitle>
+        <CardTitle>{moveSize?.name ?? "No move size"}</CardTitle>
         <CardDescription>
-          {request.totals.items} items · {request.totals.boxes} boxes ·{' '}
+          {request.totals.items} items · {request.totals.boxes} boxes ·{" "}
           {request.totals.volume} cu ft
         </CardDescription>
         <CardAction>
@@ -53,7 +53,7 @@ export function MoveSizeCard() {
         <div className="mx-auto max-w-xs space-y-2">
           {/* Inventory Dialog */}
           <Button
-            variant={hasClientInventory ? 'default' : 'outline'}
+            variant={hasClientInventory ? "default" : "outline"}
             className="h-16 w-full gap-6"
             asChild
           >
@@ -65,8 +65,8 @@ export function MoveSizeCard() {
               )}
               <span className="flex flex-col items-start">
                 {hasClientInventory
-                  ? 'View or edit inventory'
-                  : 'Edit inventory'}
+                  ? "View or edit inventory"
+                  : "Edit inventory"}
                 <span className="text-sm font-normal">Optional</span>
               </span>
             </Link>
@@ -91,5 +91,5 @@ export function MoveSizeCard() {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }

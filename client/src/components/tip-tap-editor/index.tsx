@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button"
 import {
   Select,
   SelectContent,
@@ -6,10 +6,10 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { TextStyleKit } from '@tiptap/extension-text-style';
-import { EditorContent, useEditor, useEditorState } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
+} from "@/components/ui/select"
+import { TextStyleKit } from "@tiptap/extension-text-style"
+import { EditorContent, useEditor, useEditorState } from "@tiptap/react"
+import StarterKit from "@tiptap/starter-kit"
 import {
   BoldIcon,
   EraserIcon,
@@ -18,59 +18,64 @@ import {
   ListIcon,
   ListOrderedIcon,
   UnderlineIcon,
-} from '@/components/icons';
+} from "@/components/icons"
+import { cn } from "@/lib/utils"
 
 const FONT_SIZES = [
-  { label: 'Small', value: '14px' },
-  { label: 'Medium', value: '16px' },
-  { label: 'Large', value: '20px' },
-  { label: 'Extra Large', value: '24px' },
-];
+  { label: "Small", value: "14px" },
+  { label: "Medium", value: "16px" },
+  { label: "Large", value: "20px" },
+  { label: "Extra Large", value: "24px" },
+]
 
-const extensions = [TextStyleKit, StarterKit];
+const extensions = [TextStyleKit, StarterKit]
 
 type Props = {
-  value?: string;
-  onChange?: (html: string) => void;
-  readOnly?: boolean;
-};
+  value?: string
+  onChange?: (html: string) => void
+  readOnly?: boolean
+  classNames?: {
+    editor?: string
+    content?: string
+  }
+}
 
-export function TipTapEditor({ value, onChange, readOnly }: Props) {
+export function TipTapEditor({ value, onChange, readOnly, classNames }: Props) {
   const editor = useEditor({
     extensions,
-    content: value ?? '',
+    content: value ?? "",
     editable: !readOnly,
     onUpdate({ editor }) {
-      const html = editor.getHTML();
+      const html = editor.getHTML()
       // console.log(html);
-      onChange?.(html === '<p></p>' ? '' : html);
+      onChange?.(html === "<p></p>" ? "" : html)
     },
-  });
+  })
 
   const editorState = useEditorState({
     editor,
     selector: (ctx) => {
       return {
-        isBold: ctx.editor.isActive('bold') ?? false,
-        isItalic: ctx.editor.isActive('italic') ?? false,
-        isBulletList: ctx.editor.isActive('bulletList') ?? false,
-        isOrderedList: ctx.editor.isActive('orderedList') ?? false,
-        isUnderline: ctx.editor.isActive('underline') ?? false,
-        isLink: ctx.editor.isActive('link') ?? false,
-      };
+        isBold: ctx.editor.isActive("bold") ?? false,
+        isItalic: ctx.editor.isActive("italic") ?? false,
+        isBulletList: ctx.editor.isActive("bulletList") ?? false,
+        isOrderedList: ctx.editor.isActive("orderedList") ?? false,
+        isUnderline: ctx.editor.isActive("underline") ?? false,
+        isLink: ctx.editor.isActive("link") ?? false,
+      }
     },
-  });
+  })
 
-  if (!editor) return null;
+  if (!editor) return null
 
   return (
-    <div className="rounded-md border">
+    <div className={cn("rounded-md border", classNames?.editor)}>
       {!readOnly && (
         <div className="flex flex-wrap gap-1 border-b p-1">
           <Button
             type="button"
             size="icon-sm"
-            variant={editorState.isBold ? 'default' : 'ghost'}
+            variant={editorState.isBold ? "default" : "ghost"}
             onClick={() => editor.chain().focus().toggleBold().run()}
           >
             <BoldIcon />
@@ -78,7 +83,7 @@ export function TipTapEditor({ value, onChange, readOnly }: Props) {
           <Button
             type="button"
             size="icon-sm"
-            variant={editorState.isItalic ? 'default' : 'ghost'}
+            variant={editorState.isItalic ? "default" : "ghost"}
             onClick={() => editor.chain().focus().toggleItalic().run()}
           >
             <ItalicIcon />
@@ -86,7 +91,7 @@ export function TipTapEditor({ value, onChange, readOnly }: Props) {
           <Button
             type="button"
             size="icon-sm"
-            variant={editorState.isUnderline ? 'default' : 'ghost'}
+            variant={editorState.isUnderline ? "default" : "ghost"}
             onClick={() => editor.chain().focus().toggleUnderline().run()}
           >
             <UnderlineIcon />
@@ -94,7 +99,7 @@ export function TipTapEditor({ value, onChange, readOnly }: Props) {
           <Button
             type="button"
             size="icon-sm"
-            variant={editorState.isBulletList ? 'default' : 'ghost'}
+            variant={editorState.isBulletList ? "default" : "ghost"}
             onClick={() => editor.chain().focus().toggleBulletList().run()}
           >
             <ListIcon />
@@ -102,7 +107,7 @@ export function TipTapEditor({ value, onChange, readOnly }: Props) {
           <Button
             type="button"
             size="icon-sm"
-            variant={editorState.isOrderedList ? 'default' : 'ghost'}
+            variant={editorState.isOrderedList ? "default" : "ghost"}
             onClick={() => editor.chain().focus().toggleOrderedList().run()}
           >
             <ListOrderedIcon />
@@ -110,37 +115,37 @@ export function TipTapEditor({ value, onChange, readOnly }: Props) {
           <Button
             type="button"
             size="icon-sm"
-            variant={editorState.isLink ? 'default' : 'ghost'}
+            variant={editorState.isLink ? "default" : "ghost"}
             onClick={() => {
               if (editorState.isLink) {
-                editor.chain().focus().unsetLink().run();
-                return;
+                editor.chain().focus().unsetLink().run()
+                return
               }
 
-              const previousUrl = editor.getAttributes('link').href;
-              const url = window.prompt('Enter URL', previousUrl);
+              const previousUrl = editor.getAttributes("link").href
+              const url = window.prompt("Enter URL", previousUrl)
 
-              if (url === null) return; // user cancelled
+              if (url === null) return // user cancelled
 
-              if (url === '') {
-                editor.chain().focus().unsetLink().run();
-                return;
+              if (url === "") {
+                editor.chain().focus().unsetLink().run()
+                return
               }
 
-              editor.chain().focus().setLink({ href: url }).run();
+              editor.chain().focus().setLink({ href: url }).run()
             }}
           >
             <LinkIcon />
           </Button>
           <Select
             name="font-size"
-            value={editor.getAttributes('textStyle').fontSize}
+            value={editor.getAttributes("textStyle").fontSize}
             onValueChange={(value) => {
               editor
                 .chain()
                 .focus()
-                .setMark('textStyle', { fontSize: value })
-                .run();
+                .setMark("textStyle", { fontSize: value })
+                .run()
             }}
           >
             <SelectTrigger className="h-8!">
@@ -170,7 +175,10 @@ export function TipTapEditor({ value, onChange, readOnly }: Props) {
         </div>
       )}
 
-      <EditorContent className="min-h-24 p-3" editor={editor} />
+      <EditorContent
+        className={cn("min-h-24 p-3", classNames?.content)}
+        editor={editor}
+      />
     </div>
-  );
+  )
 }

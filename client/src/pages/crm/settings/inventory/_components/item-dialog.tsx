@@ -1,6 +1,6 @@
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Trash2Icon, UploadIcon } from "@/components/icons";
-import { Button } from "@/components/ui/button";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { Trash2Icon, UploadIcon } from "@/components/icons"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -8,43 +8,43 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+} from "@/components/ui/dialog"
+import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { useRef, type ChangeEvent } from "react";
-import type { ItemForm } from "./inventory-settings.utils";
+} from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
+import { useRef, type ChangeEvent } from "react"
+import type { ItemForm } from "./inventory-settings.utils"
 
 type RoomOption = {
-  id: number;
-  name: string;
-};
+  id: number
+  name: string
+}
 
 type ItemDialogProps = {
-  mode: "create" | "edit";
-  open: boolean;
-  item: ItemForm | null;
-  roomOptions: RoomOption[];
-  imagePreview: string | null;
-  isSubmitting: boolean;
-  isDeleting?: boolean;
-  hasServerImage?: boolean;
-  onOpenChange: (open: boolean) => void;
-  onItemChange: (updater: (prev: ItemForm) => ItemForm) => void;
-  onToggleRoomTag: (roomId: number) => void;
-  onImagePreviewChange: (value: string | null) => void;
-  onMarkRemoveImage: (value: boolean) => void;
-  onCancel: () => void;
-  onDelete?: () => void;
-  onSave: () => void;
-};
+  mode: "create" | "edit"
+  open: boolean
+  item: ItemForm | null
+  roomOptions: RoomOption[]
+  imagePreview: string | null
+  isSubmitting: boolean
+  isDeleting?: boolean
+  hasServerImage?: boolean
+  onOpenChange: (open: boolean) => void
+  onItemChange: (updater: (prev: ItemForm) => ItemForm) => void
+  onToggleRoomTag: (roomId: number) => void
+  onImagePreviewChange: (value: string | null) => void
+  onMarkRemoveImage: (value: boolean) => void
+  onCancel: () => void
+  onDelete?: () => void
+  onSave: () => void
+}
 
 export function ItemDialog({
   mode,
@@ -64,28 +64,28 @@ export function ItemDialog({
   onDelete,
   onSave,
 }: ItemDialogProps) {
-  const imageInputRef = useRef<HTMLInputElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null)
 
   function handleImageChange(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
+    const file = event.target.files?.[0]
+    if (!file) return
 
-    const reader = new FileReader();
+    const reader = new FileReader()
     reader.onloadend = () => {
-      onItemChange((prev) => ({ ...prev, image: file }));
-      onImagePreviewChange(reader.result as string);
-      onMarkRemoveImage(false);
-    };
-    reader.readAsDataURL(file);
+      onItemChange((prev) => ({ ...prev, image: file }))
+      onImagePreviewChange(reader.result as string)
+      onMarkRemoveImage(false)
+    }
+    reader.readAsDataURL(file)
   }
 
   function handleRemoveImage() {
-    onItemChange((prev) => ({ ...prev, image: null }));
-    onImagePreviewChange(null);
-    onMarkRemoveImage(hasServerImage);
+    onItemChange((prev) => ({ ...prev, image: null }))
+    onImagePreviewChange(null)
+    onMarkRemoveImage(hasServerImage)
 
     if (imageInputRef.current) {
-      imageInputRef.current.value = "";
+      imageInputRef.current.value = ""
     }
   }
 
@@ -165,7 +165,7 @@ export function ItemDialog({
                     <FieldLabel>Applies to rooms</FieldLabel>
                     <div className="flex flex-wrap gap-2">
                       {roomOptions.map((room) => {
-                        const active = item.room_tag_ids.includes(room.id);
+                        const active = item.room_tag_ids.includes(room.id)
                         return (
                           <Button
                             key={room.id}
@@ -176,7 +176,7 @@ export function ItemDialog({
                           >
                             {room.name}
                           </Button>
-                        );
+                        )
                       })}
                     </div>
                   </Field>
@@ -251,7 +251,7 @@ export function ItemDialog({
                         Upload
                       </Button>
                     ) : (
-                      <div className="border-border bg-muted/50 relative mt-2 flex h-20 w-full items-center justify-center rounded-lg border">
+                      <div className="relative mt-2 flex h-20 w-full items-center justify-center rounded-lg border border-border bg-muted/50">
                         <img
                           src={imagePreview}
                           alt="Item preview"
@@ -294,5 +294,5 @@ export function ItemDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

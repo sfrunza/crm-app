@@ -4,33 +4,33 @@ import {
   priceObjectToString,
   timeObjectToString,
   timeWindowToString,
-} from "@/lib/helpers";
-import { formatPhone } from "@/lib/format-phone";
-import { formatDate } from "@/lib/format-date";
-import { getRequestUIBehavior } from "@/domains/requests/request.behavior";
-import { AddressItem } from "@/pages/crm/request/pdf-viewer/address-item";
+} from "@/lib/helpers"
+import { formatPhone } from "@/lib/format-phone"
+import { formatDate } from "@/lib/format-date"
+import { getRequestUIBehavior } from "@/domains/requests/request.behavior"
+import { AddressItem } from "@/pages/crm/request/pdf-viewer/address-item"
 import type {
   Request,
   RequestExtraItem,
-} from "@/domains/requests/request.types";
-import type { RequestRoom } from "@/domains/request-rooms/request-room.types";
-import { useGetPayments } from "@/domains/payments/payment.queries";
+} from "@/domains/requests/request.types"
+import type { RequestRoom } from "@/domains/request-rooms/request-room.types"
+import { useGetPayments } from "@/domains/payments/payment.queries"
 
 // ─── Detail row ─────────────────────────────────────────────────────
 function DetailRow({
   label,
   value,
 }: {
-  label: string;
-  value: React.ReactNode;
+  label: string
+  value: React.ReactNode
 }) {
-  if (value == null || value === "") return null;
+  if (value == null || value === "") return null
   return (
     <div className="flex items-start justify-between gap-4">
-      <p className="text-muted-foreground shrink-0">{label}</p>
+      <p className="shrink-0 text-muted-foreground">{label}</p>
       <p className="text-right font-medium">{value}</p>
     </div>
-  );
+  )
 }
 
 // ─── Section wrapper ────────────────────────────────────────────────
@@ -38,8 +38,8 @@ function Section({
   title,
   children,
 }: {
-  title?: string;
-  children: React.ReactNode;
+  title?: string
+  children: React.ReactNode
 }) {
   return (
     <>
@@ -53,7 +53,7 @@ function Section({
       </div>
       <hr className="border-border" />
     </>
-  );
+  )
 }
 
 // ─── Items table (packing supplies / extra services) ────────────────
@@ -62,11 +62,11 @@ function ItemsTable({
   items,
   total,
 }: {
-  title: string;
-  items: RequestExtraItem[];
-  total: number;
+  title: string
+  items: RequestExtraItem[]
+  total: number
 }) {
-  if (!items.length) return null;
+  if (!items.length) return null
 
   return (
     <>
@@ -74,17 +74,17 @@ function ItemsTable({
         <p className="mb-2 text-xs font-bold tracking-wide uppercase">
           {title}
         </p>
-        <div className="border-border overflow-hidden rounded-md border">
+        <div className="overflow-hidden rounded-md border border-border">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-muted/50 text-muted-foreground text-left text-xs">
+              <tr className="bg-muted/50 text-left text-xs text-muted-foreground">
                 <th className="px-3 py-2 font-medium">Item</th>
                 <th className="px-3 py-2 text-center font-medium">Qty</th>
                 <th className="px-3 py-2 text-right font-medium">Price</th>
                 <th className="px-3 py-2 text-right font-medium">Subtotal</th>
               </tr>
             </thead>
-            <tbody className="divide-border divide-y">
+            <tbody className="divide-y divide-border">
               {items.map((item) => (
                 <tr key={item.id}>
                   <td className="px-3 py-2">{item.name}</td>
@@ -113,27 +113,27 @@ function ItemsTable({
       </div>
       <hr className="border-border" />
     </>
-  );
+  )
 }
 
 function InventoryTable({ rooms }: { rooms: RequestRoom[] }) {
-  if (!rooms.length) return null;
+  if (!rooms.length) return null
 
   const totalItems = rooms.reduce(
     (sum, room) => sum + (room.totals?.items ?? 0),
-    0,
-  );
+    0
+  )
   const totalVolume = rooms.reduce(
     (sum, room) => sum + Number(room.totals?.volume ?? 0),
-    0,
-  );
+    0
+  )
 
   return (
     <>
       <div>
         <div className="mb-2 flex items-center justify-between">
           <p className="text-xs font-bold tracking-wide uppercase">Inventory</p>
-          <p className="text-muted-foreground text-xs">
+          <p className="text-xs text-muted-foreground">
             {totalItems} items, {totalVolume.toFixed(0)} cbf
           </p>
         </div>
@@ -141,13 +141,13 @@ function InventoryTable({ rooms }: { rooms: RequestRoom[] }) {
         <div className="p-0">
           <div className="grid gap-x-4 gap-y-3 md:grid-cols-2 print:grid-cols-2">
             {rooms.map((room) => (
-              <div key={room.id} className="border-border rounded-md border">
-                <div className="border-border grid grid-cols-[1fr_56px] items-center border-b px-3 py-1.5">
+              <div key={room.id} className="rounded-md border border-border">
+                <div className="grid grid-cols-[1fr_56px] items-center border-b border-border px-3 py-1.5">
                   <p className="truncate text-sm font-semibold">{room.name}</p>
                   <p className="text-right text-sm font-semibold">Qty</p>
                 </div>
 
-                <div className="divide-border divide-y">
+                <div className="divide-y divide-border">
                   {room.request_items.map((item) => (
                     <div
                       key={item.id}
@@ -169,7 +169,7 @@ function InventoryTable({ rooms }: { rooms: RequestRoom[] }) {
       </div>
       <hr className="border-border" />
     </>
-  );
+  )
 }
 
 // ─── Quote summary row ──────────────────────────────────────────────
@@ -179,10 +179,10 @@ function SummaryRow({
   bold,
   negative,
 }: {
-  label: string;
-  value: React.ReactNode;
-  bold?: boolean;
-  negative?: boolean;
+  label: string
+  value: React.ReactNode
+  bold?: boolean
+  negative?: boolean
 }) {
   return (
     <div
@@ -191,29 +191,29 @@ function SummaryRow({
       <p>{label}</p>
       <p>{value}</p>
     </div>
-  );
+  )
 }
 
 // ═════════════════════════════════════════════════════════════════════
 // Main component
 // ═════════════════════════════════════════════════════════════════════
 interface RequestDetailsProps {
-  request: Request;
+  request: Request
 }
 
 export function RequestDetails({ request }: RequestDetailsProps) {
-  if (!request) return null;
+  if (!request) return null
 
   const { data: payments = [] } = useGetPayments(request.id, {
     enabled: !!request.id,
-  });
+  })
 
   const depositPaid = payments.reduce((acc, payment) => {
     if (payment.payment_type === "deposit" && payment.status === "succeeded") {
-      return acc + payment.amount;
+      return acc + payment.amount
     }
-    return acc + 0;
-  }, 0);
+    return acc + 0
+  }, 0)
 
   const {
     showOrigin,
@@ -222,21 +222,21 @@ export function RequestDetails({ request }: RequestDetailsProps) {
     showStorageDestination,
     showDeliveryDateTime,
     showIfFlatRate,
-  } = getRequestUIBehavior(request);
+  } = getRequestUIBehavior(request)
 
   const hasAddresses =
     showOrigin ||
     showDestination ||
     showStorageOrigin ||
     showStorageDestination ||
-    (request.stops?.length ?? 0) > 0;
+    (request.stops?.length ?? 0) > 0
 
-  const hasPackingItems = (request.packing_items?.length ?? 0) > 0;
-  const hasExtraServices = (request.extra_services?.length ?? 0) > 0;
+  const hasPackingItems = (request.packing_items?.length ?? 0) > 0
+  const hasExtraServices = (request.extra_services?.length ?? 0) > 0
   const inventoryRooms = (request.request_rooms ?? []).filter(
-    (room) => (room.request_items?.length ?? 0) > 0,
-  );
-  const hasInventoryRooms = inventoryRooms.length > 0;
+    (room) => (room.request_items?.length ?? 0) > 0
+  )
+  const hasInventoryRooms = inventoryRooms.length > 0
 
   return (
     <div className="space-y-4 text-sm">
@@ -245,7 +245,7 @@ export function RequestDetails({ request }: RequestDetailsProps) {
         <DetailRow label="Request" value={`#${request.id}`} />
         <DetailRow label="Service" value={request.service?.name} />
         <div className="flex items-start justify-between gap-4">
-          <p className="text-muted-foreground shrink-0">Client</p>
+          <p className="shrink-0 text-muted-foreground">Client</p>
           <div className="text-right font-medium">
             <p>
               {request.customer?.first_name} {request.customer?.last_name}
@@ -268,7 +268,7 @@ export function RequestDetails({ request }: RequestDetailsProps) {
           label="Start time"
           value={timeWindowToString(
             request.start_time_window,
-            request.end_time_window,
+            request.end_time_window
           )}
         />
         {showDeliveryDateTime && (
@@ -288,7 +288,7 @@ export function RequestDetails({ request }: RequestDetailsProps) {
               label="Delivery time"
               value={timeWindowToString(
                 request.start_time_window_delivery,
-                request.end_time_window_delivery,
+                request.end_time_window_delivery
               )}
             />
           </>
@@ -423,7 +423,7 @@ export function RequestDetails({ request }: RequestDetailsProps) {
         <p className="mb-2 text-xs font-bold tracking-wide uppercase">
           Quote Summary
         </p>
-        <div className="border-border divide-border divide-y overflow-hidden rounded-md border">
+        <div className="divide-y divide-border overflow-hidden rounded-md border border-border">
           <SummaryRow
             label="Transportation"
             value={priceObjectToString(request.transportation)}
@@ -471,12 +471,12 @@ export function RequestDetails({ request }: RequestDetailsProps) {
               value={formatCentsToDollarsString(depositPaid || 0)}
             />
           )}
-          <div className="bg-muted/50 flex items-center justify-between px-3 py-3 font-semibold">
+          <div className="flex items-center justify-between bg-muted/50 px-3 py-3 font-semibold">
             <p>Estimated Total</p>
             <p className="text-base">{priceObjectToString(request.balance)}</p>
           </div>
         </div>
       </div>
     </div>
-  );
+  )
 }

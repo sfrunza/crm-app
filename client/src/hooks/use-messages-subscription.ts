@@ -1,6 +1,5 @@
-
 import { CableContext } from "@/providers/action-cable-provider"
-import type { CableMessageEvent } from '@/types/index'
+import type { CableMessageEvent } from "@/types/index"
 import { useContext, useEffect, useRef } from "react"
 
 interface UseMessagesSubscriptionProps {
@@ -8,7 +7,11 @@ interface UseMessagesSubscriptionProps {
   onReceived: (data: CableMessageEvent) => void
   deps: any[]
 }
-export function useMessagesSubscription({ requestId, onReceived, deps }: UseMessagesSubscriptionProps): void {
+export function useMessagesSubscription({
+  requestId,
+  onReceived,
+  deps,
+}: UseMessagesSubscriptionProps): void {
   const { consumer } = useContext(CableContext)
   const subscriptionRef = useRef<any>(null)
 

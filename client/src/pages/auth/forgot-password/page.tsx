@@ -72,7 +72,7 @@ function ForgotPasswordPage() {
                     id={field.name}
                     aria-invalid={fieldState.invalid}
                     placeholder="m@example.com"
-                    autoComplete="email"
+                    autoComplete="username"
                     required
                   />
                   {fieldState.invalid && (

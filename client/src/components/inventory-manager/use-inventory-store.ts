@@ -50,13 +50,11 @@ export const useInventoryStore = create<InventoryState>((set) => ({
 
   openItemModal: (item) =>
     set({ editingItem: item ?? null, isItemModalOpen: true }),
-  closeItemModal: () =>
-    set({ editingItem: null, isItemModalOpen: false }),
+  closeItemModal: () => set({ editingItem: null, isItemModalOpen: false }),
 
   openRoomModal: (room) =>
     set({ editingRoom: room ?? null, isRoomModalOpen: true }),
-  closeRoomModal: () =>
-    set({ editingRoom: null, isRoomModalOpen: false }),
+  closeRoomModal: () => set({ editingRoom: null, isRoomModalOpen: false }),
 
   setDraggedItem: (id) => set({ draggedItemId: id }),
 

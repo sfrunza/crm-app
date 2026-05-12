@@ -1,5 +1,5 @@
-import { useOpenRequestsStore } from "@/stores/use-open-requests-store";
-import { RequestPage } from "@/pages/crm/request/page";
+import { useOpenRequestsStore } from "@/stores/use-open-requests-store"
+import { RequestPage } from "@/pages/crm/request/page"
 
 /**
  * Renders the active request as a full-screen overlay on top of
@@ -10,13 +10,13 @@ import { RequestPage } from "@/pages/crm/request/page";
  * when switching between requests, giving each a fresh lifecycle.
  */
 export function RequestOverlay() {
-  const activeId = useOpenRequestsStore((s) => s.activeId);
+  const activeId = useOpenRequestsStore((s) => s.activeId)
 
-  if (!activeId) return null;
+  if (!activeId) return null
 
   return (
-    <div className="bg-accent fixed inset-0 z-30 flex w-full flex-col overflow-y-scroll overscroll-contain">
+    <div className="fixed inset-0 z-30 flex w-full flex-col overflow-y-scroll overscroll-contain bg-accent">
       <RequestPage key={activeId} requestId={activeId} />
     </div>
-  );
+  )
 }

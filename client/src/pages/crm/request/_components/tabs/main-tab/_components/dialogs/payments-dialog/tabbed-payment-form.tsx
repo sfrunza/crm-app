@@ -1,21 +1,21 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import type {
   PaymentType,
   SavedPaymentMethod,
-} from "@/domains/payments/payment.types";
+} from "@/domains/payments/payment.types"
 import {
   WalletIcon,
   CreditCardIcon,
   BanknoteIcon,
   ReceiptIcon,
   CircleEllipsisIcon,
-} from "@/components/icons";
-import { CardOnFileTab } from "./card-on-file-tab";
-import { NewCardTab } from "./new-card-tab";
-import { CashTab } from "./cash-tab";
-import { CheckTab } from "./check-tab";
-import { OtherTab } from "./other-tab";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+} from "@/components/icons"
+import { CardOnFileTab } from "./card-on-file-tab"
+import { NewCardTab } from "./new-card-tab"
+import { CashTab } from "./cash-tab"
+import { CheckTab } from "./check-tab"
+import { OtherTab } from "./other-tab"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
 export function TabbedPaymentForm({
   requestId,
@@ -24,11 +24,11 @@ export function TabbedPaymentForm({
   defaultAmount = 0,
   onSuccess,
 }: {
-  requestId: number;
-  savedCards: SavedPaymentMethod[];
-  paymentType: PaymentType;
-  defaultAmount?: number;
-  onSuccess: () => void;
+  requestId: number
+  savedCards: SavedPaymentMethod[]
+  paymentType: PaymentType
+  defaultAmount?: number
+  onSuccess: () => void
 }) {
   return (
     <Tabs defaultValue="card_on_file" className="px-6">
@@ -105,5 +105,5 @@ export function TabbedPaymentForm({
         />
       </TabsContent>
     </Tabs>
-  );
+  )
 }

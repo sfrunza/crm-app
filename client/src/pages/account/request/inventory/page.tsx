@@ -1,44 +1,44 @@
-import { ChevronLeftIcon, PlusIcon } from "@/components/icons";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { ChevronLeftIcon, PlusIcon } from "@/components/icons"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useGetItems } from "@/domains/items/item.queries";
-import { useCreateRequestRoom } from "@/domains/request-rooms/request-room.mutations";
-import { useGetRooms } from "@/domains/rooms/room.queries";
-import { useMoveSizes } from "@/hooks/api/use-move-sizes";
-import { useRequest } from "@/hooks/use-request";
-import { cn } from "@/lib/utils";
+} from "@/components/ui/dialog"
+import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge"
+import { Skeleton } from "@/components/ui/skeleton"
+import { useGetItems } from "@/domains/items/item.queries"
+import { useCreateRequestRoom } from "@/domains/request-rooms/request-room.mutations"
+import { useGetRooms } from "@/domains/rooms/room.queries"
+import { useMoveSizes } from "@/hooks/api/use-move-sizes"
+import { useRequest } from "@/hooks/use-request"
+import { cn } from "@/lib/utils"
 import {
   buildInventory,
   type InventoryRoom,
-} from "@/pages/crm/request/_components/tabs/inventory-tab/inventory/build-inventory";
-import { useEffect, useMemo, useState } from "react";
-import { Link, Outlet, useMatch, useNavigate, useParams } from "react-router";
+} from "@/pages/crm/request/_components/tabs/inventory-tab/inventory/build-inventory"
+import { useEffect, useMemo, useState } from "react"
+import { Link, Outlet, useMatch, useNavigate, useParams } from "react-router"
 
 export type InventoryOutletContext = {
-  inventoryRooms: InventoryRoom[];
-  requestId: number;
-  isPending: boolean;
-};
+  inventoryRooms: InventoryRoom[]
+  requestId: number
+  isPending: boolean
+}
 
 function RoomSidebarItem({
   room,
   active,
   onClick,
 }: {
-  room: InventoryRoom;
-  active: boolean;
-  onClick: () => void;
+  room: InventoryRoom
+  active: boolean
+  onClick: () => void
 }) {
   return (
     <button
@@ -79,7 +79,7 @@ function RoomSidebarItem({
         {room.totals.items}
       </Badge>
     </button>
-  );
+  )
 }
 
 function RoomSidebar({
@@ -92,16 +92,16 @@ function RoomSidebar({
   isLoading,
   onAddCustomRoom,
 }: {
-  rooms: InventoryRoom[];
-  selectedRoomId: number | null;
-  onSelect: (roomId: number) => void;
-  totalItems: number;
-  totalVolume: number;
-  totalBoxes: number;
-  isLoading: boolean;
-  onAddCustomRoom: () => void;
+  rooms: InventoryRoom[]
+  selectedRoomId: number | null
+  onSelect: (roomId: number) => void
+  totalItems: number
+  totalVolume: number
+  totalBoxes: number
+  isLoading: boolean
+  onAddCustomRoom: () => void
 }) {
-  console.log("rooms", rooms);
+  console.log("rooms", rooms)
 
   return (
     <div className="flex shrink-0 flex-col border-r max-md:hidden md:w-64">
@@ -147,7 +147,7 @@ function RoomSidebar({
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 function RoomSidebarMobile({
@@ -160,16 +160,16 @@ function RoomSidebarMobile({
   isLoading,
   onAddCustomRoom,
 }: {
-  rooms: InventoryRoom[];
-  selectedRoomId: number | null;
-  onSelect: (roomId: number) => void;
-  totalItems: number;
-  totalVolume: number;
-  totalBoxes: number;
-  isLoading: boolean;
-  onAddCustomRoom: () => void;
+  rooms: InventoryRoom[]
+  selectedRoomId: number | null
+  onSelect: (roomId: number) => void
+  totalItems: number
+  totalVolume: number
+  totalBoxes: number
+  isLoading: boolean
+  onAddCustomRoom: () => void
 }) {
-  console.log("rooms", rooms);
+  console.log("rooms", rooms)
 
   return (
     <div className="flex w-full shrink-0 flex-col border-r md:hidden">
@@ -215,38 +215,36 @@ function RoomSidebarMobile({
         </div>
       </div>
     </div>
-  );
+  )
 }
 
 function InventoryPage() {
-  const { requestId: requestIdParam } = useParams<{ requestId: string }>();
-  const requestId = Number(requestIdParam);
-  const navigate = useNavigate();
+  const { requestId: requestIdParam } = useParams<{ requestId: string }>()
+  const requestId = Number(requestIdParam)
+  const navigate = useNavigate()
 
-  const match = useMatch(
-    "/account/requests/:requestId/inventory/rooms/:roomId"
-  );
+  const match = useMatch("/account/requests/:requestId/inventory/rooms/:roomId")
   const selectedRoomId = match?.params.roomId
     ? Number(match.params.roomId)
-    : null;
+    : null
 
-  const { request, isPending: isRequestPending } = useRequest(requestId);
-  const { data: rooms, isPending: isRoomsPending } = useGetRooms();
-  const { data: items, isPending: isItemsPending } = useGetItems();
-  const { data: moveSizes } = useMoveSizes();
+  const { request, isPending: isRequestPending } = useRequest(requestId)
+  const { data: rooms, isPending: isRoomsPending } = useGetRooms()
+  const { data: items, isPending: isItemsPending } = useGetItems()
+  const { data: moveSizes } = useMoveSizes()
 
-  const [isAddRoomOpen, setIsAddRoomOpen] = useState(false);
-  const [customRoomName, setCustomRoomName] = useState("");
-  const [isCreatingRoom, setIsCreatingRoom] = useState(false);
+  const [isAddRoomOpen, setIsAddRoomOpen] = useState(false)
+  const [customRoomName, setCustomRoomName] = useState("")
+  const [isCreatingRoom, setIsCreatingRoom] = useState(false)
 
-  const { mutateAsync: createRequestRoom } = useCreateRequestRoom();
+  const { mutateAsync: createRequestRoom } = useCreateRequestRoom()
 
   const requestRooms = useMemo(
     () => request?.request_rooms ?? [],
     [request?.request_rooms]
-  );
+  )
 
-  const moveSize = moveSizes?.find((m) => m.id === request?.move_size_id);
+  const moveSize = moveSizes?.find((m) => m.id === request?.move_size_id)
 
   const inventoryRooms = useMemo(() => {
     return buildInventory(
@@ -254,31 +252,31 @@ function InventoryPage() {
       items ?? [],
       requestRooms,
       moveSize?.default_rooms ?? []
-    );
-  }, [rooms, items, requestRooms, moveSize?.default_rooms]);
+    )
+  }, [rooms, items, requestRooms, moveSize?.default_rooms])
 
-  const isPending = isRequestPending || isRoomsPending || isItemsPending;
+  const isPending = isRequestPending || isRoomsPending || isItemsPending
 
   useEffect(() => {
     if (!isPending && !selectedRoomId && inventoryRooms.length > 0) {
-      navigate(`rooms/${inventoryRooms[0].id}`, { replace: true });
+      navigate(`rooms/${inventoryRooms[0].id}`, { replace: true })
     }
-  }, [inventoryRooms, isPending, navigate, selectedRoomId]);
+  }, [inventoryRooms, isPending, navigate, selectedRoomId])
 
   async function handleAddCustomRoom() {
-    const name = customRoomName.trim();
-    if (!name) return;
-    setIsCreatingRoom(true);
+    const name = customRoomName.trim()
+    if (!name) return
+    setIsCreatingRoom(true)
     try {
       const created = await createRequestRoom({
         requestId,
         data: { name, is_custom: true },
-      });
-      setIsAddRoomOpen(false);
-      setCustomRoomName("");
-      navigate(`rooms/${created.id}`);
+      })
+      setIsAddRoomOpen(false)
+      setCustomRoomName("")
+      navigate(`rooms/${created.id}`)
     } finally {
-      setIsCreatingRoom(false);
+      setIsCreatingRoom(false)
     }
   }
 
@@ -287,13 +285,13 @@ function InventoryPage() {
     boxes: 0,
     volume: 0,
     weight: 0,
-  };
+  }
 
   const outletContext: InventoryOutletContext = {
     inventoryRooms,
     requestId,
     isPending,
-  };
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -353,7 +351,7 @@ function InventoryPage() {
                   onChange={(e) => setCustomRoomName(e.target.value)}
                   placeholder="e.g. Storage Room"
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") void handleAddCustomRoom();
+                    if (e.key === "Enter") void handleAddCustomRoom()
                   }}
                 />
               </Field>
@@ -378,7 +376,7 @@ function InventoryPage() {
         </DialogContent>
       </Dialog>
     </div>
-  );
+  )
 }
 
-export const Component = InventoryPage;
+export const Component = InventoryPage

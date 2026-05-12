@@ -1,12 +1,12 @@
-import type { Address, Request } from "@/domains/requests/request.types";
-import { formatDate } from "@/lib/format-date";
+import type { Address, Request } from "@/domains/requests/request.types"
+import { formatDate } from "@/lib/format-date"
 import {
   convertMinutesToHoursAndMinutes,
   formatCentsToDollarsString,
   formatTimeWindow,
   priceObjectToString,
   timeObjectToString,
-} from "@/lib/helpers";
+} from "@/lib/helpers"
 
 // ─── Types ───────────────────────────────────────────────────────────
 
@@ -15,33 +15,34 @@ import {
  * typed value for that field. Adding a wrong type will be a compile error.
  */
 type FieldFormatters = {
-  [K in keyof Request]?: (value: Request[K]) => string;
-};
+  [K in keyof Request]?: (value: Request[K]) => string
+}
 
 // ─── Reusable formatter functions ────────────────────────────────────
 
 const formatStatus = (v: Request["status"]) =>
-  String(v).replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+  String(v)
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (c) => c.toUpperCase())
 
-const formatDateField = (v: string | null) =>
-  formatDate(v, "MMM d, yyyy");
+const formatDateField = (v: string | null) => formatDate(v, "MMM d, yyyy")
 
 const formatTimeMinutes = (v: number | null) =>
-  v != null ? formatTimeWindow(v) : "TBD";
+  v != null ? formatTimeWindow(v) : "TBD"
 
-const formatBoolean = (v: boolean) => (v ? "Yes" : "No");
+const formatBoolean = (v: boolean) => (v ? "Yes" : "No")
 
-const formatNumber = (v: number) => String(v);
+const formatNumber = (v: number) => String(v)
 
-const formatCents = (v: number) => formatCentsToDollarsString(v);
+const formatCents = (v: number) => formatCentsToDollarsString(v)
 
 const formatAddress = (v: Address) => {
-  const parts = [v.street, v.city, v.state, v.zip].filter(Boolean);
-  return parts.join(", ") || "N/A";
-};
+  const parts = [v.street, v.city, v.state, v.zip].filter(Boolean)
+  return parts.join(", ") || "N/A"
+}
 
 const formatList = (v: unknown[]) =>
-  `${v.length} item${v.length !== 1 ? "s" : ""}`;
+  `${v.length} item${v.length !== 1 ? "s" : ""}`
 
 // ─── Field → Formatter map ──────────────────────────────────────────
 //
@@ -97,10 +98,13 @@ const FIELD_FORMATTERS = {
   origin: formatAddress,
   destination: formatAddress,
 
-  stops: (v: Request["stops"]) => v.map((stop) => {
-    const type = stop.type === "pick_up" ? "Extra pickup" : "Extra dropoff";
-    return `${type} - ${formatAddress(stop)}`;
-  }).join("; "),
+  stops: (v: Request["stops"]) =>
+    v
+      .map((stop) => {
+        const type = stop.type === "pick_up" ? "Extra pickup" : "Extra dropoff"
+        return `${type} - ${formatAddress(stop)}`
+      })
+      .join("; "),
 
   // Lists / arrays
   // Extra services and packing items
@@ -119,8 +123,8 @@ const FIELD_FORMATTERS = {
   details: (v: Request["details"]) => {
     const pairs = Object.entries(v)
       .filter(([k]) => k !== "is_touched")
-      .map(([k, val]) => `${k.replace(/_/g, " ")}: ${val}`);
-    return pairs.join(", ") || "empty";
+      .map(([k, val]) => `${k.replace(/_/g, " ")}: ${val}`)
+    return pairs.join(", ") || "empty"
   },
 
   // Notes (plain strings)
@@ -137,22 +141,21 @@ const FIELD_FORMATTERS = {
   move_size_id: (v: Request["move_size_id"]) => `#${v}`,
   paired_request_id: (v: Request["paired_request_id"]) =>
     v != null ? `#${v}` : "",
-} satisfies FieldFormatters;
+} satisfies FieldFormatters
 
 // ─── Public API ──────────────────────────────────────────────────────
 
-type TrackedField = keyof typeof FIELD_FORMATTERS;
+type TrackedField = keyof typeof FIELD_FORMATTERS
 
 const defaultFormatter = (v: unknown): string => {
   if (typeof v === "object" && v !== null) {
-    if (Array.isArray(v))
-      return `${v.length} item${v.length !== 1 ? "s" : ""}`;
+    if (Array.isArray(v)) return `${v.length} item${v.length !== 1 ? "s" : ""}`
     return Object.entries(v)
       .map(([k, val]) => `${k.replace(/_/g, " ")}: ${val}`)
-      .join(", ");
+      .join(", ")
   }
-  return String(v);
-};
+  return String(v)
+}
 
 /**
  * Format a raw field value for display in the activity log.
@@ -162,13 +165,13 @@ const defaultFormatter = (v: unknown): string => {
  * This function is the fallback when display strings are missing.
  */
 export function formatFieldValue(field: string, value: unknown): string {
-  if (value === null || value === undefined || value === "") return "empty";
+  if (value === null || value === undefined || value === "") return "empty"
 
   if (field in FIELD_FORMATTERS) {
-    const formatter = FIELD_FORMATTERS[field as TrackedField];
+    const formatter = FIELD_FORMATTERS[field as TrackedField]
     // biome-ignore lint: value is typed at the formatter definition via satisfies
-    return (formatter as (v: any) => string)(value);
+    return (formatter as (v: any) => string)(value)
   }
 
-  return defaultFormatter(value);
+  return defaultFormatter(value)
 }

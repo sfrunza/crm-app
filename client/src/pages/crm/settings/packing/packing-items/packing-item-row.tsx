@@ -1,24 +1,24 @@
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { GripVerticalIcon, MoreHorizontalIcon } from "@/components/icons";
+import { useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
+import { GripVerticalIcon, MoreHorizontalIcon } from "@/components/icons"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { TableCell, TableRow } from "@/components/ui/table";
-import { useSearchParams } from "react-router";
-import type { PackingItem } from "@/types/index";
+} from "@/components/ui/dropdown-menu"
+import { TableCell, TableRow } from "@/components/ui/table"
+import { useSearchParams } from "react-router"
+import type { PackingItem } from "@/types/index"
 
 export function PackingItemRow({
   id,
   item,
 }: {
-  id: number;
-  item: PackingItem;
+  id: number
+  item: PackingItem
 }) {
   const {
     attributes,
@@ -27,7 +27,7 @@ export function PackingItemRow({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: id });
+  } = useSortable({ id: id })
 
   return (
     <TableRow
@@ -58,11 +58,11 @@ export function PackingItemRow({
         <Actions packingItem={item} />
       </TableCell>
     </TableRow>
-  );
+  )
 }
 
 function Actions({ packingItem }: { packingItem: PackingItem }) {
-  const [_, setSearchParams] = useSearchParams();
+  const [_, setSearchParams] = useSearchParams()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -76,7 +76,7 @@ function Actions({ packingItem }: { packingItem: PackingItem }) {
           onClick={() => {
             setSearchParams({
               edit_packing_supply: packingItem.id.toString(),
-            });
+            })
           }}
         >
           Edit packing supply
@@ -85,7 +85,7 @@ function Actions({ packingItem }: { packingItem: PackingItem }) {
           onClick={() => {
             setSearchParams({
               delete_packing_supply: packingItem.id.toString(),
-            });
+            })
           }}
           variant="destructive"
         >
@@ -93,5 +93,5 @@ function Actions({ packingItem }: { packingItem: PackingItem }) {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

@@ -1,15 +1,15 @@
-import { ModeToggle } from "@/components/mode-toggle";
-import { useSettings } from "@/hooks/api/use-settings";
-import { Outlet } from "react-router";
+import { ModeToggle } from "@/components/mode-toggle"
+import { useSettings } from "@/hooks/api/use-settings"
+import { Outlet } from "react-router"
 
 export function AuthLayout() {
-  const { data: settings } = useSettings();
+  const { data: settings } = useSettings()
   return (
     <div className="relative">
       <div className="absolute top-4 right-4 z-50">
         <ModeToggle />
       </div>
-      <div className="relative isolate flex min-h-svh flex-col items-center justify-center gap-6 overflow-hidden bg-muted p-6 md:p-10 dark:bg-background">
+      <div className="relative isolate flex min-h-dvh flex-col items-center justify-center gap-6 overflow-hidden bg-muted p-6 md:p-10 dark:bg-background">
         <svg
           aria-hidden="true"
           className="absolute inset-0 -z-10 size-full mask-[radial-gradient(56rem_56rem_at_center,white,transparent)] stroke-foreground/10"
@@ -71,5 +71,5 @@ export function AuthLayout() {
         </div>
       </div>
     </div>
-  );
+  )
 }

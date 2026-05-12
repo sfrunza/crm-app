@@ -1,13 +1,13 @@
 import { useContext, useEffect, useRef } from "react"
 import { queryClient } from "@/lib/query-client"
 import { CableContext } from "@/providers/action-cable-provider"
-import { queryKeys } from "@/lib/query-keys";
+import { queryKeys } from "@/lib/query-keys"
 
 type NotificationEvent = {
-  type: typeof UNREAD_MESSAGES_CHANGED_EVENT;
-};
+  type: typeof UNREAD_MESSAGES_CHANGED_EVENT
+}
 
-const UNREAD_MESSAGES_CHANGED_EVENT = "unread_messages_changed";
+const UNREAD_MESSAGES_CHANGED_EVENT = "unread_messages_changed"
 
 export function useNotificationsSubscription(requestId?: number): void {
   const { consumer } = useContext(CableContext)
@@ -27,15 +27,15 @@ export function useNotificationsSubscription(requestId?: number): void {
           if (event.type === UNREAD_MESSAGES_CHANGED_EVENT) {
             queryClient.invalidateQueries({
               queryKey: queryKeys.messages.totalUnread,
-            });
+            })
             queryClient.invalidateQueries({
               queryKey: queryKeys.conversations.all,
-            });
+            })
 
             if (requestId) {
               queryClient.invalidateQueries({
                 queryKey: queryKeys.messages.unreadCount(requestId),
-              });
+              })
             }
           }
         },

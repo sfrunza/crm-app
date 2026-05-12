@@ -1,24 +1,24 @@
-import { Button } from "@/components/ui/button";
-import { LoadingSwap } from "@/components/ui/loading-swap";
+import { Button } from "@/components/ui/button"
+import { LoadingSwap } from "@/components/ui/loading-swap"
 import {
   storageIcons,
   type StorageIconKey,
-} from "@/domains/requests/request.constants";
-import { requestKeys } from "@/domains/requests/request.keys";
-import { useUnpairRequests } from "@/domains/requests/request.mutations";
-import type { Service } from "@/types/index";
-import { formatDate } from "@/lib/format-date";
-import { queryClient } from "@/lib/query-client";
-import { Trash2Icon } from "@/components/icons";
-import { toast } from "sonner";
-import { openRequest } from "@/stores/use-open-requests-store";
+} from "@/domains/requests/request.constants"
+import { requestKeys } from "@/domains/requests/request.keys"
+import { useUnpairRequests } from "@/domains/requests/request.mutations"
+import type { Service } from "@/types/index"
+import { formatDate } from "@/lib/format-date"
+import { queryClient } from "@/lib/query-client"
+import { Trash2Icon } from "@/components/icons"
+import { toast } from "sonner"
+import { openRequest } from "@/stores/use-open-requests-store"
 
 interface PairedRequestInfoProps {
-  currentRequestId: number;
-  service: Service;
-  pairedRequestId: number | null;
-  movingDate: string | null | undefined;
-  type: "in" | "out";
+  currentRequestId: number
+  service: Service
+  pairedRequestId: number | null
+  movingDate: string | null | undefined
+  type: "in" | "out"
 }
 
 export function PairedRequestInfo({
@@ -32,30 +32,30 @@ export function PairedRequestInfo({
     useUnpairRequests({
       onSettled: (data, error) => {
         if (error) {
-          queryClient.cancelQueries({ queryKey: requestKeys.lists() });
+          queryClient.cancelQueries({ queryKey: requestKeys.lists() })
         }
         if (data) {
           queryClient.invalidateQueries({
             queryKey: requestKeys.lists(),
-          });
+          })
 
           queryClient.invalidateQueries({
             queryKey: requestKeys.statusCounts(),
-          });
+          })
           // queryClient.setQueryData(requestKeys.detail(data.id), data);
         }
       },
-    });
+    })
 
   async function handleDisconnectRequests() {
     if (!pairedRequestId) {
-      toast.error("Paired request ID is missing.");
-      return;
+      toast.error("Paired request ID is missing.")
+      return
     }
     unpairRequestsMutation({
       requestId: currentRequestId,
       pairedRequestId: pairedRequestId,
-    });
+    })
   }
 
   return (
@@ -88,5 +88,5 @@ export function PairedRequestInfo({
         </LoadingSwap>
       </Button>
     </div>
-  );
+  )
 }

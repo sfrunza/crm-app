@@ -1,5 +1,5 @@
-import { CrmLayout } from "@/layouts/crm/layout";
-import { Navigate } from "react-router";
+import { CrmLayout } from "@/layouts/crm/layout"
+import { Navigate } from "react-router"
 
 export const crmRoutes = [
   {
@@ -105,4 +105,4 @@ export const crmRoutes = [
       },
     ],
   },
-];
+]

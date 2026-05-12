@@ -1,11 +1,11 @@
-import { RequestDetails } from "@/components/request/request-details";
-import { Card, CardContent } from "@/components/ui/card";
-import type { Request } from "@/domains/requests/request.types";
-import { DISCLAIMER_PARAGRAPHS } from "../_content/confirmation-content";
+import { RequestDetails } from "@/components/request/request-details"
+import { Card, CardContent } from "@/components/ui/card"
+import type { Request } from "@/domains/requests/request.types"
+import { DISCLAIMER_PARAGRAPHS } from "../_content/confirmation-content"
 
 interface ConfirmationPrintContentProps {
-  request: Request;
-  companyLogoUrl: string;
+  request: Request
+  companyLogoUrl: string
 }
 
 export function ConfirmationPrintContent({
@@ -19,7 +19,7 @@ export function ConfirmationPrintContent({
         <div className="mb-8 flex justify-between">
           <div>
             <h1 className="text-2xl font-bold uppercase">Confirmation</h1>
-            <p className="text-muted-foreground text-sm font-medium tracking-wider uppercase">
+            <p className="text-sm font-medium tracking-wider text-muted-foreground uppercase">
               {request.service?.name}
             </p>
           </div>
@@ -53,5 +53,5 @@ export function ConfirmationPrintContent({
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }

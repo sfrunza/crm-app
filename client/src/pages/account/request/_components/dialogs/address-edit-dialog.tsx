@@ -1,6 +1,6 @@
-import { AddressAutocompleteInput } from "@/components/inputs/address-autocomplete-input";
-import { SelectWithSearch } from "@/components/inputs/select-with-search";
-import { Button } from "@/components/ui/button";
+import { AddressAutocompleteInput } from "@/components/inputs/address-autocomplete-input"
+import { SelectWithSearch } from "@/components/inputs/select-with-search"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogClose,
@@ -9,15 +9,15 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { LoadingSwap } from "@/components/ui/loading-swap";
+} from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { LoadingSwap } from "@/components/ui/loading-swap"
 import {
   Select,
   SelectContent,
@@ -25,20 +25,20 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { requestKeys } from "@/domains/requests/request.keys";
-import { useUpdateRequest } from "@/domains/requests/request.mutations";
-import type { Address } from "@/domains/requests/request.types";
-import { useEntranceTypes } from "@/hooks/api/use-entrance-types";
-import { useRequest } from "@/hooks/use-request";
-import { queryClient } from "@/lib/query-client";
-import { usStates } from "@/lib/usStates";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useCallback, useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { useSearchParams } from "react-router";
-import { toast } from "sonner";
-import { z } from "zod";
+} from "@/components/ui/select"
+import { requestKeys } from "@/domains/requests/request.keys"
+import { useUpdateRequest } from "@/domains/requests/request.mutations"
+import type { Address } from "@/domains/requests/request.types"
+import { useEntranceTypes } from "@/hooks/api/use-entrance-types"
+import { useRequest } from "@/hooks/use-request"
+import { queryClient } from "@/lib/query-client"
+import { usStates } from "@/lib/usStates"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useCallback, useEffect, useState } from "react"
+import { Controller, useForm } from "react-hook-form"
+import { useSearchParams } from "react-router"
+import { toast } from "sonner"
+import { z } from "zod"
 
 const formSchema = z.object({
   street: z.string().min(1, "Street is required"),
@@ -53,9 +53,9 @@ const formSchema = z.object({
       lng: z.number().optional(),
     })
     .optional(),
-});
+})
 
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.infer<typeof formSchema>
 
 const EMPTY_ADDRESS: Address = {
   street: "",
@@ -65,38 +65,37 @@ const EMPTY_ADDRESS: Address = {
   apt: "",
   floor_id: null,
   location: { lat: 0, lng: 0 },
-};
+}
 
 export function AddressEditDialog() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [isOpen, setIsOpen] = useState(false);
-  const { request } = useRequest();
-  const { data: entranceTypes } = useEntranceTypes();
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [isOpen, setIsOpen] = useState(false)
+  const { request } = useRequest()
+  const { data: entranceTypes } = useEntranceTypes()
 
-  const editParam = searchParams.get("edit_address");
+  const editParam = searchParams.get("edit_address")
 
-  const isNewStop = editParam === "new_stop";
-  const isStop = editParam?.startsWith("stop_") ?? false;
-  const stopIndex = isStop ? parseInt(editParam!.replace("stop_", "")) : -1;
+  const isNewStop = editParam === "new_stop"
+  const isStop = editParam?.startsWith("stop_") ?? false
+  const stopIndex = isStop ? parseInt(editParam!.replace("stop_", "")) : -1
 
   // Get current address data based on param
   const currentAddress = (() => {
-    if (!request || !editParam) return EMPTY_ADDRESS;
-    if (editParam === "origin") return request.origin ?? EMPTY_ADDRESS;
-    if (editParam === "destination")
-      return request.destination ?? EMPTY_ADDRESS;
+    if (!request || !editParam) return EMPTY_ADDRESS
+    if (editParam === "origin") return request.origin ?? EMPTY_ADDRESS
+    if (editParam === "destination") return request.destination ?? EMPTY_ADDRESS
     if (isStop && stopIndex >= 0)
-      return request.stops?.[stopIndex] ?? EMPTY_ADDRESS;
-    return EMPTY_ADDRESS;
-  })();
+      return request.stops?.[stopIndex] ?? EMPTY_ADDRESS
+    return EMPTY_ADDRESS
+  })()
 
   const dialogTitle = (() => {
-    if (isNewStop) return "Add a stop";
-    if (editParam === "origin") return "Edit pickup address";
-    if (editParam === "destination") return "Edit drop-off address";
-    if (isStop) return "Edit stop address";
-    return "Edit address";
-  })();
+    if (isNewStop) return "Add a stop"
+    if (editParam === "origin") return "Edit pickup address"
+    if (editParam === "destination") return "Edit drop-off address"
+    if (isStop) return "Edit stop address"
+    return "Edit address"
+  })()
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -110,76 +109,76 @@ export function AddressEditDialog() {
       floor_id: currentAddress.floor_id ?? null,
       location: currentAddress.location ?? { lat: 0, lng: 0 },
     },
-  });
+  })
 
   const { mutate: updateRequestMutation, isPending: isUpdating } =
     useUpdateRequest(
       {
         onSettled: (_, error) => {
           if (error) {
-            toast.error("Failed to update address");
+            toast.error("Failed to update address")
           } else {
             queryClient.invalidateQueries({
               queryKey: requestKeys.detail(request!.id),
-            });
-            toast.success(isNewStop ? "Stop added" : "Address updated");
-            handleClose();
+            })
+            toast.success(isNewStop ? "Stop added" : "Address updated")
+            handleClose()
           }
         },
       },
       { forceCalculate: true }
-    );
+    )
 
   useEffect(() => {
     if (editParam) {
-      setIsOpen(true);
+      setIsOpen(true)
     }
-  }, [editParam]);
+  }, [editParam])
 
   function handleClose() {
-    form.reset();
-    setIsOpen(false);
+    form.reset()
+    setIsOpen(false)
     setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      next.delete("edit_address");
-      return next;
-    });
+      const next = new URLSearchParams(prev)
+      next.delete("edit_address")
+      return next
+    })
   }
 
   function onSubmit(values: FormValues) {
-    if (!request) return;
+    if (!request) return
 
     const updatedAddress: Omit<Address, "location"> = {
       ...currentAddress,
       ...values,
-    };
+    }
 
     if (editParam === "origin") {
       updateRequestMutation({
         id: request.id,
         data: { origin: updatedAddress },
-      });
+      })
     } else if (editParam === "destination") {
       updateRequestMutation({
         id: request.id,
         data: { destination: updatedAddress },
-      });
+      })
     } else if (isStop && stopIndex >= 0) {
-      const newStops = [...(request.stops ?? [])];
-      newStops[stopIndex] = { ...newStops[stopIndex], ...updatedAddress };
+      const newStops = [...(request.stops ?? [])]
+      newStops[stopIndex] = { ...newStops[stopIndex], ...updatedAddress }
       updateRequestMutation({
         id: request.id,
         data: { stops: newStops },
-      });
+      })
     } else if (isNewStop) {
       const newStop: Address = {
         ...updatedAddress,
         type: "drop_off",
-      };
+      }
       updateRequestMutation({
         id: request.id,
         data: { stops: [...(request.stops ?? []), newStop] },
-      });
+      })
     }
   }
 
@@ -189,11 +188,11 @@ export function AddressEditDialog() {
         form.setValue(key as keyof FormValues, value ?? "", {
           shouldDirty: true,
           shouldValidate: true,
-        });
-      });
+        })
+      })
     },
     [form]
-  );
+  )
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose} modal={false}>
@@ -360,5 +359,5 @@ export function AddressEditDialog() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

@@ -1,5 +1,5 @@
-import { AccountLayout } from "@/layouts/account/layout";
-import { Navigate } from "react-router";
+import { AccountLayout } from "@/layouts/account/layout"
+import { Navigate } from "react-router"
 
 export const accountRoutes = [
   {
@@ -58,4 +58,4 @@ export const accountRoutes = [
       },
     ],
   },
-];
+]

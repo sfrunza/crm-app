@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
-import type { InventoryRoom } from "./build-inventory";
-import { RoomRow } from "./room-row";
-import { PlusIcon } from "@/components/icons";
+import { Button } from "@/components/ui/button"
+import { Spinner } from "@/components/ui/spinner"
+import type { InventoryRoom } from "./build-inventory"
+import { RoomRow } from "./room-row"
+import { PlusIcon } from "@/components/icons"
 
 export function RoomList({
   rooms,
@@ -14,20 +14,20 @@ export function RoomList({
   isLoading,
   onAddCustomRoom,
 }: {
-  rooms: InventoryRoom[];
-  selectedRoomId: number | null;
-  onSelect: (roomId: number) => void;
-  totalItems: number;
-  totalVolume: number;
-  totalBoxes: number;
-  isLoading: boolean;
-  onAddCustomRoom: () => void;
+  rooms: InventoryRoom[]
+  selectedRoomId: number | null
+  onSelect: (roomId: number) => void
+  totalItems: number
+  totalVolume: number
+  totalBoxes: number
+  isLoading: boolean
+  onAddCustomRoom: () => void
 }) {
   return (
     <div className="flex w-80 shrink-0 flex-col border-r">
       <div className="border-b p-5">
         <p className="text-lg font-semibold">Inventory</p>
-        <p className="text-muted-foreground mt-1 text-sm">
+        <p className="mt-1 text-sm text-muted-foreground">
           {totalItems} items · {totalBoxes} boxes · {totalVolume} cu ft
         </p>
       </div>
@@ -40,7 +40,7 @@ export function RoomList({
         )}
 
         {!isLoading && rooms.length === 0 && (
-          <p className="text-muted-foreground px-2 py-10 text-center text-sm">
+          <p className="px-2 py-10 text-center text-sm text-muted-foreground">
             No rooms available for this request.
           </p>
         )}
@@ -62,5 +62,5 @@ export function RoomList({
         </div>
       </div>
     </div>
-  );
+  )
 }

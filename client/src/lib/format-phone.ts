@@ -8,8 +8,6 @@
 //   return phoneNumber ? phoneNumber.formatNational() : value
 // }
 
-
-
 // export { formatPhone, AsYouType, COUNTRY };
 
 import parsePhoneNumberFromString, { AsYouType } from "libphonenumber-js"

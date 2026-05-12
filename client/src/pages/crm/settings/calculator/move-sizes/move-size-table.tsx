@@ -5,7 +5,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/ui/table"
 import {
   DndContext,
   KeyboardSensor,
@@ -14,32 +14,29 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
-} from "@dnd-kit/core";
-import { restrictToParentElement } from "@dnd-kit/modifiers";
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-} from "@dnd-kit/sortable";
-import { useId } from "react";
-import { MoveSizeRow } from "./move-size-row";
-import type { MoveSize } from "@/types/index";
+} from "@dnd-kit/core"
+import { restrictToParentElement } from "@dnd-kit/modifiers"
+import { SortableContext, sortableKeyboardCoordinates } from "@dnd-kit/sortable"
+import { useId } from "react"
+import { MoveSizeRow } from "./move-size-row"
+import type { MoveSize } from "@/types/index"
 
 interface MoveSizesTableProps {
-  moveSizes: MoveSize[];
-  handleDragEnd: (event: DragEndEvent) => void;
+  moveSizes: MoveSize[]
+  handleDragEnd: (event: DragEndEvent) => void
 }
 
 export function MoveSizesTable({
   moveSizes,
   handleDragEnd,
 }: MoveSizesTableProps) {
-  const sortableId = useId();
+  const sortableId = useId()
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
-  );
+  )
 
   return (
     <DndContext
@@ -76,5 +73,5 @@ export function MoveSizesTable({
         </SortableContext>
       </Table>
     </DndContext>
-  );
+  )
 }

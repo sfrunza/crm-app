@@ -1,5 +1,5 @@
-import { ClockIcon, PencilLineIcon, SunIcon } from "@/components/icons";
-import { Button } from "@/components/ui/button";
+import { ClockIcon, PencilLineIcon, SunIcon } from "@/components/icons"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogClose,
@@ -9,24 +9,24 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { requestKeys } from "@/domains/requests/request.keys";
-import { useUpdateRequest } from "@/domains/requests/request.mutations";
-import { cn } from "@/lib/utils";
-import { queryClient } from "@/lib/query-client";
-import { useState } from "react";
-import { toast } from "sonner";
+} from "@/components/ui/dialog"
+import { LoadingSwap } from "@/components/ui/loading-swap"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { requestKeys } from "@/domains/requests/request.keys"
+import { useUpdateRequest } from "@/domains/requests/request.mutations"
+import { cn } from "@/lib/utils"
+import { queryClient } from "@/lib/query-client"
+import { useState } from "react"
+import { toast } from "sonner"
 
 type TimeOption = {
-  label: string;
-  description: string;
-  value: string;
-  icon: React.ElementType;
-  start: number | null;
-  end: number | null;
-};
+  label: string
+  description: string
+  value: string
+  icon: React.ElementType
+  start: number | null
+  end: number | null
+}
 
 const TIME_OPTIONS: TimeOption[] = [
   {
@@ -69,21 +69,21 @@ const TIME_OPTIONS: TimeOption[] = [
     start: 900,
     end: 1080,
   },
-];
+]
 
 function findCurrentOption(start: number | null, end: number | null): string {
   const match = TIME_OPTIONS.find(
-    (opt) => opt.start === start && opt.end === end,
-  );
-  return match?.value ?? "any";
+    (opt) => opt.start === start && opt.end === end
+  )
+  return match?.value ?? "any"
 }
 
 type StartTimeDialogProps = {
-  requestId: number;
-  startTime: number | null;
-  endTime: number | null;
-  type: "move" | "delivery";
-};
+  requestId: number
+  startTime: number | null
+  endTime: number | null
+  type: "move" | "delivery"
+}
 
 export function StartTimeDialog({
   requestId,
@@ -91,42 +91,42 @@ export function StartTimeDialog({
   endTime,
   type,
 }: StartTimeDialogProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
   const [selected, setSelected] = useState(() =>
-    findCurrentOption(startTime, endTime),
-  );
+    findCurrentOption(startTime, endTime)
+  )
 
   const { mutate: updateRequestMutation, isPending: isUpdating } =
     useUpdateRequest(
       {
         onSettled: (_, error) => {
           if (error) {
-            toast.error("Failed to save changes");
+            toast.error("Failed to save changes")
           } else {
-            console.log("requestId", requestId);
+            console.log("requestId", requestId)
             queryClient.invalidateQueries({
               queryKey: requestKeys.detail(requestId),
-            });
-            toast.success("Changes saved");
-            setIsOpen(false);
+            })
+            toast.success("Changes saved")
+            setIsOpen(false)
           }
         },
       },
-      { forceCalculate: false },
-    );
+      { forceCalculate: false }
+    )
 
   function handleOpenChange(open: boolean) {
-    setIsOpen(open);
+    setIsOpen(open)
     if (open) {
-      setSelected(findCurrentOption(startTime, endTime));
+      setSelected(findCurrentOption(startTime, endTime))
     }
   }
 
   function onSubmit(e: React.SubmitEvent) {
-    e.preventDefault();
+    e.preventDefault()
 
-    const option = TIME_OPTIONS.find((opt) => opt.value === selected);
-    if (!option) return;
+    const option = TIME_OPTIONS.find((opt) => opt.value === selected)
+    if (!option) return
 
     const data =
       type === "move"
@@ -137,14 +137,14 @@ export function StartTimeDialog({
         : {
             start_time_window_delivery: option.start,
             end_time_window_delivery: option.end,
-          };
+          }
 
-    updateRequestMutation({ id: requestId, data });
+    updateRequestMutation({ id: requestId, data })
   }
 
   const title =
-    type === "move" ? "Preferred start time" : "Preferred delivery time";
-  const formId = `start-time-form-${type}`;
+    type === "move" ? "Preferred start time" : "Preferred delivery time"
+  const formId = `start-time-form-${type}`
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
@@ -168,8 +168,8 @@ export function StartTimeDialog({
             className="grid grid-cols-2 gap-3"
           >
             {TIME_OPTIONS.map((opt) => {
-              const isSelected = selected === opt.value;
-              const Icon = opt.icon;
+              const isSelected = selected === opt.value
+              const Icon = opt.icon
 
               return (
                 <label
@@ -180,7 +180,7 @@ export function StartTimeDialog({
                     "hover:border-primary/40 hover:bg-primary/5",
                     isSelected
                       ? "border-primary bg-primary/5 ring-primary/20"
-                      : "border-border",
+                      : "border-border"
                   )}
                 >
                   <RadioGroupItem
@@ -188,10 +188,10 @@ export function StartTimeDialog({
                     id={`time-${type}-${opt.value}`}
                     className="sr-only"
                   />
-                  <Icon className="text-muted-foreground mr-1 size-5" />
+                  <Icon className="mr-1 size-5 text-muted-foreground" />
                   <span className="text-sm font-semibold">{opt.label}</span>
                 </label>
-              );
+              )
             })}
           </RadioGroup>
         </form>
@@ -207,5 +207,5 @@ export function StartTimeDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

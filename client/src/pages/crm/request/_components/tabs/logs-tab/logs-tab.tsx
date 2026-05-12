@@ -3,21 +3,21 @@ import {
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
-} from "@/components/ui/empty";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Spinner } from "@/components/ui/spinner";
-import { useGetRequestLogs } from "@/domains/request-logs/request-log.queries";
-import { useInfiniteScroll } from "@/hooks/use-infinite-scroll";
-import { useRequest } from "@/hooks/use-request";
-import { LogsIcon, MessageCircleIcon, UserIcon } from "@/components/icons";
-import { LogEntry } from "./log-entry";
-import { formatGroupDate, groupLogsByDate } from "./log-utils";
+} from "@/components/ui/empty"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { Spinner } from "@/components/ui/spinner"
+import { useGetRequestLogs } from "@/domains/request-logs/request-log.queries"
+import { useInfiniteScroll } from "@/hooks/use-infinite-scroll"
+import { useRequest } from "@/hooks/use-request"
+import { LogsIcon, MessageCircleIcon, UserIcon } from "@/components/icons"
+import { LogEntry } from "./log-entry"
+import { formatGroupDate, groupLogsByDate } from "./log-utils"
 
-const OBSERVER_OPTIONS: IntersectionObserverInit = { threshold: 0.1 };
+const OBSERVER_OPTIONS: IntersectionObserverInit = { threshold: 0.1 }
 
 export function LogsTab() {
-  const { request } = useRequest();
-  const requestId = request?.id;
+  const { request } = useRequest()
+  const requestId = request?.id
 
   const {
     data,
@@ -26,21 +26,21 @@ export function LogsTab() {
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useGetRequestLogs(requestId!);
+  } = useGetRequestLogs(requestId!)
 
   const sentinelRef = useInfiniteScroll({
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
     observerOptions: OBSERVER_OPTIONS,
-  });
+  })
 
   if (!requestId) {
     return (
       <div className="flex items-center justify-center py-20">
-        <p className="text-muted-foreground text-sm">No request selected.</p>
+        <p className="text-sm text-muted-foreground">No request selected.</p>
       </div>
-    );
+    )
   }
 
   if (isLoading) {
@@ -48,21 +48,21 @@ export function LogsTab() {
       <div className="flex items-center justify-center py-20">
         <Spinner />
       </div>
-    );
+    )
   }
 
   if (isError) {
     return (
       <div className="flex items-center justify-center py-20">
-        <p className="text-destructive text-sm">
+        <p className="text-sm text-destructive">
           Failed to load activity logs.
         </p>
       </div>
-    );
+    )
   }
 
-  const allLogs = data?.pages.flatMap((page) => page.logs) ?? [];
-  const grouped = groupLogsByDate(allLogs);
+  const allLogs = data?.pages.flatMap((page) => page.logs) ?? []
+  const grouped = groupLogsByDate(allLogs)
 
   if (allLogs.length === 0) {
     return (
@@ -80,7 +80,7 @@ export function LogsTab() {
           </Empty>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -90,12 +90,12 @@ export function LogsTab() {
         <div className="mb-6 flex items-center justify-between">
           <div>
             <h3 className="text-lg font-semibold">Activity Log</h3>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-sm text-muted-foreground">
               {data?.pages[0]?.pagination.total_count ?? 0} total events
             </p>
           </div>
           <div className="flex items-center gap-1.5 text-xs">
-            <UserIcon className="text-muted-foreground h-3.5 w-3.5" />
+            <UserIcon className="h-3.5 w-3.5 text-muted-foreground" />
             <span className="text-muted-foreground">Tracking all changes</span>
           </div>
         </div>
@@ -116,11 +116,11 @@ export function LogsTab() {
             <div key={group.date}>
               {/* Date header */}
               <div className="mb-2 flex items-center gap-2">
-                <div className="bg-border h-px flex-1" />
-                <span className="text-muted-foreground shrink-0 text-xs font-medium">
+                <div className="h-px flex-1 bg-border" />
+                <span className="shrink-0 text-xs font-medium text-muted-foreground">
                   {formatGroupDate(group.date)}
                 </span>
-                <div className="bg-border h-px flex-1" />
+                <div className="h-px flex-1 bg-border" />
               </div>
 
               {/* Entries */}
@@ -143,5 +143,5 @@ export function LogsTab() {
       </div>
       <ScrollBar orientation="vertical" />
     </ScrollArea>
-  );
+  )
 }

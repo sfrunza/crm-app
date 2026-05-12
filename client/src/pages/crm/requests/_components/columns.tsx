@@ -1,15 +1,15 @@
-import { AddressCell } from "@/components/data-table/cells/address-cell";
-import { DateCell } from "@/components/data-table/cells/date-cell";
-import { PriceCell } from "@/components/data-table/cells/price-cell";
-import { StatusCell } from "@/components/data-table/cells/status-cell";
+import { AddressCell } from "@/components/data-table/cells/address-cell"
+import { DateCell } from "@/components/data-table/cells/date-cell"
+import { PriceCell } from "@/components/data-table/cells/price-cell"
+import { StatusCell } from "@/components/data-table/cells/status-cell"
 import {
   storageIcons,
   type StorageIconKey,
-} from "@/domains/requests/request.constants";
-import type { TableRequest } from "@/domains/requests/request.types";
-import { formatPhone } from "@/lib/format-phone";
-import type { ColumnDef } from "@tanstack/react-table";
-import { useMemo } from "react";
+} from "@/domains/requests/request.constants"
+import type { TableRequest } from "@/domains/requests/request.types"
+import { formatPhone } from "@/lib/format-phone"
+import type { ColumnDef } from "@tanstack/react-table"
+import { useMemo } from "react"
 
 export function useColumns() {
   return useMemo<ColumnDef<TableRequest>[]>(
@@ -68,11 +68,11 @@ export function useColumns() {
         cell: ({ row }) => {
           const withStorage =
             row.original.service.name === "Moving with Storage" ||
-            row.original.service.name === "Overnight Truck Storage";
-          const isMovingFromStorage = row.original.is_moving_from_storage;
-          const hasPairedRequest = row.original.has_paired_request;
+            row.original.service.name === "Overnight Truck Storage"
+          const isMovingFromStorage = row.original.is_moving_from_storage
+          const hasPairedRequest = row.original.has_paired_request
           const showStorageOrigin =
-            withStorage && isMovingFromStorage && hasPairedRequest;
+            withStorage && isMovingFromStorage && hasPairedRequest
           if (showStorageOrigin) {
             return (
               <div className="flex items-center gap-2">
@@ -84,9 +84,9 @@ export function useColumns() {
                 />
                 From storage
               </div>
-            );
+            )
           }
-          return <AddressCell address={row.original.origin} />;
+          return <AddressCell address={row.original.origin} />
         },
         enableSorting: false,
       },
@@ -96,11 +96,11 @@ export function useColumns() {
         cell: ({ row }) => {
           const withStorage =
             row.original.service.name === "Moving with Storage" ||
-            row.original.service.name === "Overnight Truck Storage";
-          const isMovingFromStorage = row.original.is_moving_from_storage;
-          const hasPairedRequest = row.original.has_paired_request;
+            row.original.service.name === "Overnight Truck Storage"
+          const isMovingFromStorage = row.original.is_moving_from_storage
+          const hasPairedRequest = row.original.has_paired_request
           const showStorageDestination =
-            withStorage && !isMovingFromStorage && hasPairedRequest;
+            withStorage && !isMovingFromStorage && hasPairedRequest
           if (showStorageDestination) {
             return (
               <div className="flex items-center gap-2">
@@ -112,9 +112,9 @@ export function useColumns() {
                 />
                 To storage
               </div>
-            );
+            )
           }
-          return <AddressCell address={row.original.destination} />;
+          return <AddressCell address={row.original.destination} />
         },
         enableSorting: false,
       },
@@ -157,5 +157,5 @@ export function useColumns() {
       },
     ],
     []
-  );
+  )
 }

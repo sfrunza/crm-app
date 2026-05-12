@@ -5,8 +5,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import type { EntranceType } from "@/types/index";
+} from "@/components/ui/table"
+import type { EntranceType } from "@/types/index"
 import {
   DndContext,
   KeyboardSensor,
@@ -15,31 +15,28 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
-} from "@dnd-kit/core";
-import { restrictToParentElement } from "@dnd-kit/modifiers";
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-} from "@dnd-kit/sortable";
-import { useId } from "react";
-import { EntranceTypeRow } from "./entrance-type-item-row";
+} from "@dnd-kit/core"
+import { restrictToParentElement } from "@dnd-kit/modifiers"
+import { SortableContext, sortableKeyboardCoordinates } from "@dnd-kit/sortable"
+import { useId } from "react"
+import { EntranceTypeRow } from "./entrance-type-item-row"
 
 interface EntranceTypesTableProps {
-  entranceTypes: EntranceType[];
-  handleDragEnd: (event: DragEndEvent) => void;
+  entranceTypes: EntranceType[]
+  handleDragEnd: (event: DragEndEvent) => void
 }
 
 export function EntranceTypesTable({
   entranceTypes,
   handleDragEnd,
 }: EntranceTypesTableProps) {
-  const sortableId = useId();
+  const sortableId = useId()
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
-  );
+  )
 
   return (
     <DndContext
@@ -74,5 +71,5 @@ export function EntranceTypesTable({
         </SortableContext>
       </Table>
     </DndContext>
-  );
+  )
 }

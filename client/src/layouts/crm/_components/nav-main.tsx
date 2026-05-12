@@ -1,4 +1,4 @@
-import { NavLink, useLocation, useNavigate } from "react-router";
+import { NavLink, useLocation, useNavigate } from "react-router"
 
 import {
   SidebarGroup,
@@ -6,34 +6,34 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   useSidebar,
-} from "@/components/ui/sidebar";
+} from "@/components/ui/sidebar"
 
 type NavMainProps = {
   items: {
-    title: string;
-    url: string;
-    icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-  }[];
-};
+    title: string
+    url: string
+    icon?: React.ComponentType<React.SVGProps<SVGSVGElement>>
+  }[]
+}
 
 export function NavMain({ items }: NavMainProps) {
-  const { setOpenMobile, isMobile } = useSidebar();
-  const navigate = useNavigate();
-  const location = useLocation();
+  const { setOpenMobile, isMobile } = useSidebar()
+  const navigate = useNavigate()
+  const location = useLocation()
 
-  const pathname = location.pathname.split("/").pop();
+  const pathname = location.pathname.split("/").pop()
 
   function handleClick(url: string) {
     if (isMobile) {
-      setOpenMobile(false);
+      setOpenMobile(false)
     }
-    navigate(url, { replace: true });
+    navigate(url, { replace: true })
   }
   return (
     <SidebarGroup>
       <SidebarMenu>
         {items.map((item) => {
-          const isActive = pathname === item.url;
+          const isActive = pathname === item.url
           return (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton
@@ -47,9 +47,9 @@ export function NavMain({ items }: NavMainProps) {
                 </NavLink>
               </SidebarMenuButton>
             </SidebarMenuItem>
-          );
+          )
         })}
       </SidebarMenu>
     </SidebarGroup>
-  );
+  )
 }

@@ -1,75 +1,75 @@
-import { Button } from "@/components/ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ChevronLeftIcon, SendIcon } from "@/components/icons";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { ChevronLeftIcon, SendIcon } from "@/components/icons"
+import { useCallback, useEffect, useRef, useState } from "react"
 import {
   EmailEditor,
   type EditorRef,
   type EmailEditorProps,
-} from "react-email-editor";
-import { useForm } from "react-hook-form";
-import { useSearchParams } from "react-router";
-import { toast } from "sonner";
-import { z } from "zod";
-import { TemplateForm } from "./template-form";
-import { LoadingSwap } from "@/components/ui/loading-swap";
+} from "react-email-editor"
+import { useForm } from "react-hook-form"
+import { useSearchParams } from "react-router"
+import { toast } from "sonner"
+import { z } from "zod"
+import { TemplateForm } from "./template-form"
+import { LoadingSwap } from "@/components/ui/loading-swap"
 import {
   useCreateEmailTemplate,
   useEmailTemplates,
   useUpdateEmailTemplate,
-} from "@/hooks/api/use-email-templates";
+} from "@/hooks/api/use-email-templates"
 
 const templateFormSchema = z.object({
   name: z.string(),
   subject: z.string(),
   folder_id: z.string(),
   event_key: z.string(),
-});
+})
 
-type TemplateFormValues = z.infer<typeof templateFormSchema>;
+type TemplateFormValues = z.infer<typeof templateFormSchema>
 
 type UnlayerExportHtml = {
-  design: Record<string, any>; // Unlayer design JSON
-  html: string;
-};
+  design: Record<string, any> // Unlayer design JSON
+  html: string
+}
 
 export function TemplateShow() {
-  const emailEditorRef = useRef<EditorRef>(null);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const folderId = searchParams.get("folder_id") ?? "1";
-  const createTemplate = searchParams.get("create_template") ?? false;
-  const templateId = searchParams.get("edit_template_id") ?? null;
-  const [isOpen, setIsOpen] = useState(false);
+  const emailEditorRef = useRef<EditorRef>(null)
+  const [searchParams, setSearchParams] = useSearchParams()
+  const folderId = searchParams.get("folder_id") ?? "1"
+  const createTemplate = searchParams.get("create_template") ?? false
+  const templateId = searchParams.get("edit_template_id") ?? null
+  const [isOpen, setIsOpen] = useState(false)
 
   const { data: emailTemplates } = useEmailTemplates({
     enabled: !!templateId,
-  });
+  })
 
   const emailTemplate = emailTemplates?.find(
     (emailTemplate) => emailTemplate.id === Number(templateId)
-  );
+  )
 
   useEffect(() => {
     if (templateId) {
-      setIsOpen(true);
+      setIsOpen(true)
     } else if (createTemplate) {
-      setIsOpen(true);
+      setIsOpen(true)
     }
-  }, [templateId, createTemplate]);
+  }, [templateId, createTemplate])
 
   const { mutate: createEmailTemplate, isPending: isCreating } =
     useCreateEmailTemplate({
       onSuccess: () => {
-        toast.success("Template created");
+        toast.success("Template created")
       },
-    });
+    })
 
   const { mutate: updateEmailTemplate, isPending: isUpdating } =
     useUpdateEmailTemplate({
       onSuccess: () => {
-        toast.success("Template updated");
+        toast.success("Template updated")
       },
-    });
+    })
 
   const form = useForm<TemplateFormValues>({
     mode: "onChange",
@@ -81,20 +81,20 @@ export function TemplateShow() {
       folder_id: emailTemplate?.folder_id.toString() ?? folderId?.toString(),
       event_key: emailTemplate?.event_key ?? "",
     },
-  });
+  })
 
   const exportHtml = () => {
-    const unlayer = emailEditorRef.current?.editor;
+    const unlayer = emailEditorRef.current?.editor
 
     unlayer?.exportHtml((data: UnlayerExportHtml) => {
-      const { design, html } = data;
+      const { design, html } = data
 
-      console.log("design", design);
-      console.log("html", html);
-      console.log("name", form.getValues("name"));
-      console.log("subject", form.getValues("subject"));
-      console.log("folder_id", form.getValues("folder_id"));
-      console.log("event_key", form.getValues("event_key"));
+      console.log("design", design)
+      console.log("html", html)
+      console.log("name", form.getValues("name"))
+      console.log("subject", form.getValues("subject"))
+      console.log("folder_id", form.getValues("folder_id"))
+      console.log("event_key", form.getValues("event_key"))
 
       if (createTemplate) {
         createEmailTemplate({
@@ -104,7 +104,7 @@ export function TemplateShow() {
           subject: form.getValues("subject"),
           folder_id: Number(form.getValues("folder_id")),
           event_key: form.getValues("event_key"),
-        });
+        })
       }
       if (templateId && emailTemplate) {
         updateEmailTemplate({
@@ -117,17 +117,17 @@ export function TemplateShow() {
             folder_id: Number(form.getValues("folder_id")),
             event_key: form.getValues("event_key"),
           },
-        });
+        })
       }
-    });
-  };
+    })
+  }
 
   const onReady: EmailEditorProps["onReady"] = useCallback(
     (unlayer: any) => {
-      console.log("template", emailTemplate);
+      console.log("template", emailTemplate)
 
       if (emailTemplate) {
-        unlayer.loadDesign(emailTemplate.design);
+        unlayer.loadDesign(emailTemplate.design)
       }
       // editor is ready
       // you can load your template here;
@@ -137,9 +137,9 @@ export function TemplateShow() {
       // unlayer.loadDesign(templateJson);
     },
     [emailTemplate]
-  );
+  )
 
-  if (!isOpen) return null;
+  if (!isOpen) return null
 
   return (
     <div className="absolute inset-0 z-50 flex min-h-screen flex-col overflow-y-auto">
@@ -153,11 +153,11 @@ export function TemplateShow() {
                 className="size-10 rounded-full"
                 onClick={() => {
                   setSearchParams((prev) => {
-                    prev.delete("edit_template_id");
-                    prev.delete("create_template");
-                    return prev;
-                  });
-                  setIsOpen(false);
+                    prev.delete("edit_template_id")
+                    prev.delete("create_template")
+                    return prev
+                  })
+                  setIsOpen(false)
                 }}
               >
                 <ChevronLeftIcon className="size-6" />
@@ -226,5 +226,5 @@ export function TemplateShow() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -36,7 +36,7 @@ function RequestsPage() {
   })
 
   return (
-    <PageContainer classNameInner="space-y-2 pt-4">
+    <PageContainer classNameInner="space-y-2.5 pt-4">
       {/* Stats card */}
       <StatsCard />
       {/* Status tabs */}

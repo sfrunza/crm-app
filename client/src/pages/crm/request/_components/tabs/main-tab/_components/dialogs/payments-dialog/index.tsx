@@ -6,57 +6,57 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import {
   useGetInvoices,
   useGetPaymentMethods,
   useGetPayments,
-} from "@/domains/payments/payment.queries";
-import { useRequest } from "@/hooks/use-request";
-import { ChevronLeftIcon } from "@/components/icons";
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router";
-import { AddInvoiceForm } from "./add-invoice-form";
-import { PaymentsListView } from "./payments-list-view";
-import { TabbedPaymentForm } from "./tabbed-payment-form";
+} from "@/domains/payments/payment.queries"
+import { useRequest } from "@/hooks/use-request"
+import { ChevronLeftIcon } from "@/components/icons"
+import { useEffect, useState } from "react"
+import { useSearchParams } from "react-router"
+import { AddInvoiceForm } from "./add-invoice-form"
+import { PaymentsListView } from "./payments-list-view"
+import { TabbedPaymentForm } from "./tabbed-payment-form"
 
-type SubView = "list" | "add-payment" | "add-invoice" | "add-reservation";
+type SubView = "list" | "add-payment" | "add-invoice" | "add-reservation"
 
 export function PaymentsDialog() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [isOpen, setIsOpen] = useState(false);
-  const [subView, setSubView] = useState<SubView>("list");
-  const { draft } = useRequest();
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [isOpen, setIsOpen] = useState(false)
+  const [subView, setSubView] = useState<SubView>("list")
+  const { draft } = useRequest()
 
-  const requestId = draft?.id;
-  const customerId = draft?.customer_id;
+  const requestId = draft?.id
+  const customerId = draft?.customer_id
 
   const { data: payments = [] } = useGetPayments(requestId!, {
     enabled: !!requestId && isOpen,
-  });
+  })
   const { data: invoices = [] } = useGetInvoices(requestId!, {
     enabled: !!requestId && isOpen,
-  });
+  })
   const { data: savedCards = [] } = useGetPaymentMethods(customerId!, {
     enabled: !!customerId && isOpen,
-  });
+  })
 
   useEffect(() => {
-    const editParam = searchParams.get("edit_payments");
+    const editParam = searchParams.get("edit_payments")
     if (editParam) {
-      setIsOpen(true);
+      setIsOpen(true)
     }
-  }, [searchParams]);
+  }, [searchParams])
 
   function handleClose() {
-    setSubView("list");
-    setIsOpen(false);
-    setSearchParams();
+    setSubView("list")
+    setIsOpen(false)
+    setSearchParams()
   }
 
-  if (!requestId) return null;
+  if (!requestId) return null
 
   return (
     <AlertDialog open={isOpen} onOpenChange={handleClose}>
@@ -133,5 +133,5 @@ export function PaymentsDialog() {
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }

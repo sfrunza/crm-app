@@ -1,32 +1,32 @@
-import { getRequestUIBehavior } from '@/domains/requests/request.behavior';
+import { getRequestUIBehavior } from "@/domains/requests/request.behavior"
 import type {
   Request,
   RequestExtraItem,
-} from '@/domains/requests/request.types';
-import { formatDate } from '@/lib/format-date';
+} from "@/domains/requests/request.types"
+import { formatDate } from "@/lib/format-date"
 import {
   convertMinutesToHoursAndMinutes,
   formatCentsToDollarsString,
   priceObjectToString,
   timeObjectToString,
   timeWindowToString,
-} from '@/lib/helpers';
+} from "@/lib/helpers"
 
 // ─── Detail row ─────────────────────────────────────────────────────
 function DetailRow({
   label,
   value,
 }: {
-  label: string;
-  value: React.ReactNode;
+  label: string
+  value: React.ReactNode
 }) {
-  if (value == null || value === '') return null;
+  if (value == null || value === "") return null
   return (
     <div className="flex items-start justify-between gap-4">
-      <p className="text-muted-foreground shrink-0">{label}</p>
+      <p className="shrink-0 text-muted-foreground">{label}</p>
       <p className="text-right font-medium">{value}</p>
     </div>
-  );
+  )
 }
 
 // ─── Section wrapper ────────────────────────────────────────────────
@@ -57,10 +57,10 @@ function ItemsTable({
   title,
   items,
 }: {
-  title: string;
-  items: RequestExtraItem[];
+  title: string
+  items: RequestExtraItem[]
 }) {
-  if (!items.length) return null;
+  if (!items.length) return null
 
   return (
     <>
@@ -78,7 +78,7 @@ function ItemsTable({
 
       <hr className="border-border" />
     </>
-  );
+  )
 }
 
 // ─── Quote summary row ──────────────────────────────────────────────
@@ -88,43 +88,42 @@ function SummaryRow({
   bold,
   negative,
 }: {
-  label: string;
-  value: React.ReactNode;
-  bold?: boolean;
-  negative?: boolean;
+  label: string
+  value: React.ReactNode
+  bold?: boolean
+  negative?: boolean
 }) {
   return (
     <div
-      className={`flex items-center justify-between px-3 py-2 ${bold ? 'font-semibold' : ''} ${negative ? 'text-green-600' : ''}`}
+      className={`flex items-center justify-between px-3 py-2 ${bold ? "font-semibold" : ""} ${negative ? "text-green-600" : ""}`}
     >
       <p className="truncate">{label}</p>
       <p>{value}</p>
     </div>
-  );
+  )
 }
 
 // ═════════════════════════════════════════════════════════════════════
 // Main component
 // ═════════════════════════════════════════════════════════════════════
 interface QuoteDetailsProps {
-  request: Request;
+  request: Request
 }
 
 export function QuoteDetails({ request }: QuoteDetailsProps) {
-  if (!request) return null;
+  if (!request) return null
 
-  const { showDeliveryDateTime, showIfFlatRate } =
-    getRequestUIBehavior(request);
+  const { showDeliveryDateTime, showIfFlatRate } = getRequestUIBehavior(request)
 
-  const hasPackingItems = (request.packing_items?.length ?? 0) > 0;
-  const hasExtraServices = (request.extra_services?.length ?? 0) > 0;
+  const hasPackingItems = (request.packing_items?.length ?? 0) > 0
+  const hasExtraServices = (request.extra_services?.length ?? 0) > 0
 
   return (
     <div className="space-y-4">
       <div>
         {/* ── Schedule ────────────────────────────────────────────── */}
         <DetailRow
-          label={showIfFlatRate ? 'Pickup date' : 'Move date'}
+          label={showIfFlatRate ? "Pickup date" : "Move date"}
           value={formatDate(request.moving_date)}
         />
         <DetailRow
@@ -143,7 +142,7 @@ export function QuoteDetails({ request }: QuoteDetailsProps) {
                   {formatDate(request.delivery_date_window_start)}
                   {request.delivery_date_window_end
                     ? ` - ${formatDate(request.delivery_date_window_end)}`
-                    : ''}
+                    : ""}
                 </>
               }
             />
@@ -176,7 +175,7 @@ export function QuoteDetails({ request }: QuoteDetailsProps) {
               label="Trucks"
               value={
                 request.trucks?.length
-                  ? `${request.trucks.length} ${request.trucks.length > 1 ? 'trucks' : 'truck'}`
+                  ? `${request.trucks.length} ${request.trucks.length > 1 ? "trucks" : "truck"}`
                   : null
               }
             />
@@ -208,7 +207,7 @@ export function QuoteDetails({ request }: QuoteDetailsProps) {
 
       {/* ── Quote Summary ───────────────────────────────────────── */}
 
-      <div className="border-border divide-border divide-y overflow-hidden rounded-md border">
+      <div className="divide-y divide-border overflow-hidden rounded-md border border-border">
         {!showIfFlatRate && (
           <>
             <SummaryRow
@@ -253,13 +252,13 @@ export function QuoteDetails({ request }: QuoteDetailsProps) {
             label="Deposit"
             value={formatCentsToDollarsString(request.deposit || 0)}
           /> */}
-        <div className="bg-muted/50 flex flex-col items-center justify-between px-3 py-3 font-semibold">
-          <p>{showIfFlatRate ? 'Flat rate' : 'Estimated quote'}</p>
+        <div className="flex flex-col items-center justify-between bg-muted/50 px-3 py-3 font-semibold">
+          <p>{showIfFlatRate ? "Flat rate" : "Estimated quote"}</p>
           <p className="text-lg font-bold">
             {priceObjectToString(request.grand_total)}
           </p>
         </div>
       </div>
     </div>
-  );
+  )
 }

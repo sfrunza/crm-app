@@ -14,13 +14,13 @@ const TIME_SLOTS = [
   "07 PM",
   "08 PM",
   "09 PM",
-];
+]
 
 export function ParklotTimeline() {
   return (
     <div className="grid auto-cols-[70px] grid-flow-col grid-rows-[100%] border-b">
       {TIME_SLOTS.map((time, index) => {
-        const [digit, suffix] = time.split(" ");
+        const [digit, suffix] = time.split(" ")
         return (
           <div
             key={index}
@@ -30,12 +30,12 @@ export function ParklotTimeline() {
             <div className="-translate-x-2 pr-1 text-xs font-semibold">
               {digit}
             </div>
-            <div className="text-muted-foreground -translate-x-2 text-xs">
+            <div className="-translate-x-2 text-xs text-muted-foreground">
               {suffix}
             </div>
           </div>
-        );
+        )
       })}
     </div>
-  );
+  )
 }

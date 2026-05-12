@@ -1,21 +1,21 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { formatDate, parseDateOnly } from "@/lib/format-date";
-import type { CalendarRateMap, Rate } from "@/types/index";
-import { ChevronDownIcon } from "@/components/icons";
-import { useMemo, useState } from "react";
-import { CalendarWithRates } from "@/components/calendar-with-rates";
+} from "@/components/ui/popover"
+import { formatDate, parseDateOnly } from "@/lib/format-date"
+import type { CalendarRateMap, Rate } from "@/types/index"
+import { ChevronDownIcon } from "@/components/icons"
+import { useMemo, useState } from "react"
+import { CalendarWithRates } from "@/components/calendar-with-rates"
 
 interface DatePickerWithRatesProps {
-  rates: Rate[] | undefined;
-  calendarRates: CalendarRateMap | undefined;
-  id?: string;
-  selected: Date | undefined;
-  onSelectDate: (date: Date) => void;
+  rates: Rate[] | undefined
+  calendarRates: CalendarRateMap | undefined
+  id?: string
+  selected: Date | undefined
+  onSelectDate: (date: Date) => void
 }
 
 export function DatePickerWithRates({
@@ -26,7 +26,7 @@ export function DatePickerWithRates({
   onSelectDate,
   ...props
 }: DatePickerWithRatesProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
   const disabledDates = useMemo(() => {
     return Object.values(calendarRates ?? {})
@@ -35,8 +35,8 @@ export function DatePickerWithRates({
           ? (parseDateOnly(rate.formatted_date) ?? new Date())
           : null
       )
-      .filter((date) => date !== null);
-  }, [calendarRates]);
+      .filter((date) => date !== null)
+  }, [calendarRates])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -54,8 +54,8 @@ export function DatePickerWithRates({
           selected={selected}
           isLoading={!calendarRates}
           onDayClick={(date) => {
-            onSelectDate(date);
-            setOpen(false);
+            onSelectDate(date)
+            setOpen(false)
           }}
           modifiers={{
             disabled: disabledDates,
@@ -70,5 +70,5 @@ export function DatePickerWithRates({
         />
       </PopoverContent>
     </Popover>
-  );
+  )
 }

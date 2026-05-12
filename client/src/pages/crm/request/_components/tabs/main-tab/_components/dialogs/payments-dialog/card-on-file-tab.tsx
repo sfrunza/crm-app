@@ -1,21 +1,21 @@
-import { Button } from "@/components/ui/button";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Button } from "@/components/ui/button"
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import {
   useConfirmPayment,
   useCreatePayment,
-} from "@/domains/payments/payment.mutations";
-import { paymentKeys } from "@/domains/payments/payment.keys";
-import { requestKeys } from "@/domains/requests/request.keys";
+} from "@/domains/payments/payment.mutations"
+import { paymentKeys } from "@/domains/payments/payment.keys"
+import { requestKeys } from "@/domains/requests/request.keys"
 import type {
   PaymentType,
   SavedPaymentMethod,
-} from "@/domains/payments/payment.types";
-import { CreditCardIcon } from "@/components/icons";
-import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { parseCents } from "./utils";
-import { AmountField } from "./amount-field";
-import { LoadingSwap } from "@/components/ui/loading-swap";
+} from "@/domains/payments/payment.types"
+import { CreditCardIcon } from "@/components/icons"
+import { useState } from "react"
+import { useQueryClient } from "@tanstack/react-query"
+import { parseCents } from "./utils"
+import { AmountField } from "./amount-field"
+import { LoadingSwap } from "@/components/ui/loading-swap"
 
 export function CardOnFileTab({
   requestId,
@@ -24,22 +24,22 @@ export function CardOnFileTab({
   defaultAmount,
   onSuccess,
 }: {
-  requestId: number;
-  savedCards: SavedPaymentMethod[];
-  paymentType: PaymentType;
-  defaultAmount: number;
-  onSuccess: () => void;
+  requestId: number
+  savedCards: SavedPaymentMethod[]
+  paymentType: PaymentType
+  defaultAmount: number
+  onSuccess: () => void
 }) {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   const [amount, setAmount] = useState(
-    defaultAmount > 0 ? (defaultAmount / 100).toString() : "",
-  );
-  const [selectedCardId, setSelectedCardId] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
+    defaultAmount > 0 ? (defaultAmount / 100).toString() : ""
+  )
+  const [selectedCardId, setSelectedCardId] = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
-  const confirmPaymentMutation = useConfirmPayment();
+  const confirmPaymentMutation = useConfirmPayment()
 
-  const isDeposit = paymentType === "deposit";
+  const isDeposit = paymentType === "deposit"
 
   const createPayment = useCreatePayment({
     onSuccess: async (data) => {
@@ -48,7 +48,7 @@ export function CardOnFileTab({
           await confirmPaymentMutation.mutateAsync({
             requestId,
             paymentId: data.payment.id,
-          });
+          })
         } catch {
           // Webhook will handle it as fallback
         }
@@ -56,34 +56,34 @@ export function CardOnFileTab({
 
       await queryClient.invalidateQueries({
         queryKey: paymentKeys.forRequest(requestId),
-      });
+      })
       await queryClient.invalidateQueries({
         queryKey: requestKeys.detail(requestId),
-      });
+      })
       if (isDeposit) {
         await queryClient.invalidateQueries({
           queryKey: requestKeys.bookingStats(),
-        });
+        })
       }
-      onSuccess();
+      onSuccess()
     },
     onError: (err) => {
-      setError(err.message || "Payment failed");
+      setError(err.message || "Payment failed")
     },
-  });
+  })
 
   function handleSubmit(e: React.SubmitEvent) {
-    e.preventDefault();
-    setError(null);
+    e.preventDefault()
+    setError(null)
 
-    const cents = parseCents(amount);
+    const cents = parseCents(amount)
     if (cents === null) {
-      setError("Please enter a valid amount");
-      return;
+      setError("Please enter a valid amount")
+      return
     }
     if (!selectedCardId) {
-      setError("Please select a card");
-      return;
+      setError("Please select a card")
+      return
     }
 
     createPayment.mutate({
@@ -94,7 +94,7 @@ export function CardOnFileTab({
         payment_method_id: selectedCardId,
         is_deposit: isDeposit || undefined,
       },
-    });
+    })
   }
 
   return (
@@ -105,7 +105,7 @@ export function CardOnFileTab({
         <Field>
           <FieldLabel>Select Card</FieldLabel>
           {savedCards.length === 0 ? (
-            <p className="text-muted-foreground text-sm">
+            <p className="text-sm text-muted-foreground">
               No saved cards. The customer needs to pay with a card first.
             </p>
           ) : (
@@ -129,10 +129,10 @@ export function CardOnFileTab({
                       setSelectedCardId(card.stripe_payment_method_id)
                     }
                   />
-                  <CreditCardIcon className="text-muted-foreground size-4" />
+                  <CreditCardIcon className="size-4 text-muted-foreground" />
                   <span className="capitalize">{card.card_brand}</span>
                   <span>**** {card.card_last_four}</span>
-                  <span className="text-muted-foreground ml-auto text-xs">
+                  <span className="ml-auto text-xs text-muted-foreground">
                     Exp {card.card_exp_month}/{card.card_exp_year}
                   </span>
                 </label>
@@ -142,7 +142,7 @@ export function CardOnFileTab({
         </Field>
       </FieldGroup>
 
-      {error && <p className="text-destructive text-sm">{error}</p>}
+      {error && <p className="text-sm text-destructive">{error}</p>}
 
       <Button
         type="submit"
@@ -154,5 +154,5 @@ export function CardOnFileTab({
         </LoadingSwap>
       </Button>
     </form>
-  );
+  )
 }

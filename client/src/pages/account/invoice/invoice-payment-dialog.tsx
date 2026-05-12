@@ -1,22 +1,22 @@
-import { PaymentCardForm } from "@/components/request/payment-card-form";
-import { Button } from "@/components/ui/button";
+import { PaymentCardForm } from "@/components/request/payment-card-form"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import { paymentKeys } from "@/domains/payments/payment.keys";
-import { queryClient } from "@/lib/query-client";
-import { useState } from "react";
+} from "@/components/ui/dialog"
+import { paymentKeys } from "@/domains/payments/payment.keys"
+import { queryClient } from "@/lib/query-client"
+import { useState } from "react"
 
 interface InvoicePaymentDialogProps {
-  disabled: boolean;
-  requestId: number;
-  invoiceId: number;
-  invoiceToken: string;
-  amount: number;
+  disabled: boolean
+  requestId: number
+  invoiceId: number
+  invoiceToken: string
+  amount: number
 }
 
 export function InvoicePaymentDialog({
@@ -26,14 +26,14 @@ export function InvoicePaymentDialog({
   invoiceToken,
   amount,
 }: InvoicePaymentDialogProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
 
   const handlePaymentSuccess = () => {
     queryClient.invalidateQueries({
       queryKey: paymentKeys.publicInvoice(invoiceToken),
-    });
-    setIsOpen(false);
-  };
+    })
+    setIsOpen(false)
+  }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -50,7 +50,7 @@ export function InvoicePaymentDialog({
         <DialogHeader>
           <DialogTitle>Pay Invoice</DialogTitle>
         </DialogHeader>
-        <div className="bg-muted/30 min-h-[320px] rounded-lg border p-4">
+        <div className="min-h-[320px] rounded-lg border bg-muted/30 p-4">
           <div className="space-y-4">
             {requestId != null && (
               <PaymentCardForm
@@ -65,5 +65,5 @@ export function InvoicePaymentDialog({
         </div>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

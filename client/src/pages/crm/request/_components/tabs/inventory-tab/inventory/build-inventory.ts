@@ -42,14 +42,13 @@ export function buildInventory(
   requestRooms: RequestRoom[],
   defaultRooms: MoveSizeRoom[]
 ): InventoryRoom[] {
-
   const requestRoomMap = new Map<number, RequestRoom>()
-  requestRooms.forEach(room => {
+  requestRooms.forEach((room) => {
     if (room.room_id) requestRoomMap.set(room.room_id, room)
   })
 
   const defaultRoomMap = new Map<number, MoveSizeRoom>()
-  defaultRooms.forEach(room => {
+  defaultRooms.forEach((room) => {
     defaultRoomMap.set(room.room_id, room)
   })
 
@@ -57,15 +56,10 @@ export function buildInventory(
 
   // TEMPLATE ROOMS
   for (const room of globalRooms) {
-
     const requestRoom = requestRoomMap.get(room.id)
     const defaultRoom = defaultRoomMap.get(room.id)
 
-    const roomItems = buildInventoryItems(
-      globalItems,
-      requestRoom,
-      defaultRoom
-    )
+    const roomItems = buildInventoryItems(globalItems, requestRoom, defaultRoom)
 
     rooms.push({
       id: room.id,
@@ -77,20 +71,15 @@ export function buildInventory(
       suggested_items: defaultRoom?.items,
       is_suggested: !!defaultRoom,
       is_custom: false,
-      image_url: room.image_url
+      image_url: room.image_url,
     })
   }
 
   // CUSTOM ROOMS
-  const customRooms = requestRooms.filter(r => r.is_custom)
+  const customRooms = requestRooms.filter((r) => r.is_custom)
 
   for (const room of customRooms) {
-
-    const roomItems = buildInventoryItems(
-      globalItems,
-      room,
-      undefined
-    )
+    const roomItems = buildInventoryItems(globalItems, room, undefined)
 
     rooms.push({
       id: room.id,
@@ -100,13 +89,12 @@ export function buildInventory(
       totals: calculateTotals(roomItems),
       is_custom: true,
       is_suggested: false,
-      image_url: room.image_url
+      image_url: room.image_url,
     })
   }
 
   // SORT ORDER
   rooms.sort((a, b) => {
-
     if (a.is_suggested && !b.is_suggested) return -1
     if (!a.is_suggested && b.is_suggested) return 1
 
@@ -127,19 +115,17 @@ export function buildInventoryItems(
   requestRoom?: RequestRoom,
   defaultRoom?: MoveSizeRoom
 ): InventoryItem[] {
-
   const requestItems = requestRoom?.request_items ?? []
   const suggestedItems = defaultRoom?.items ?? {}
 
   const requestItemMap = new Map<number, RequestItem>()
-  requestItems.forEach(i => {
+  requestItems.forEach((i) => {
     if (i.item_id) requestItemMap.set(i.item_id, i)
   })
 
   const items: InventoryItem[] = []
 
   for (const item of globalItems) {
-
     const requestItem = requestItemMap.get(item.id)
     const suggestedQty = suggestedItems[item.id] ?? 0
 
@@ -155,11 +141,11 @@ export function buildInventoryItems(
       is_box: item.is_box,
       is_furniture: item.is_furniture,
       is_special_handling: item.is_special_handling,
-      image_url: item.image_url
+      image_url: item.image_url,
     })
   }
 
-  const customItems = requestItems.filter(i => i.is_custom)
+  const customItems = requestItems.filter((i) => i.is_custom)
 
   for (const item of customItems) {
     items.push({
@@ -173,7 +159,7 @@ export function buildInventoryItems(
       is_box: item.is_box,
       is_furniture: item.is_furniture,
       is_special_handling: item.is_special_handling,
-      image_url: item.image_url
+      image_url: item.image_url,
     })
   }
 
@@ -181,7 +167,6 @@ export function buildInventoryItems(
 }
 
 function calculateTotals(items: InventoryItem[]) {
-
   let totalItems = 0
   let totalVolume = 0
 
@@ -195,12 +180,11 @@ function calculateTotals(items: InventoryItem[]) {
   for (const item of items) {
     totalItems += item.quantity
     totalVolume += item.quantity * item.volume
-
   }
 
   return {
     items: totalItems,
     volume: totalVolume,
-    boxes
+    boxes,
   }
 }

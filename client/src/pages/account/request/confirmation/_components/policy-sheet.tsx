@@ -5,15 +5,15 @@ import {
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
+} from "@/components/ui/sheet"
 
-const SHEET_CLASS = "w-full data-[side=bottom]:h-[90vh]";
-const CONTENT_CLASS = "no-scrollbar mx-auto max-w-3xl overflow-y-auto px-4";
+const SHEET_CLASS = "w-full data-[side=bottom]:h-[90vh]"
+const CONTENT_CLASS = "no-scrollbar mx-auto max-w-3xl overflow-y-auto px-4"
 
 interface PolicySheetProps {
-  title: string;
-  trigger: React.ReactNode;
-  children: React.ReactNode;
+  title: string
+  trigger: React.ReactNode
+  children: React.ReactNode
 }
 
 export function PolicySheet({ title, trigger, children }: PolicySheetProps) {
@@ -30,5 +30,5 @@ export function PolicySheet({ title, trigger, children }: PolicySheetProps) {
         <div className={CONTENT_CLASS}>{children}</div>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

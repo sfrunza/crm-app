@@ -1,6 +1,6 @@
-import { PrinterIcon } from "@/components/icons";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { PrinterIcon } from "@/components/icons"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardAction,
@@ -9,9 +9,9 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { Spinner } from "@/components/ui/spinner";
+} from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import { Spinner } from "@/components/ui/spinner"
 import {
   Table,
   TableBody,
@@ -19,47 +19,47 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { useGetPublicInvoice } from "@/domains/payments/payment.queries";
-import type { InvoiceItem } from "@/domains/payments/payment.types";
-import { formatDate } from "@/lib/format-date";
-import { formatPhone } from "@/lib/format-phone";
-import { formatCentsToDollarsString } from "@/lib/helpers";
-import { useRef } from "react";
-import { useParams } from "react-router";
-import { useReactToPrint } from "react-to-print";
-import { InvoicePaymentDialog } from "./invoice-payment-dialog";
-import type { InvoiceStatus } from "@/types/index";
+} from "@/components/ui/table"
+import { useGetPublicInvoice } from "@/domains/payments/payment.queries"
+import type { InvoiceItem } from "@/domains/payments/payment.types"
+import { formatDate } from "@/lib/format-date"
+import { formatPhone } from "@/lib/format-phone"
+import { formatCentsToDollarsString } from "@/lib/helpers"
+import { useRef } from "react"
+import { useParams } from "react-router"
+import { useReactToPrint } from "react-to-print"
+import { InvoicePaymentDialog } from "./invoice-payment-dialog"
+import type { InvoiceStatus } from "@/types/index"
 import {
   INVOICE_STATUS_BG_COLOR,
   INVOICE_STATUS_TEXT_COLOR,
-} from "@/domains/payments/invoice.constants";
-import { cn } from "@/lib/utils";
-import { Confetti } from "../request/reservation/_components/confetti";
+} from "@/domains/payments/invoice.constants"
+import { cn } from "@/lib/utils"
+import { Confetti } from "../request/reservation/_components/confetti"
 
 // ─── Page wrapper ────────────────────────────────────────────────
 
 function InvoicePage() {
-  const { token } = useParams<{ token: string }>();
-  const { data, isLoading, isError, error } = useGetPublicInvoice(token);
+  const { token } = useParams<{ token: string }>()
+  const { data, isLoading, isError, error } = useGetPublicInvoice(token)
 
-  const printRef = useRef<HTMLDivElement>(null);
+  const printRef = useRef<HTMLDivElement>(null)
   const handlePrint = useReactToPrint({
     contentRef: printRef,
     documentTitle: "Invoice",
-  });
+  })
 
-  const invoice = data?.invoice ?? null;
-  const company = data?.company ?? null;
-  const loading = isLoading;
-  const errorMessage = isError ? error?.message || "Invoice not found" : null;
+  const invoice = data?.invoice ?? null
+  const company = data?.company ?? null
+  const loading = isLoading
+  const errorMessage = isError ? error?.message || "Invoice not found" : null
 
   if (loading) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-muted">
         <Spinner />
       </div>
-    );
+    )
   }
 
   if (errorMessage || !invoice) {
@@ -72,7 +72,7 @@ function InvoicePage() {
           </p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -221,7 +221,7 @@ function InvoicePage() {
         </div>
       )}
     </div>
-  );
+  )
 }
 
 // ─── Helpers ─────────────────────────────────────────────────────
@@ -240,7 +240,7 @@ function InvoiceStatusBadge({ status }: { status: InvoiceStatus }) {
       />
       {status.charAt(0).toUpperCase() + status.slice(1)}
     </Badge>
-  );
+  )
 }
 
-export const Component = InvoicePage;
+export const Component = InvoicePage

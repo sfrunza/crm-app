@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogClose,
@@ -6,8 +6,8 @@ import {
   DialogDescription,
   DialogFooter,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
+} from "@/components/ui/dialog"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import {
   Table,
   TableBody,
@@ -15,163 +15,163 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { useRequest } from '@/hooks/use-request';
-import { PlusIcon, Trash2Icon } from '@/components/icons';
-import { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router';
+} from "@/components/ui/table"
+import { useRequest } from "@/hooks/use-request"
+import { PlusIcon, Trash2Icon } from "@/components/icons"
+import { useEffect, useState } from "react"
+import { useSearchParams } from "react-router"
 
-import { AmountInput } from '@/components/inputs/amount-input';
-import { Field, FieldGroup, FieldLabel } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
+import { AmountInput } from "@/components/inputs/amount-input"
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from '@/components/ui/input-group';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { formatCentsToDollarsString } from '@/lib/helpers';
-import { cn } from '@/lib/utils';
-import type { Request } from '@/domains/requests/request.types';
-import { Badge } from '@/components/ui/badge';
+} from "@/components/ui/input-group"
+import { useIsMobile } from "@/hooks/use-mobile"
+import { formatCentsToDollarsString } from "@/lib/helpers"
+import { cn } from "@/lib/utils"
+import type { Request } from "@/domains/requests/request.types"
+import { Badge } from "@/components/ui/badge"
 
 export interface Item {
-  id: number;
-  name: string;
-  price: number;
+  id: number
+  name: string
+  price: number
 }
 
 export interface TableItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
+  id: number
+  name: string
+  price: number
+  quantity: number
 }
 
 export interface ItemsDialogConfig {
   /** Search param key to open the dialog (e.g., "edit_packing_supplies") */
-  searchParamKey: string;
+  searchParamKey: string
   /** Field name in the draft object (e.g., "packing_items") */
-  itemsFieldName: string;
+  itemsFieldName: string
   /** Field name for the total (e.g., "packing_items_total") */
-  totalFieldName: string;
+  totalFieldName: string
   /** Dialog title */
-  title: string;
+  title: string
   /** Dialog description */
-  description: string;
+  description: string
   /** Label for the sidebar section */
-  sidebarLabel: string;
+  sidebarLabel: string
   /** Placeholder for custom item input */
-  customItemPlaceholder: string;
+  customItemPlaceholder: string
   /** Label for custom item input */
-  customItemLabel: string;
+  customItemLabel: string
   /** Label for the grand total section */
-  totalLabel: string;
+  totalLabel: string
   /** Hook to fetch items */
-  useItemsHook: () => { data: Item[] | undefined };
+  useItemsHook: () => { data: Item[] | undefined }
 }
 
 export function ItemsDialog({ config }: { config: ItemsDialogConfig }) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [isOpen, setIsOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [isOpen, setIsOpen] = useState(false)
 
-  const { draft, setField } = useRequest();
-  const { data: items } = config.useItemsHook();
+  const { draft, setField } = useRequest()
+  const { data: items } = config.useItemsHook()
 
   const initialItems =
-    (draft?.[config.itemsFieldName as keyof Request] as TableItem[]) ?? [];
-  const [tableData, setTableData] = useState<TableItem[]>(initialItems);
+    (draft?.[config.itemsFieldName as keyof Request] as TableItem[]) ?? []
+  const [tableData, setTableData] = useState<TableItem[]>(initialItems)
 
   // Sync tableData with draft when it changes
   useEffect(() => {
     const draftItems =
-      (draft?.[config.itemsFieldName as keyof Request] as TableItem[]) ?? [];
-    setTableData(draftItems);
-  }, [draft, config.itemsFieldName]);
+      (draft?.[config.itemsFieldName as keyof Request] as TableItem[]) ?? []
+    setTableData(draftItems)
+  }, [draft, config.itemsFieldName])
 
   useEffect(() => {
-    const editParam = searchParams.get(config.searchParamKey);
+    const editParam = searchParams.get(config.searchParamKey)
     if (editParam) {
-      setIsOpen(true);
+      setIsOpen(true)
     }
-  }, [searchParams, config.searchParamKey]);
+  }, [searchParams, config.searchParamKey])
 
   function handleCancel() {
-    setIsOpen(false);
+    setIsOpen(false)
     setSearchParams((prev) => {
-      const newParams = new URLSearchParams(prev);
-      newParams.delete(config.searchParamKey);
-      return newParams;
-    });
+      const newParams = new URLSearchParams(prev)
+      newParams.delete(config.searchParamKey)
+      return newParams
+    })
   }
 
   function handleSave() {
-    setField(config.itemsFieldName as keyof Request, tableData);
-    setField(config.totalFieldName as keyof Request, grandTotal);
-    handleCancel();
+    setField(config.itemsFieldName as keyof Request, tableData)
+    setField(config.totalFieldName as keyof Request, grandTotal)
+    handleCancel()
   }
 
   function addItemToTable(item: TableItem) {
-    const existingItem = tableData.find((i) => i.id === item.id);
+    const existingItem = tableData.find((i) => i.id === item.id)
     if (existingItem) {
       setTableData((prev) =>
         prev.map((i) =>
           i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
         )
-      );
+      )
     } else {
-      setTableData((prev) => [...prev, item]);
+      setTableData((prev) => [...prev, item])
     }
   }
 
   function removeItemFromTable(id: number) {
-    setTableData((prev) => prev.filter((item) => item.id !== id));
+    setTableData((prev) => prev.filter((item) => item.id !== id))
   }
 
   function handleNameChange(id: number, value: string) {
     setTableData((prev) =>
       prev.map((item) => (item.id === id ? { ...item, name: value } : item))
-    );
+    )
   }
 
   function handlePriceChange(id: number, value: number) {
     setTableData((prev) =>
       prev.map((item) => (item.id === id ? { ...item, price: value } : item))
-    );
+    )
   }
 
   function handleQuantityChange(id: number, value: number) {
     setTableData((prev) =>
       prev.map((item) => (item.id === id ? { ...item, quantity: value } : item))
-    );
+    )
   }
 
   function calculateItemTotal(item: {
-    id: number;
-    price: number;
-    quantity: number;
+    id: number
+    price: number
+    quantity: number
   }) {
-    return item.price * item.quantity;
+    return item.price * item.quantity
   }
 
   function calculateGrandTotal() {
-    return tableData.reduce((acc, item) => acc + calculateItemTotal(item), 0);
+    return tableData.reduce((acc, item) => acc + calculateItemTotal(item), 0)
   }
 
-  const grandTotal = calculateGrandTotal();
+  const grandTotal = calculateGrandTotal()
 
   function GrandTotalSection() {
     return (
-      <div className="border-border border-b px-6 pt-5 pb-3">
-        <h2 className="flex items-center gap-2 w-full text-lg font-normal">
+      <div className="border-b border-border px-6 pt-5 pb-3">
+        <h2 className="flex w-full items-center gap-2 text-lg font-normal">
           {config.totalLabel}
           <Badge variant="secondary" className="h-8 text-base">
             {formatCentsToDollarsString(grandTotal)}
           </Badge>
         </h2>
       </div>
-    );
+    )
   }
 
   return (
@@ -200,7 +200,7 @@ export function ItemsDialog({ config }: { config: ItemsDialogConfig }) {
                       })
                     }
                   />
-                );
+                )
               })}
             </div>
             <ScrollBar orientation="horizontal" />
@@ -210,17 +210,17 @@ export function ItemsDialog({ config }: { config: ItemsDialogConfig }) {
         {/* Desktop Layout */}
         <div className="hidden min-h-0 flex-1 md:flex">
           {/* Sidebar */}
-          <div className="border-border bg-sidebar flex min-h-0 w-56 flex-col border-r">
+          <div className="flex min-h-0 w-56 flex-col border-r border-border bg-sidebar">
             <ScrollArea className="flex-1 overflow-y-auto">
               <div className="mb-1 space-y-4 pt-4">
-                <p className="text-muted-foreground px-4 text-xs font-medium">
+                <p className="px-4 text-xs font-medium text-muted-foreground">
                   {config.sidebarLabel}
                 </p>
                 <AddCustomItem
                   placeholder={config.customItemPlaceholder}
                   label={config.customItemLabel}
                   onSubmit={(item) => {
-                    addItemToTable(item);
+                    addItemToTable(item)
                   }}
                 />
               </div>
@@ -240,7 +240,7 @@ export function ItemsDialog({ config }: { config: ItemsDialogConfig }) {
                         })
                       }
                     />
-                  );
+                  )
                 })}
               </nav>
               <ScrollBar orientation="vertical" />
@@ -248,9 +248,9 @@ export function ItemsDialog({ config }: { config: ItemsDialogConfig }) {
           </div>
 
           {/* Content */}
-          <div className="grid min-w-0 flex-1 h-full grid-rows-[auto_1fr_auto]">
+          <div className="grid h-full min-w-0 flex-1 grid-rows-[auto_1fr_auto]">
             <GrandTotalSection />
-            <ScrollArea className="overflow-y-auto min-h-0">
+            <ScrollArea className="min-h-0 overflow-y-auto">
               <ItemsTable
                 tableData={tableData}
                 handleNameChange={handleNameChange}
@@ -265,8 +265,8 @@ export function ItemsDialog({ config }: { config: ItemsDialogConfig }) {
           </div>
         </div>
         {/* Mobile Content */}
-        <div className="grid grid-rows-[auto_max-content] h-full overflow-hidden md:hidden">
-          <ScrollArea className="overflow-y-auto min-h-0">
+        <div className="grid h-full grid-rows-[auto_max-content] overflow-hidden md:hidden">
+          <ScrollArea className="min-h-0 overflow-y-auto">
             <ItemsTable
               tableData={tableData}
               handleNameChange={handleNameChange}
@@ -282,7 +282,7 @@ export function ItemsDialog({ config }: { config: ItemsDialogConfig }) {
         </div>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
 
 function AddCustomItem({
@@ -290,22 +290,22 @@ function AddCustomItem({
   placeholder,
   label,
 }: {
-  onSubmit: (item: TableItem) => void;
-  placeholder: string;
-  label: string;
+  onSubmit: (item: TableItem) => void
+  placeholder: string
+  label: string
 }) {
-  const [name, setName] = useState('');
+  const [name, setName] = useState("")
   return (
     <form
       onSubmit={(e) => {
-        e.preventDefault();
+        e.preventDefault()
         onSubmit({
           id: Math.floor(Math.random() * 100000) + Date.now(),
           name,
           price: 0,
           quantity: 1,
-        });
-        setName('');
+        })
+        setName("")
       }}
       className="px-3"
     >
@@ -337,7 +337,7 @@ function AddCustomItem({
         </Field>
       </FieldGroup>
     </form>
-  );
+  )
 }
 
 function MenuButton({
@@ -345,24 +345,24 @@ function MenuButton({
   className,
   onClick,
 }: {
-  item: Item;
-  className?: string;
-  onClick: () => void;
+  item: Item
+  className?: string
+  onClick: () => void
 }) {
-  const isMobile = useIsMobile();
+  const isMobile = useIsMobile()
   return (
     <Button
       key={item.id}
-      variant={isMobile ? 'outline' : 'ghost'}
+      variant={isMobile ? "outline" : "ghost"}
       onClick={onClick}
-      className={cn('group/menu-item', className)}
+      className={cn("group/menu-item", className)}
     >
       {item.name}
       {!isMobile && (
-        <PlusIcon className="bg-primary/10 text-primary ml-auto rounded opacity-0 transition-opacity group-hover/menu-item:opacity-100" />
+        <PlusIcon className="ml-auto rounded bg-primary/10 text-primary opacity-0 transition-opacity group-hover/menu-item:opacity-100" />
       )}
     </Button>
-  );
+  )
 }
 
 function FooterSection({ handleSave }: { handleSave: () => void }) {
@@ -375,7 +375,7 @@ function FooterSection({ handleSave }: { handleSave: () => void }) {
         Save changes
       </Button>
     </DialogFooter>
-  );
+  )
 }
 
 function ItemsTable({
@@ -386,16 +386,16 @@ function ItemsTable({
   handleQuantityChange,
   removeItemFromTable,
 }: {
-  tableData: TableItem[];
+  tableData: TableItem[]
   calculateItemTotal: (item: {
-    id: number;
-    price: number;
-    quantity: number;
-  }) => number;
-  handleNameChange: (id: number, value: string) => void;
-  handlePriceChange: (id: number, value: number) => void;
-  handleQuantityChange: (id: number, value: number) => void;
-  removeItemFromTable: (id: number) => void;
+    id: number
+    price: number
+    quantity: number
+  }) => number
+  handleNameChange: (id: number, value: string) => void
+  handlePriceChange: (id: number, value: number) => void
+  handleQuantityChange: (id: number, value: number) => void
+  removeItemFromTable: (id: number) => void
 }) {
   return (
     <div className="px-6">
@@ -411,23 +411,23 @@ function ItemsTable({
         </TableHeader>
         <TableBody>
           {tableData.map((item) => {
-            const total = calculateItemTotal(item);
+            const total = calculateItemTotal(item)
             return (
               <TableRow key={`${item.id}-table-row`}>
                 <TableCell>
                   <Input
                     value={item.name}
                     onChange={(e) => {
-                      handleNameChange(item.id, e.target.value);
+                      handleNameChange(item.id, e.target.value)
                     }}
                     className="h-7 min-w-40"
                   />
                 </TableCell>
                 <TableCell>
                   <AmountInput
-                    value={((item.price ?? 0) / 100).toString() ?? ''}
+                    value={((item.price ?? 0) / 100).toString() ?? ""}
                     onChange={(value) => {
-                      handlePriceChange(item.id, Number(value) * 100);
+                      handlePriceChange(item.id, Number(value) * 100)
                     }}
                     className="h-7 min-w-24"
                   />
@@ -437,7 +437,7 @@ function ItemsTable({
                     type="number"
                     value={item.quantity}
                     onChange={(e) => {
-                      handleQuantityChange(item.id, Number(e.target.value));
+                      handleQuantityChange(item.id, Number(e.target.value))
                     }}
                     className="h-7 min-w-16"
                   />
@@ -454,10 +454,10 @@ function ItemsTable({
                   </Button>
                 </TableCell>
               </TableRow>
-            );
+            )
           })}
         </TableBody>
       </Table>
     </div>
-  );
+  )
 }

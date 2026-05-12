@@ -1,23 +1,23 @@
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
 import {
   GripVerticalIcon,
   ImageIcon,
   MoreHorizontalIcon,
   Move3DIcon,
   TruckIcon,
-} from "@/components/icons";
+} from "@/components/icons"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { TableCell, TableRow } from "@/components/ui/table";
-import { useSearchParams } from "react-router";
-import type { MoveSize } from "@/types/index";
+} from "@/components/ui/dropdown-menu"
+import { TableCell, TableRow } from "@/components/ui/table"
+import { useSearchParams } from "react-router"
+import type { MoveSize } from "@/types/index"
 
 export function MoveSizeRow({ id, item }: { id: number; item: MoveSize }) {
   const {
@@ -27,7 +27,7 @@ export function MoveSizeRow({ id, item }: { id: number; item: MoveSize }) {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: id });
+  } = useSortable({ id: id })
 
   return (
     <TableRow
@@ -82,11 +82,11 @@ export function MoveSizeRow({ id, item }: { id: number; item: MoveSize }) {
         <Actions moveSize={item} />
       </TableCell>
     </TableRow>
-  );
+  )
 }
 
 function Actions({ moveSize }: { moveSize: MoveSize }) {
-  const [_, setSearchParams] = useSearchParams();
+  const [_, setSearchParams] = useSearchParams()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -100,7 +100,7 @@ function Actions({ moveSize }: { moveSize: MoveSize }) {
           onClick={() => {
             setSearchParams({
               edit_move_size: moveSize.id.toString(),
-            });
+            })
           }}
         >
           Edit move size
@@ -109,7 +109,7 @@ function Actions({ moveSize }: { moveSize: MoveSize }) {
           onClick={() => {
             setSearchParams({
               delete_move_size: moveSize.id.toString(),
-            });
+            })
           }}
           variant="destructive"
         >
@@ -117,5 +117,5 @@ function Actions({ moveSize }: { moveSize: MoveSize }) {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

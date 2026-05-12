@@ -1,8 +1,8 @@
-import { InfoIcon } from "@/components/icons";
-import { PageContainer, PageContent } from "@/components/page-component";
-import { QuoteDetails } from "@/components/request/quote-details";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import { InfoIcon } from "@/components/icons"
+import { PageContainer, PageContent } from "@/components/page-component"
+import { QuoteDetails } from "@/components/request/quote-details"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
@@ -10,41 +10,43 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Spinner } from "@/components/ui/spinner";
-import { useRequest } from "@/hooks/use-request";
-import { MoveSizeDialog } from "@/pages/crm/request/_components/tabs/main-tab/_components/dialogs/move-size-dialog";
-import { useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router";
-import { CustomerCard } from "../_components/customer-card";
-import { AdditionalDetailsCard } from "./_components/additional-details-card";
-import { AddressesCard } from "./_components/addresses-card";
-import { DateTimeCard } from "./_components/date-time-card";
-import { AddressEditDialog } from "./_components/dialogs/address-edit-dialog";
-import { MessagesDialog } from "./_components/dialogs/messages-dialog";
-import { PackingDialog } from "./_components/dialogs/packing-dialog";
-import { ValuationDialog } from "./_components/dialogs/valuation-dialog";
-import { Faqs } from "./_components/faqs";
-import { MoveSizeCard } from "./_components/move-size-card";
-import { MovingAssistantCard } from "./_components/moving-assistant-card";
-import { PhotosCard } from "./_components/photos-card";
-import { RequestsToggle } from "./_components/requests-toggle";
-import { StatusCard } from "./_components/status-card";
-import { WhatsNext } from "./_components/whats-next";
-import { PolicySheet } from "./confirmation/_components/policy-sheet";
+} from "@/components/ui/card"
+import { Spinner } from "@/components/ui/spinner"
+import { useRequest } from "@/hooks/use-request"
+import { MoveSizeDialog } from "@/pages/crm/request/_components/tabs/main-tab/_components/dialogs/move-size-dialog"
+import { useEffect } from "react"
+import { Link, useNavigate, useParams } from "react-router"
+import { CustomerCard } from "../_components/customer-card"
+import { AdditionalDetailsCard } from "./_components/additional-details-card"
+import { AddressesCard } from "./_components/addresses-card"
+import { DateTimeCard } from "./_components/date-time-card"
+import { AddressEditDialog } from "./_components/dialogs/address-edit-dialog"
+import { MessagesDialog } from "./_components/dialogs/messages-dialog"
+import { PackingDialog } from "./_components/dialogs/packing-dialog"
+import { ValuationDialog } from "./_components/dialogs/valuation-dialog"
+import { Faqs } from "./_components/faqs"
+import { MoveSizeCard } from "./_components/move-size-card"
+import { MovingAssistantCard } from "./_components/moving-assistant-card"
+import { PhotosCard } from "./_components/photos-card"
+import { RequestsToggle } from "./_components/requests-toggle"
+import { StatusCard } from "./_components/status-card"
+import { WhatsNext } from "./_components/whats-next"
+import { PolicySheet } from "./confirmation/_components/policy-sheet"
+import { TipTapEditor } from "@/components/tip-tap-editor"
+import type { User } from "@/types"
 
 function AccountRequestPage() {
-  const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
-  const requestId = Number(id);
-  const { request, isPending, isError, error } = useRequest(requestId);
+  const navigate = useNavigate()
+  const { id } = useParams<{ id: string }>()
+  const requestId = Number(id)
+  const { request, isPending, isError, error } = useRequest(requestId)
 
   // Redirect if request doesn't have allowed status
   useEffect(() => {
     if (isError) {
-      navigate("/account/requests", { replace: true });
+      navigate("/account/requests", { replace: true })
     }
-  }, [isError, navigate]);
+  }, [isError, navigate])
 
   // ── Loading / error / not-found states ────────────────────────────
   if (isPending) {
@@ -59,7 +61,7 @@ function AccountRequestPage() {
           </div>
         </PageContent>
       </PageContainer>
-    );
+    )
   }
 
   if (isError) {
@@ -73,7 +75,7 @@ function AccountRequestPage() {
           </div>
         </PageContent>
       </PageContainer>
-    );
+    )
   }
 
   if (!request) {
@@ -87,11 +89,13 @@ function AccountRequestPage() {
           </div>
         </PageContent>
       </PageContainer>
-    );
+    )
   }
 
-  const canEdit = request.can_edit_request;
-  const initials = `${request.customer?.first_name?.[0] ?? ""}${request.customer?.last_name?.[0] ?? ""}`;
+  const canEdit = request.can_edit_request
+  const initials = `${request.customer?.first_name?.[0] ?? ""}${
+    request.customer?.last_name?.[0] ?? ""
+  }`
 
   return (
     <div className="space-y-6">
@@ -105,19 +109,20 @@ function AccountRequestPage() {
 
       <div className="border-b pb-6">
         <CustomerCard
-        // onUpdateSuccess={async () => {
-        //   if (!request) return;
+          user={request.customer as User}
+          // onUpdateSuccess={async () => {
+          //   if (!request) return;
 
-        //   // Refresh UI
-        //   await Promise.all([
-        //     queryClient.invalidateQueries({
-        //       queryKey: customerKeys.id({ id: request.customer?.id! }),
-        //     }),
-        //     queryClient.invalidateQueries({
-        //       queryKey: requestKeys.detail(request.id),
-        //     }),
-        //   ]);
-        // }}
+          //   // Refresh UI
+          //   await Promise.all([
+          //     queryClient.invalidateQueries({
+          //       queryKey: customerKeys.id({ id: request.customer?.id! }),
+          //     }),
+          //     queryClient.invalidateQueries({
+          //       queryKey: requestKeys.detail(request.id),
+          //     }),
+          //   ]);
+          // }}
         />
       </div>
 
@@ -164,9 +169,12 @@ function AccountRequestPage() {
                   {request.packing_type?.name}
                 </CardDescription>
                 <div className="relative h-32 overflow-hidden">
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: request.packing_type?.description ?? "",
+                  <TipTapEditor
+                    value={request.packing_type?.description ?? ""}
+                    readOnly={true}
+                    classNames={{
+                      editor: "border-none",
+                      content: "p-0",
                     }}
                   />
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-linear-to-t from-card to-transparent"></div>
@@ -199,9 +207,12 @@ function AccountRequestPage() {
                   {request.valuation?.name}
                 </CardDescription>
                 <div className="relative h-32 overflow-hidden">
-                  <div
-                    dangerouslySetInnerHTML={{
-                      __html: request.valuation?.description ?? "",
+                  <TipTapEditor
+                    value={request.valuation?.description ?? ""}
+                    readOnly={true}
+                    classNames={{
+                      editor: "border-none",
+                      content: "p-0",
                     }}
                   />
                   <div className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-linear-to-t from-card to-transparent"></div>
@@ -331,7 +342,7 @@ function AccountRequestPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }
 
-export const Component = AccountRequestPage;
+export const Component = AccountRequestPage

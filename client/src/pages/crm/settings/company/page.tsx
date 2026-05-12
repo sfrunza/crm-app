@@ -7,7 +7,6 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
-  FieldSeparator,
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { LoadingSwap } from "@/components/ui/loading-swap"
@@ -132,7 +131,7 @@ function CompanyPage() {
 
   return (
     <PageContent>
-      <div className="mt-10 w-full max-w-md">
+      <div className="mt-4 w-full max-w-md">
         <form onSubmit={form.handleSubmit(onSubmit)} id="company-settings-form">
           <FieldGroup>
             {/* Company Logo */}
@@ -198,7 +197,6 @@ function CompanyPage() {
                 </Field>
               )}
             />
-            <FieldSeparator />
 
             {/* Company Name */}
             <Controller

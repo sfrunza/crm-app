@@ -1,4 +1,4 @@
-import { useMutation, type UseMutationOptions } from "@tanstack/react-query";
+import { useMutation, type UseMutationOptions } from "@tanstack/react-query"
 import {
   confirmPayment,
   createInvoice,
@@ -7,7 +7,7 @@ import {
   deletePaymentMethod,
   refundPayment,
   voidInvoice,
-} from "./payment.api";
+} from "./payment.api"
 import type {
   CreateInvoiceParams,
   CreatePaymentParams,
@@ -15,7 +15,7 @@ import type {
   Invoice,
   Payment,
   SetupIntentResponse,
-} from "./payment.types";
+} from "./payment.types"
 
 export function useCreatePayment(
   mutationOptions?: Omit<
@@ -30,7 +30,7 @@ export function useCreatePayment(
   return useMutation({
     mutationFn: ({ requestId, params }) => createPayment(requestId, params),
     ...mutationOptions,
-  });
+  })
 }
 
 export function useConfirmPayment(
@@ -47,7 +47,7 @@ export function useConfirmPayment(
     mutationFn: ({ requestId, paymentId }) =>
       confirmPayment(requestId, paymentId),
     ...mutationOptions,
-  });
+  })
 }
 
 export function useRefundPayment(
@@ -64,7 +64,7 @@ export function useRefundPayment(
     mutationFn: ({ requestId, paymentId, amount }) =>
       refundPayment(requestId, paymentId, amount),
     ...mutationOptions,
-  });
+  })
 }
 
 export function useCreateInvoice(
@@ -80,7 +80,7 @@ export function useCreateInvoice(
   return useMutation({
     mutationFn: ({ requestId, params }) => createInvoice(requestId, params),
     ...mutationOptions,
-  });
+  })
 }
 
 export function useVoidInvoice(
@@ -94,10 +94,9 @@ export function useVoidInvoice(
   >
 ) {
   return useMutation({
-    mutationFn: ({ requestId, invoiceId }) =>
-      voidInvoice(requestId, invoiceId),
+    mutationFn: ({ requestId, invoiceId }) => voidInvoice(requestId, invoiceId),
     ...mutationOptions,
-  });
+  })
 }
 
 export function useCreateSetupIntent(
@@ -109,7 +108,7 @@ export function useCreateSetupIntent(
   return useMutation({
     mutationFn: ({ userId }) => createSetupIntent(userId),
     ...mutationOptions,
-  });
+  })
 }
 
 export function useDeletePaymentMethod(
@@ -121,5 +120,5 @@ export function useDeletePaymentMethod(
   return useMutation({
     mutationFn: ({ id }) => deletePaymentMethod(id),
     ...mutationOptions,
-  });
+  })
 }

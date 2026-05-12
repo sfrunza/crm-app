@@ -5,7 +5,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/ui/table"
 import {
   closestCenter,
   DndContext,
@@ -14,29 +14,26 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
-} from "@dnd-kit/core";
-import { restrictToParentElement } from "@dnd-kit/modifiers";
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-} from "@dnd-kit/sortable";
-import { useId } from "react";
-import { TemplateRow } from "./template-row";
-import type { EmailTemplate } from "@/types/index";
+} from "@dnd-kit/core"
+import { restrictToParentElement } from "@dnd-kit/modifiers"
+import { SortableContext, sortableKeyboardCoordinates } from "@dnd-kit/sortable"
+import { useId } from "react"
+import { TemplateRow } from "./template-row"
+import type { EmailTemplate } from "@/types/index"
 
 interface TemplatesTableProps {
-  items: EmailTemplate[];
-  handleDragEnd: (event: DragEndEvent) => void;
+  items: EmailTemplate[]
+  handleDragEnd: (event: DragEndEvent) => void
 }
 
 export function TemplatesTable({ items, handleDragEnd }: TemplatesTableProps) {
-  const sortableId = useId();
+  const sortableId = useId()
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
-  );
+  )
   return (
     <DndContext
       sensors={sensors}
@@ -71,5 +68,5 @@ export function TemplatesTable({ items, handleDragEnd }: TemplatesTableProps) {
         </SortableContext>
       </Table>
     </DndContext>
-  );
+  )
 }

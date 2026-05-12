@@ -5,7 +5,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/ui/table"
 import {
   DndContext,
   KeyboardSensor,
@@ -14,29 +14,26 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
-} from "@dnd-kit/core";
-import { restrictToParentElement } from "@dnd-kit/modifiers";
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-} from "@dnd-kit/sortable";
-import { ServiceRow } from "./service-row";
-import { useId } from "react";
-import type { Service } from "@/types/index";
+} from "@dnd-kit/core"
+import { restrictToParentElement } from "@dnd-kit/modifiers"
+import { SortableContext, sortableKeyboardCoordinates } from "@dnd-kit/sortable"
+import { ServiceRow } from "./service-row"
+import { useId } from "react"
+import type { Service } from "@/types/index"
 
 interface ServicesTableProps {
-  services: Service[];
-  handleDragEnd: (event: DragEndEvent) => void;
+  services: Service[]
+  handleDragEnd: (event: DragEndEvent) => void
 }
 
 export function ServicesTable({ services, handleDragEnd }: ServicesTableProps) {
-  const sortableId = useId();
+  const sortableId = useId()
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
-  );
+  )
   return (
     <DndContext
       sensors={sensors}
@@ -72,5 +69,5 @@ export function ServicesTable({ services, handleDragEnd }: ServicesTableProps) {
         </SortableContext>
       </Table>
     </DndContext>
-  );
+  )
 }

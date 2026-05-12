@@ -3,8 +3,8 @@ export const TABLE_CONFIG = {
   GC_TIME: 5 * 60 * 1000, // 5 minutes
   RETRY_COUNT: 2,
   CURRENCY_FORMAT: {
-    style: 'currency',
-    currency: 'USD',
+    style: "currency",
+    currency: "USD",
   },
-  DATE_FORMAT: 'MMM dd, yyyy',
-} as const; 
+  DATE_FORMAT: "MMM dd, yyyy",
+} as const

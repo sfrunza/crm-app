@@ -1,5 +1,5 @@
-import { PasswordInput } from "@/components/inputs/password-input";
-import { Button } from "@/components/ui/button";
+import { PasswordInput } from "@/components/inputs/password-input"
+import { Button } from "@/components/ui/button"
 import {
   Field,
   FieldContent,
@@ -8,10 +8,10 @@ import {
   FieldGroup,
   FieldLabel,
   FieldTitle,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { PhoneInput } from "@/components/inputs/phone-input";
+} from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { LoadingSwap } from "@/components/ui/loading-swap"
+import { PhoneInput } from "@/components/inputs/phone-input"
 import {
   Select,
   SelectContent,
@@ -19,7 +19,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "@/components/ui/select"
 import {
   Sheet,
   SheetClose,
@@ -28,25 +28,25 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
-import { Spinner } from "@/components/ui/spinner";
-import { Switch } from "@/components/ui/switch";
-import { employeeKeys } from "@/domains/employees/employee.keys";
+} from "@/components/ui/sheet"
+import { Spinner } from "@/components/ui/spinner"
+import { Switch } from "@/components/ui/switch"
+import { employeeKeys } from "@/domains/employees/employee.keys"
 import {
   useCreateEmployee,
   useUpdateEmployee,
-} from "@/domains/employees/employee.mutations";
-import { useGetEmployeeById } from "@/domains/employees/employee.queries";
-import { queryClient } from "@/lib/query-client";
-import { formatPhone } from "@/lib/format-phone";
-import type { UserRole } from "@/types/user";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { isValidPhoneNumber } from "libphonenumber-js";
-import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { useSearchParams } from "react-router";
-import { toast } from "sonner";
-import { z } from "zod";
+} from "@/domains/employees/employee.mutations"
+import { useGetEmployeeById } from "@/domains/employees/employee.queries"
+import { queryClient } from "@/lib/query-client"
+import { formatPhone } from "@/lib/format-phone"
+import type { UserRole } from "@/types/user"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { isValidPhoneNumber } from "libphonenumber-js"
+import { useEffect, useState } from "react"
+import { Controller, useForm } from "react-hook-form"
+import { useSearchParams } from "react-router"
+import { toast } from "sonner"
+import { z } from "zod"
 
 const userRoles = [
   {
@@ -69,7 +69,7 @@ const userRoles = [
     label: "Helper",
     value: "helper",
   },
-] as const;
+] as const
 
 const formSchema = z.object({
   first_name: z.string().min(1, {
@@ -87,22 +87,22 @@ const formSchema = z.object({
       message: "Invalid phone number",
     }),
   role: z.enum(
-    userRoles.map((role) => role.value) as [UserRole, ...UserRole[]],
+    userRoles.map((role) => role.value) as [UserRole, ...UserRole[]]
   ),
   active: z.boolean().optional(),
   password: z.string().optional(),
-});
+})
 
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.infer<typeof formSchema>
 
 export function EmployeeFormSheet() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [isOpen, setIsOpen] = useState(false);
-  const [editId, setEditId] = useState<number | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [isOpen, setIsOpen] = useState(false)
+  const [editId, setEditId] = useState<number | null>(null)
 
   const { data: employee, isFetching } = useGetEmployeeById(editId, {
     enabled: !!editId,
-  });
+  })
 
   const form = useForm<FormValues>({
     mode: "onChange",
@@ -117,63 +117,63 @@ export function EmployeeFormSheet() {
       active: employee?.active ?? true,
       password: "",
     },
-  });
+  })
 
   const { mutate: updateEmployeeMutation, isPending: isUpdating } =
     useUpdateEmployee({
       onSettled: (_, error) => {
         if (error) {
-          queryClient.cancelQueries({ queryKey: employeeKeys.all });
+          queryClient.cancelQueries({ queryKey: employeeKeys.all })
         } else {
-          queryClient.invalidateQueries({ queryKey: employeeKeys.all });
-          toast.success("Employee updated");
-          handleCancel();
+          queryClient.invalidateQueries({ queryKey: employeeKeys.all })
+          toast.success("Employee updated")
+          handleCancel()
         }
       },
-    });
+    })
 
   const { mutate: createEmployeeMutation, isPending: isCreating } =
     useCreateEmployee({
       onSettled: (_, error) => {
         if (error) {
-          queryClient.cancelQueries({ queryKey: employeeKeys.all });
+          queryClient.cancelQueries({ queryKey: employeeKeys.all })
         } else {
-          queryClient.invalidateQueries({ queryKey: employeeKeys.all });
-          toast.success("Employee created");
-          handleCancel();
+          queryClient.invalidateQueries({ queryKey: employeeKeys.all })
+          toast.success("Employee created")
+          handleCancel()
         }
       },
-    });
+    })
 
   useEffect(() => {
-    const editParam = searchParams.get("edit_employee");
-    const createParam = searchParams.get("create_employee");
+    const editParam = searchParams.get("edit_employee")
+    const createParam = searchParams.get("create_employee")
 
     if (editParam) {
-      setEditId(Number(editParam));
-      setIsOpen(true);
+      setEditId(Number(editParam))
+      setIsOpen(true)
     } else if (createParam) {
-      setEditId(null);
-      setIsOpen(true);
+      setEditId(null)
+      setIsOpen(true)
     }
-  }, [searchParams]);
+  }, [searchParams])
 
   function onSubmit(values: FormValues) {
     if (employee) {
-      updateEmployeeMutation({ id: employee.id, data: values });
+      updateEmployeeMutation({ id: employee.id, data: values })
     } else {
-      createEmployeeMutation(values);
+      createEmployeeMutation(values)
     }
   }
 
   function handleCancel() {
-    form.reset();
-    setIsOpen(false);
+    form.reset()
+    setIsOpen(false)
     setSearchParams((prev) => {
-      prev.delete("edit_employee");
-      prev.delete("create_employee");
-      return prev;
-    });
+      prev.delete("edit_employee")
+      prev.delete("create_employee")
+      return prev
+    })
   }
 
   return (
@@ -381,5 +381,5 @@ export function EmployeeFormSheet() {
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

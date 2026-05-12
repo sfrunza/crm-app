@@ -1,35 +1,35 @@
-import { buttonVariants } from "@/components/ui/button";
-import { useGetTotalUnreadMessagesCount } from "@/hooks/api/use-messages";
-import { cn } from "@/lib/utils";
-import { MessageCircleMoreIcon } from "@/components/icons";
-import { useEffect, useRef } from "react";
-import { NavLink, useLocation } from "react-router";
-import { Badge } from "@/components/ui/badge";
-import { useNotificationsSubscription } from "@/hooks/use-notifications-subscription";
-import { NotificationSound } from "@/components/notification-sound";
+import { buttonVariants } from "@/components/ui/button"
+import { useGetTotalUnreadMessagesCount } from "@/hooks/api/use-messages"
+import { cn } from "@/lib/utils"
+import { MessageCircleMoreIcon } from "@/components/icons"
+import { useEffect, useRef } from "react"
+import { NavLink, useLocation } from "react-router"
+import { Badge } from "@/components/ui/badge"
+import { useNotificationsSubscription } from "@/hooks/use-notifications-subscription"
+import { NotificationSound } from "@/components/notification-sound"
 
 export function MessageNotifications() {
   // Subscribe to per-user notifications channel for real-time count updates
-  useNotificationsSubscription();
+  useNotificationsSubscription()
 
-  const { data } = useGetTotalUnreadMessagesCount();
-  const count = data?.count ?? 0;
-  const prevCountRef = useRef(count);
-  const location = useLocation();
+  const { data } = useGetTotalUnreadMessagesCount()
+  const count = data?.count ?? 0
+  const prevCountRef = useRef(count)
+  const location = useLocation()
 
   // Play sound only when unread count increases AND user is not on the chat page
   useEffect(() => {
-    const isOnChatPage = /^\/crm\/messages\/\d+/.test(location.pathname);
+    const isOnChatPage = /^\/crm\/messages\/\d+/.test(location.pathname)
 
     if (count > prevCountRef.current && !isOnChatPage) {
       NotificationSound()
         .play()
         .catch(() => {
           // Browser may block autoplay until user interacts with the page
-        });
+        })
     }
-    prevCountRef.current = count;
-  }, [count, location.pathname]);
+    prevCountRef.current = count
+  }, [count, location.pathname])
 
   return (
     <NavLink
@@ -55,5 +55,5 @@ export function MessageNotifications() {
         </Badge>
       )}
     </NavLink>
-  );
+  )
 }

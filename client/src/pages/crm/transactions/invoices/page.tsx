@@ -1,72 +1,72 @@
-import { DataTable } from "@/components/data-table/data-table";
-import { TABLE_CONFIG } from "@/components/data-table/table.config";
-import { DatePickerRangePill } from "@/components/inputs/date-picker-range-pill";
-import { PageContent } from "@/components/page-component";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Spinner } from "@/components/ui/spinner";
-import { useGetAdminInvoices } from "@/domains/payments/payment.queries";
+import { DataTable } from "@/components/data-table/data-table"
+import { TABLE_CONFIG } from "@/components/data-table/table.config"
+import { DatePickerRangePill } from "@/components/inputs/date-picker-range-pill"
+import { PageContent } from "@/components/page-component"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { Spinner } from "@/components/ui/spinner"
+import { useGetAdminInvoices } from "@/domains/payments/payment.queries"
 import type {
   AdminInvoiceListParams,
   InvoiceSortField,
   InvoiceStatusFilter,
-} from "@/domains/payments/payment.types";
-import { getRequestById } from "@/domains/requests/request.api";
-import { requestKeys } from "@/domains/requests/request.keys";
-import { INVOICE_STATUSES } from "@/lib/constants";
-import { queryClient } from "@/lib/query-client";
-import { openRequest } from "@/stores/use-open-requests-store";
-import type { SortOrder } from "@/stores/use-table-requests-store";
-import { format, isValid, parse } from "date-fns";
-import { Fragment, useCallback, useMemo } from "react";
-import type { DateRange } from "react-day-picker";
-import { useSearchParams } from "react-router";
-import { useInvoiceColumns } from "./_components/columns";
-import { InvoiceStatusTabs } from "./_components/invoice-status-tabs";
+} from "@/domains/payments/payment.types"
+import { getRequestById } from "@/domains/requests/request.api"
+import { requestKeys } from "@/domains/requests/request.keys"
+import { INVOICE_STATUSES } from "@/lib/constants"
+import { queryClient } from "@/lib/query-client"
+import { openRequest } from "@/stores/use-open-requests-store"
+import type { SortOrder } from "@/stores/use-table-requests-store"
+import { format, isValid, parse } from "date-fns"
+import { Fragment, useCallback, useMemo } from "react"
+import type { DateRange } from "react-day-picker"
+import { useSearchParams } from "react-router"
+import { useInvoiceColumns } from "./columns"
+import { InvoiceStatusTabs } from "./invoice-status-tabs"
 
 const currencyTotal = new Intl.NumberFormat(
   "en-US",
   TABLE_CONFIG.CURRENCY_FORMAT
-);
+)
 
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 20
 
 function parseStatusParam(value: string | null): InvoiceStatusFilter {
-  if (!value) return "all";
-  if (value === "all") return "all";
+  if (!value) return "all"
+  if (value === "all") return "all"
   return INVOICE_STATUSES.includes(value as (typeof INVOICE_STATUSES)[number])
     ? (value as InvoiceStatusFilter)
-    : "all";
+    : "all"
 }
 
 function parseDateParam(value: string | null): Date | undefined {
-  if (!value) return undefined;
-  const d = parse(value, "yyyy-MM-dd", new Date());
-  return isValid(d) ? d : undefined;
+  if (!value) return undefined
+  const d = parse(value, "yyyy-MM-dd", new Date())
+  return isValid(d) ? d : undefined
 }
 
 function dateRangeFromParams(
   start: string | null,
   end: string | null
 ): DateRange | undefined {
-  const from = parseDateParam(start);
-  if (!from) return undefined;
-  const to = parseDateParam(end);
-  return to ? { from, to } : { from, to: undefined };
+  const from = parseDateParam(start)
+  if (!from) return undefined
+  const to = parseDateParam(end)
+  return to ? { from, to } : { from, to: undefined }
 }
 
 function dateRangeToQuery(
   range: DateRange | undefined
 ): Pick<AdminInvoiceListParams, "start_date" | "end_date"> {
-  if (!range?.from) return {};
+  if (!range?.from) return {}
   return {
     start_date: format(range.from, "yyyy-MM-dd"),
     ...(range.to ? { end_date: format(range.to, "yyyy-MM-dd") } : {}),
-  };
+  }
 }
 
 /** Date filter: applied range comes from URL; {@link DatePickerRangePill} commits via popover Apply. */
 function InvoiceDateFiltersBar() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams()
 
   const appliedRange = useMemo(
     () =>
@@ -75,38 +75,38 @@ function InvoiceDateFiltersBar() {
         searchParams.get("end_date")
       ),
     [searchParams]
-  );
+  )
 
   const applyDateRange = useCallback(
     (range: DateRange | undefined) => {
       setSearchParams((prev) => {
-        const next = new URLSearchParams(prev);
+        const next = new URLSearchParams(prev)
         if (range?.from) {
-          next.set("start_date", format(range.from, "yyyy-MM-dd"));
+          next.set("start_date", format(range.from, "yyyy-MM-dd"))
           if (range.to) {
-            next.set("end_date", format(range.to, "yyyy-MM-dd"));
+            next.set("end_date", format(range.to, "yyyy-MM-dd"))
           } else {
-            next.delete("end_date");
+            next.delete("end_date")
           }
         } else {
-          next.delete("start_date");
-          next.delete("end_date");
+          next.delete("start_date")
+          next.delete("end_date")
         }
-        next.delete("page");
-        return next;
-      });
+        next.delete("page")
+        return next
+      })
     },
     [setSearchParams]
-  );
+  )
 
   return (
     <ScrollArea className="w-full px-4 whitespace-nowrap">
-      <div className="flex gap-2 py-2">
+      <div className="flex gap-2 py-2.5">
         <DatePickerRangePill value={appliedRange} onApply={applyDateRange} />
       </div>
       <ScrollBar orientation="horizontal" className="invisible" />
     </ScrollArea>
-  );
+  )
 }
 
 function InvoiceTotal({ totalAmount }: { totalAmount: number }) {
@@ -119,32 +119,32 @@ function InvoiceTotal({ totalAmount }: { totalAmount: number }) {
         </span>
       </p>
     </div>
-  );
+  )
 }
 
 function InvoicesPage() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams()
 
-  const startQ = searchParams.get("start_date") ?? "";
-  const endQ = searchParams.get("end_date") ?? "";
-  const appliedDateFilterKey = `${startQ}|${endQ}`;
+  const startQ = searchParams.get("start_date") ?? ""
+  const endQ = searchParams.get("end_date") ?? ""
+  const appliedDateFilterKey = `${startQ}|${endQ}`
 
   const { appliedQueryParams, sortBy, sortOrder } = useMemo(() => {
     const page = Math.max(
       1,
       Number.parseInt(searchParams.get("page") ?? "1", 10) || 1
-    );
-    const status = parseStatusParam(searchParams.get("status"));
+    )
+    const status = parseStatusParam(searchParams.get("status"))
     const dates = dateRangeToQuery(
       dateRangeFromParams(
         searchParams.get("start_date"),
         searchParams.get("end_date")
       )
-    );
-    const sort_by = (searchParams.get("sort_by") ?? "date") as InvoiceSortField;
+    )
+    const sort_by = (searchParams.get("sort_by") ?? "date") as InvoiceSortField
     const sort_order = (
       searchParams.get("sort_order") === "asc" ? "asc" : "desc"
-    ) as "asc" | "desc";
+    ) as "asc" | "desc"
     const params: AdminInvoiceListParams = {
       page,
       per_page: PAGE_SIZE,
@@ -152,15 +152,15 @@ function InvoicesPage() {
       ...dates,
       sort_by,
       sort_order,
-    };
+    }
     return {
       appliedQueryParams: params,
       sortBy: sort_by,
       sortOrder: sort_order as SortOrder,
-    };
-  }, [searchParams]);
+    }
+  }, [searchParams])
 
-  const columns = useInvoiceColumns();
+  const columns = useInvoiceColumns()
 
   const { data, error, isPending, isFetching, isLoading } = useGetAdminInvoices(
     appliedQueryParams,
@@ -170,46 +170,46 @@ function InvoicesPage() {
       refetchOnMount: true,
       placeholderData: (prev) => prev,
     }
-  );
+  )
 
   const currentPage = Math.max(
     1,
     Number.parseInt(searchParams.get("page") ?? "1", 10) || 1
-  );
+  )
 
   const setPage = useCallback(
     (page: number) => {
       setSearchParams((prev) => {
-        const next = new URLSearchParams(prev);
-        if (page <= 1) next.delete("page");
-        else next.set("page", String(page));
-        return next;
-      });
+        const next = new URLSearchParams(prev)
+        if (page <= 1) next.delete("page")
+        else next.set("page", String(page))
+        return next
+      })
     },
     [setSearchParams]
-  );
+  )
 
   const setSort = useCallback(
     (field: string, order: SortOrder) => {
       setSearchParams((prev) => {
-        const next = new URLSearchParams(prev);
-        next.set("sort_by", field);
-        next.set("sort_order", order);
-        next.delete("page");
-        return next;
-      });
+        const next = new URLSearchParams(prev)
+        next.set("sort_by", field)
+        next.set("sort_order", order)
+        next.delete("page")
+        return next
+      })
     },
     [setSearchParams]
-  );
+  )
 
   const onRowClick = useCallback((row: { id: number; request_id: number }) => {
     queryClient.prefetchQuery({
       queryKey: requestKeys.detail(row.request_id),
       queryFn: () => getRequestById(row.request_id),
       staleTime: TABLE_CONFIG.STALE_TIME,
-    });
-    openRequest(row.request_id);
-  }, []);
+    })
+    openRequest(row.request_id)
+  }, [])
 
   return (
     <Fragment>
@@ -256,7 +256,7 @@ function InvoicesPage() {
         )}
       </PageContent>
     </Fragment>
-  );
+  )
 }
 
-export const Component = InvoicesPage;
+export const Component = InvoicesPage

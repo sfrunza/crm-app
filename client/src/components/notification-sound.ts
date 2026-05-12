@@ -1,3 +1,3 @@
 export function NotificationSound() {
-  return new Audio("/notification.mp3");
+  return new Audio("/notification.mp3")
 }

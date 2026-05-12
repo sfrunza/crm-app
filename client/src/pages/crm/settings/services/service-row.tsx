@@ -1,19 +1,19 @@
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { GripVerticalIcon, MoreHorizontalIcon } from "@/components/icons";
+import { useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
+import { GripVerticalIcon, MoreHorizontalIcon } from "@/components/icons"
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Switch } from "@/components/ui/switch";
-import { TableCell, TableRow } from "@/components/ui/table";
-import { useSearchParams } from "react-router";
-import type { Service } from "@/types/index";
+} from "@/components/ui/dropdown-menu"
+import { Switch } from "@/components/ui/switch"
+import { TableCell, TableRow } from "@/components/ui/table"
+import { useSearchParams } from "react-router"
+import type { Service } from "@/types/index"
 
 export function ServiceRow({ id, item }: { id: number; item: Service }) {
   const {
@@ -23,7 +23,7 @@ export function ServiceRow({ id, item }: { id: number; item: Service }) {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: id });
+  } = useSortable({ id: id })
 
   return (
     <TableRow
@@ -59,11 +59,11 @@ export function ServiceRow({ id, item }: { id: number; item: Service }) {
         <Actions service={item} />
       </TableCell>
     </TableRow>
-  );
+  )
 }
 
 function Actions({ service }: { service: Service }) {
-  const [_, setSearchParams] = useSearchParams();
+  const [_, setSearchParams] = useSearchParams()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -81,7 +81,7 @@ function Actions({ service }: { service: Service }) {
           onClick={() => {
             setSearchParams({
               edit_service: service.id.toString(),
-            });
+            })
           }}
         >
           Edit service
@@ -90,7 +90,7 @@ function Actions({ service }: { service: Service }) {
           onClick={() => {
             setSearchParams({
               delete_service: service.id.toString(),
-            });
+            })
           }}
           disabled={service.is_default}
           className="flex-col items-start gap-0"
@@ -103,5 +103,5 @@ function Actions({ service }: { service: Service }) {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

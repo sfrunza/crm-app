@@ -1,6 +1,6 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Controller, useForm } from "react-hook-form"
+import { z } from "zod"
 
 import {
   Field,
@@ -8,21 +8,21 @@ import {
   FieldLabel,
   FieldLegend,
   FieldSet,
-} from "@/components/ui/field";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Textarea } from "@/components/ui/textarea";
-import type { Request } from "@/domains/requests/request.types";
-import { CircleQuestionMarkIcon } from "@/components/icons";
-import { useEffect } from "react";
+} from "@/components/ui/field"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Textarea } from "@/components/ui/textarea"
+import type { Request } from "@/domains/requests/request.types"
+import { CircleQuestionMarkIcon } from "@/components/icons"
+import { useEffect } from "react"
 
 type Question = {
-  id: number;
+  id: number
   name:
     | "delicate_items_question_answer"
     | "bulky_items_question_answer"
-    | "disassemble_items_question_answer";
-  question: string;
-};
+    | "disassemble_items_question_answer"
+  question: string
+}
 
 const questions: Question[] = [
   {
@@ -42,24 +42,24 @@ const questions: Question[] = [
     name: "disassemble_items_question_answer",
     question: "Do you have items that we'll need to disassemble for you?",
   },
-];
+]
 
 const formSchema = z.object({
   delicate_items_question_answer: z.string(),
   bulky_items_question_answer: z.string(),
   disassemble_items_question_answer: z.string(),
   comments: z.string(),
-});
+})
 
-type Inputs = z.infer<typeof formSchema>;
+type Inputs = z.infer<typeof formSchema>
 
 interface DetailsFormProps {
-  formId: "details-form";
-  details: Request["details"];
-  onSave: (values: Inputs) => void;
-  className?: string;
-  disabled?: boolean;
-  setHasChanges?: (hasChanges: boolean) => void;
+  formId: "details-form"
+  details: Request["details"]
+  onSave: (values: Inputs) => void
+  className?: string
+  disabled?: boolean
+  setHasChanges?: (hasChanges: boolean) => void
 }
 
 export function DetailsForm({
@@ -81,15 +81,15 @@ export function DetailsForm({
         details?.disassemble_items_question_answer ?? "",
       comments: details?.comments ?? "",
     },
-  });
+  })
 
   function handleSaveChanges(values: Inputs) {
-    onSave(values);
+    onSave(values)
   }
 
   useEffect(() => {
-    setHasChanges?.(form.formState.isDirty);
-  }, [form.formState.isDirty, setHasChanges, form.formState.isDirty]);
+    setHasChanges?.(form.formState.isDirty)
+  }, [form.formState.isDirty, setHasChanges, form.formState.isDirty])
 
   return (
     <div className={className}>
@@ -107,7 +107,7 @@ export function DetailsForm({
                       variant="label"
                       className="min-w-0 font-normal"
                     >
-                      <span className="text-muted-foreground flex gap-2">
+                      <span className="flex gap-2 text-muted-foreground">
                         <CircleQuestionMarkIcon className="mt-0.5 size-4 shrink-0" />
                         <span className="text-sm leading-5">{q.question}</span>
                       </span>
@@ -172,5 +172,5 @@ export function DetailsForm({
         </FieldGroup>
       </form>
     </div>
-  );
+  )
 }

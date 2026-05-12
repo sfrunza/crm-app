@@ -1,22 +1,22 @@
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
 import {
   GripVerticalIcon,
   MoreHorizontalIcon,
   TruckIcon,
-} from "@/components/icons";
+} from "@/components/icons"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Switch } from "@/components/ui/switch";
-import { TableCell, TableRow } from "@/components/ui/table";
-import type { Truck } from "@/types/index";
-import { useSearchParams } from "react-router";
+} from "@/components/ui/dropdown-menu"
+import { Switch } from "@/components/ui/switch"
+import { TableCell, TableRow } from "@/components/ui/table"
+import type { Truck } from "@/types/index"
+import { useSearchParams } from "react-router"
 
 export function TruckRow({ id, item }: { id: number; item: Truck }) {
   const {
@@ -26,7 +26,7 @@ export function TruckRow({ id, item }: { id: number; item: Truck }) {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: id });
+  } = useSortable({ id: id })
 
   return (
     <TableRow
@@ -64,11 +64,11 @@ export function TruckRow({ id, item }: { id: number; item: Truck }) {
         <Actions truck={item} />
       </TableCell>
     </TableRow>
-  );
+  )
 }
 
 function Actions({ truck }: { truck: Truck }) {
-  const [_, setSearchParams] = useSearchParams();
+  const [_, setSearchParams] = useSearchParams()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -82,12 +82,12 @@ function Actions({ truck }: { truck: Truck }) {
           onClick={() => {
             setSearchParams({
               edit_truck: truck.id.toString(),
-            });
+            })
           }}
         >
           Edit truck
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

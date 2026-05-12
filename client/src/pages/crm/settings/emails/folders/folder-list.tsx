@@ -1,5 +1,5 @@
-import { useUpdateFolder } from "@/hooks/api/use-folders";
-import type { Folder } from "@/types/index";
+import { useUpdateFolder } from "@/hooks/api/use-folders"
+import type { Folder } from "@/types/index"
 import {
   DndContext,
   KeyboardSensor,
@@ -7,21 +7,21 @@ import {
   closestCenter,
   useSensor,
   useSensors,
-} from "@dnd-kit/core";
-import { restrictToParentElement } from "@dnd-kit/modifiers";
+} from "@dnd-kit/core"
+import { restrictToParentElement } from "@dnd-kit/modifiers"
 import {
   SortableContext,
   arrayMove,
   sortableKeyboardCoordinates,
-} from "@dnd-kit/sortable";
-import { useCallback } from "react";
-import { toast } from "sonner";
-import { debounce } from "throttle-debounce";
-import { FolderItem } from "./folder-item";
+} from "@dnd-kit/sortable"
+import { useCallback } from "react"
+import { toast } from "sonner"
+import { debounce } from "throttle-debounce"
+import { FolderItem } from "./folder-item"
 
 interface FoldersListProps {
-  items: Folder[];
-  setItems: (items: Folder[]) => void;
+  items: Folder[]
+  setItems: (items: Folder[]) => void
 }
 
 export function FoldersList({ items, setItems }: FoldersListProps) {
@@ -30,39 +30,39 @@ export function FoldersList({ items, setItems }: FoldersListProps) {
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
-  );
+  )
 
   const { mutate: updateFolderMutation } = useUpdateFolder({
     onSuccess: () => {
-      toast.success("Folder updated");
+      toast.success("Folder updated")
     },
-  });
+  })
 
   const debouncedUpdateFolder = useCallback(
     debounce(
       1000,
       (itemId: number, values: Partial<Folder>) => {
-        updateFolderMutation({ id: itemId, data: values });
+        updateFolderMutation({ id: itemId, data: values })
       },
       { atBegin: false }
     ),
     [updateFolderMutation]
-  );
+  )
 
   function onDragEnd(event: any) {
-    const { active, over } = event;
+    const { active, over } = event
 
     if (over && active.id !== over.id) {
-      const oldIndex = items.findIndex((item) => item.id === active.id);
-      const newIndex = items.findIndex((item) => item.id === over.id);
-      const newItems = arrayMove(items, oldIndex, newIndex);
+      const oldIndex = items.findIndex((item) => item.id === active.id)
+      const newIndex = items.findIndex((item) => item.id === over.id)
+      const newItems = arrayMove(items, oldIndex, newIndex)
       const updatedItems = newItems.map((item, i) => ({
         ...item,
         position: i,
-      }));
+      }))
 
-      setItems(updatedItems);
-      const activeItem = newItems.find((item) => item.position === oldIndex);
+      setItems(updatedItems)
+      const activeItem = newItems.find((item) => item.position === oldIndex)
 
       if (activeItem) {
         updateFolderMutation({
@@ -70,7 +70,7 @@ export function FoldersList({ items, setItems }: FoldersListProps) {
           data: {
             position: newIndex,
           },
-        });
+        })
       }
     }
   }
@@ -78,9 +78,9 @@ export function FoldersList({ items, setItems }: FoldersListProps) {
   function onInputChange(itemId: number, values: Partial<Folder>) {
     setItems(
       items.map((item) => (item.id === itemId ? { ...item, ...values } : item))
-    );
+    )
 
-    debouncedUpdateFolder(itemId, values);
+    debouncedUpdateFolder(itemId, values)
   }
 
   return (
@@ -101,5 +101,5 @@ export function FoldersList({ items, setItems }: FoldersListProps) {
         ))}
       </SortableContext>
     </DndContext>
-  );
+  )
 }

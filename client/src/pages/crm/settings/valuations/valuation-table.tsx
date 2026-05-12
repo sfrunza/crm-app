@@ -5,12 +5,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import type { Valuation } from "@/types/index";
-import { ValuationRow } from "./valuation-row";
+} from "@/components/ui/table"
+import type { Valuation } from "@/types/index"
+import { ValuationRow } from "./valuation-row"
 
 interface ValuationsTableProps {
-  valuations: Valuation[];
+  valuations: Valuation[]
 }
 
 export function ValuationsTable({ valuations }: ValuationsTableProps) {
@@ -37,5 +37,5 @@ export function ValuationsTable({ valuations }: ValuationsTableProps) {
         )}
       </TableBody>
     </Table>
-  );
+  )
 }

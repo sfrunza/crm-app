@@ -5,8 +5,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import type { Truck } from "@/types/index";
+} from "@/components/ui/table"
+import type { Truck } from "@/types/index"
 import {
   DndContext,
   KeyboardSensor,
@@ -15,28 +15,25 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
-} from "@dnd-kit/core";
-import { restrictToParentElement } from "@dnd-kit/modifiers";
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-} from "@dnd-kit/sortable";
-import { useId } from "react";
-import { TruckRow } from "./truck-row";
+} from "@dnd-kit/core"
+import { restrictToParentElement } from "@dnd-kit/modifiers"
+import { SortableContext, sortableKeyboardCoordinates } from "@dnd-kit/sortable"
+import { useId } from "react"
+import { TruckRow } from "./truck-row"
 
 interface TrucksTableProps {
-  trucks: Truck[];
-  handleDragEnd: (event: DragEndEvent) => void;
+  trucks: Truck[]
+  handleDragEnd: (event: DragEndEvent) => void
 }
 
 export function TrucksTable({ trucks, handleDragEnd }: TrucksTableProps) {
-  const sortableId = useId();
+  const sortableId = useId()
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
-  );
+  )
   return (
     <DndContext
       sensors={sensors}
@@ -70,5 +67,5 @@ export function TrucksTable({ trucks, handleDragEnd }: TrucksTableProps) {
         </SortableContext>
       </Table>
     </DndContext>
-  );
+  )
 }

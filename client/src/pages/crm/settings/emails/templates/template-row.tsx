@@ -1,21 +1,21 @@
-import { Button } from "@/components/ui/button";
-import { GripVerticalIcon, MoreHorizontalIcon } from "@/components/icons";
-import { useSearchParams } from "react-router";
+import { Button } from "@/components/ui/button"
+import { GripVerticalIcon, MoreHorizontalIcon } from "@/components/icons"
+import { useSearchParams } from "react-router"
 
-import { TableCell, TableRow } from "@/components/ui/table";
+import { TableCell, TableRow } from "@/components/ui/table"
 
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { toast } from "sonner";
-import type { EmailTemplate } from "@/types/index";
-import { useCreateEmailTemplate } from "@/hooks/api/use-email-templates";
+} from "@/components/ui/dropdown-menu"
+import { LoadingSwap } from "@/components/ui/loading-swap"
+import { useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
+import { toast } from "sonner"
+import type { EmailTemplate } from "@/types/index"
+import { useCreateEmailTemplate } from "@/hooks/api/use-email-templates"
 
 export function TemplateRow({ id, item }: { id: number; item: EmailTemplate }) {
   const {
@@ -25,7 +25,7 @@ export function TemplateRow({ id, item }: { id: number; item: EmailTemplate }) {
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: id });
+  } = useSortable({ id: id })
   return (
     <TableRow
       ref={setNodeRef}
@@ -55,18 +55,18 @@ export function TemplateRow({ id, item }: { id: number; item: EmailTemplate }) {
         <Actions email={item} />
       </TableCell>
     </TableRow>
-  );
+  )
 }
 
 function Actions({ email }: { email: EmailTemplate }) {
-  const [_, setSearchParams] = useSearchParams();
+  const [_, setSearchParams] = useSearchParams()
 
   const { mutate: createEmailTemplate, isPending: isCreating } =
     useCreateEmailTemplate({
       onSuccess: () => {
-        toast.success("Email duplicated");
+        toast.success("Email duplicated")
       },
-    });
+    })
 
   return (
     <DropdownMenu>
@@ -80,9 +80,9 @@ function Actions({ email }: { email: EmailTemplate }) {
         <DropdownMenuItem
           onClick={() => {
             setSearchParams((prev) => {
-              prev.set("edit_template_id", email.id.toString());
-              return prev;
-            });
+              prev.set("edit_template_id", email.id.toString())
+              return prev
+            })
           }}
         >
           Edit email
@@ -90,9 +90,9 @@ function Actions({ email }: { email: EmailTemplate }) {
         <DropdownMenuItem
           onClick={() => {
             setSearchParams((prev) => {
-              prev.set("preview_template_id", email.id.toString());
-              return prev;
-            });
+              prev.set("preview_template_id", email.id.toString())
+              return prev
+            })
           }}
         >
           Preview email
@@ -105,7 +105,7 @@ function Actions({ email }: { email: EmailTemplate }) {
               folder_id: email.folder_id,
               html: email.html,
               design: email.design,
-            });
+            })
           }}
           disabled={isCreating}
         >
@@ -115,14 +115,14 @@ function Actions({ email }: { email: EmailTemplate }) {
           variant="destructive"
           onClick={() => {
             setSearchParams((prev) => {
-              prev.set("delete_template_id", email.id.toString());
-              return prev;
-            });
+              prev.set("delete_template_id", email.id.toString())
+              return prev
+            })
           }}
         >
           Delete email
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

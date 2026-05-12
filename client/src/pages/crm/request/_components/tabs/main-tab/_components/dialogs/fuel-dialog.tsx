@@ -1,9 +1,9 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Controller, useForm } from "react-hook-form"
+import { z } from "zod"
 
-import { AmountInput } from "@/components/inputs/amount-input";
-import { Button } from "@/components/ui/button";
+import { AmountInput } from "@/components/inputs/amount-input"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogClose,
@@ -12,30 +12,30 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
   FieldSet,
-} from "@/components/ui/field";
-import { useRequest } from "@/hooks/use-request";
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router";
+} from "@/components/ui/field"
+import { useRequest } from "@/hooks/use-request"
+import { useEffect, useState } from "react"
+import { useSearchParams } from "react-router"
 
 const formSchema = z.object({
   percent: z.number().min(0).max(100),
   value: z.number().min(0),
   total: z.number().min(0),
-});
+})
 
-export type Inputs = z.infer<typeof formSchema>;
+export type Inputs = z.infer<typeof formSchema>
 
 export function FuelDialog() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [isOpen, setIsOpen] = useState(false);
-  const { draft, setField } = useRequest();
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [isOpen, setIsOpen] = useState(false)
+  const { draft, setField } = useRequest()
 
   const form = useForm<Inputs>({
     resolver: zodResolver(formSchema),
@@ -45,28 +45,28 @@ export function FuelDialog() {
       value: draft?.fuel?.value ?? 0,
       total: draft?.fuel?.total ?? 0,
     },
-  });
+  })
 
   function onSubmit(values: Inputs) {
     setField("fuel", {
       percent: values.percent,
       value: values.value,
       total: values.total,
-    });
-    handleCancel();
+    })
+    handleCancel()
   }
 
   useEffect(() => {
-    const editParam = searchParams.get("edit_fuel");
+    const editParam = searchParams.get("edit_fuel")
     if (editParam) {
-      setIsOpen(true);
+      setIsOpen(true)
     }
-  }, [searchParams]);
+  }, [searchParams])
 
   function handleCancel() {
-    form.reset();
-    setIsOpen(false);
-    setSearchParams();
+    form.reset()
+    setIsOpen(false)
+    setSearchParams()
   }
 
   return (
@@ -90,13 +90,10 @@ export function FuelDialog() {
                       id={field.name}
                       value={(field.value ?? 0).toString() ?? ""}
                       onChange={(value) => {
-                        field.onChange(Number(value));
-                        const totalMax = draft?.transportation.max ?? 0;
-                        form.setValue(
-                          "total",
-                          (Number(value) / 100) * totalMax,
-                        );
-                        form.setValue("value", 0);
+                        field.onChange(Number(value))
+                        const totalMax = draft?.transportation.max ?? 0
+                        form.setValue("total", (Number(value) / 100) * totalMax)
+                        form.setValue("value", 0)
                       }}
                       max={100}
                       min={0}
@@ -120,9 +117,9 @@ export function FuelDialog() {
                       id={field.name}
                       value={((field.value ?? 0) / 100).toString() ?? ""}
                       onChange={(value) => {
-                        field.onChange(Number(value) * 100);
-                        form.setValue("total", Number(value) * 100);
-                        form.setValue("percent", 0);
+                        field.onChange(Number(value) * 100)
+                        form.setValue("total", Number(value) * 100)
+                        form.setValue("percent", 0)
                       }}
                     />
                     {fieldState.invalid && (
@@ -163,5 +160,5 @@ export function FuelDialog() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

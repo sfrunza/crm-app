@@ -1,13 +1,13 @@
-import { Button } from "@/components/ui/button";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { Textarea } from "@/components/ui/textarea";
-import { SendIcon } from "@/components/icons";
+import { Button } from "@/components/ui/button"
+import { LoadingSwap } from "@/components/ui/loading-swap"
+import { Textarea } from "@/components/ui/textarea"
+import { SendIcon } from "@/components/icons"
 
 interface MessageInputProps {
-  value: string;
-  onChange: (value: string) => void;
-  onSend: () => void;
-  isSending: boolean;
+  value: string
+  onChange: (value: string) => void
+  onSend: () => void
+  isSending: boolean
 }
 
 export function MessageInput({
@@ -37,5 +37,5 @@ export function MessageInput({
         </Button>
       </div>
     </div>
-  );
+  )
 }

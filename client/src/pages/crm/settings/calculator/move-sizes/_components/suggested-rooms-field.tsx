@@ -1,17 +1,17 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   Field,
   FieldContent,
   FieldDescription,
   FieldLabel,
-} from "@/components/ui/field";
-import type { Room } from "@/domains/rooms/room.types";
+} from "@/components/ui/field"
+import type { Room } from "@/domains/rooms/room.types"
 
 type SuggestedRoomsFieldProps = {
-  rooms: Room[];
-  value: number[];
-  onChange: (value: number[]) => void;
-};
+  rooms: Room[]
+  value: number[]
+  onChange: (value: number[]) => void
+}
 
 export function SuggestedRoomsField({
   rooms,
@@ -19,15 +19,15 @@ export function SuggestedRoomsField({
   onChange,
 }: SuggestedRoomsFieldProps) {
   function handleToggle(roomId: number) {
-    const exists = value.includes(roomId);
+    const exists = value.includes(roomId)
     if (exists) {
-      onChange(value.filter((id) => id !== roomId));
+      onChange(value.filter((id) => id !== roomId))
     } else {
-      onChange([...value, roomId]);
+      onChange([...value, roomId])
     }
   }
 
-  const activeRooms = rooms.filter((room) => room.active);
+  const activeRooms = rooms.filter((room) => room.active)
 
   return (
     <Field>
@@ -51,5 +51,5 @@ export function SuggestedRoomsField({
         ))}
       </div>
     </Field>
-  );
+  )
 }

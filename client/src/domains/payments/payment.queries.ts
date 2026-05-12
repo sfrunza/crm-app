@@ -1,52 +1,52 @@
-import { useQuery, type UseQueryOptions } from "@tanstack/react-query";
+import { useQuery, type UseQueryOptions } from "@tanstack/react-query"
 import {
   getAdminInvoices,
+  getAdminPayments,
   getInvoiceStatusCounts,
   getInvoices,
   getPaymentMethods,
+  getPaymentStatusCounts,
   getPayments,
   getPublicInvoice,
   getStripeConfig,
-} from "./payment.api";
-import { paymentKeys } from "./payment.keys";
+} from "./payment.api"
+import { paymentKeys } from "./payment.keys"
 import type {
   AdminInvoiceListParams,
+  AdminPaymentListParams,
   Invoice,
   InvoiceListResponse,
   InvoiceStatusCounts,
   InvoiceStatusCountsParams,
   Payment,
+  PaymentListResponse,
+  PaymentStatusCounts,
+  PaymentStatusCountsParams,
   PublicInvoiceResponse,
   SavedPaymentMethod,
   StripeConfigResponse,
-} from "./payment.types";
+} from "./payment.types"
 
 export function useGetPayments(
   requestId: number,
-  queryOptions?: Omit<
-    UseQueryOptions<Payment[], Error>,
-    "queryKey" | "queryFn"
-  >
+  queryOptions?: Omit<UseQueryOptions<Payment[], Error>, "queryKey" | "queryFn">
 ) {
   return useQuery({
     queryKey: paymentKeys.forRequest(requestId),
     queryFn: () => getPayments(requestId),
     ...queryOptions,
-  });
+  })
 }
 
 export function useGetInvoices(
   requestId: number,
-  queryOptions?: Omit<
-    UseQueryOptions<Invoice[], Error>,
-    "queryKey" | "queryFn"
-  >
+  queryOptions?: Omit<UseQueryOptions<Invoice[], Error>, "queryKey" | "queryFn">
 ) {
   return useQuery({
     queryKey: paymentKeys.invoicesForRequest(requestId),
     queryFn: () => getInvoices(requestId),
     ...queryOptions,
-  });
+  })
 }
 
 export function useGetAdminInvoices(
@@ -60,7 +60,35 @@ export function useGetAdminInvoices(
     queryKey: paymentKeys.adminInvoiceList(params as Record<string, unknown>),
     queryFn: () => getAdminInvoices(params),
     ...queryOptions,
-  });
+  })
+}
+
+export function useGetAdminPayments(
+  params: AdminPaymentListParams,
+  queryOptions?: Omit<
+    UseQueryOptions<PaymentListResponse, Error>,
+    "queryKey" | "queryFn"
+  >
+) {
+  return useQuery({
+    queryKey: paymentKeys.adminPaymentList(params as Record<string, unknown>),
+    queryFn: () => getAdminPayments(params),
+    ...queryOptions,
+  })
+}
+
+export function useGetPaymentStatusCounts(
+  params: PaymentStatusCountsParams,
+  queryOptions?: Omit<
+    UseQueryOptions<PaymentStatusCounts, Error>,
+    "queryKey" | "queryFn"
+  >
+) {
+  return useQuery({
+    queryKey: paymentKeys.paymentStatusCounts(params),
+    queryFn: () => getPaymentStatusCounts(params),
+    ...queryOptions,
+  })
 }
 
 export function useGetInvoiceStatusCounts(
@@ -74,7 +102,7 @@ export function useGetInvoiceStatusCounts(
     queryKey: paymentKeys.invoiceStatusCounts(params),
     queryFn: () => getInvoiceStatusCounts(params),
     ...queryOptions,
-  });
+  })
 }
 
 export function useGetPublicInvoice(
@@ -89,7 +117,7 @@ export function useGetPublicInvoice(
     queryFn: () => getPublicInvoice(token!),
     enabled: !!token,
     ...queryOptions,
-  });
+  })
 }
 
 export function useGetPaymentMethods(
@@ -103,7 +131,7 @@ export function useGetPaymentMethods(
     queryKey: paymentKeys.paymentMethodsForUser(userId),
     queryFn: () => getPaymentMethods(userId),
     ...queryOptions,
-  });
+  })
 }
 
 export function useGetStripeConfig(
@@ -117,5 +145,5 @@ export function useGetStripeConfig(
     queryFn: getStripeConfig,
     staleTime: Infinity,
     ...queryOptions,
-  });
+  })
 }

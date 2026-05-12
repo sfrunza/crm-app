@@ -1,8 +1,8 @@
-import { memo } from "react";
-import type { Address } from "@/domains/requests/request.types";
+import { memo } from "react"
+import type { Address } from "@/domains/requests/request.types"
 
 interface AddressCellProps {
-  address: Pick<Address, "city" | "state" | "zip">;
+  address: Pick<Address, "city" | "state" | "zip">
 }
 
 export const AddressCell = memo(({ address }: AddressCellProps) => {
@@ -12,5 +12,5 @@ export const AddressCell = memo(({ address }: AddressCellProps) => {
       <br />
       {address.state} {address.zip}
     </span>
-  );
-});
+  )
+})

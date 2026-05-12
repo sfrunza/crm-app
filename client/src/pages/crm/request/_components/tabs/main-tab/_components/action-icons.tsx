@@ -9,19 +9,19 @@ import {
   AlertDialogMedia,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { LoadingSwap } from "@/components/ui/loading-swap";
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
+import { LoadingSwap } from "@/components/ui/loading-swap"
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { requestKeys } from "@/domains/requests/request.keys";
-import { useCloneRequest } from "@/domains/requests/request.mutations";
-import { useRequest } from "@/hooks/use-request";
-import { queryClient } from "@/lib/query-client";
+} from "@/components/ui/tooltip"
+import { requestKeys } from "@/domains/requests/request.keys"
+import { useCloneRequest } from "@/domains/requests/request.mutations"
+import { useRequest } from "@/hooks/use-request"
+import { queryClient } from "@/lib/query-client"
 import {
   BookCopyIcon,
   ClipboardPenLine,
@@ -29,43 +29,43 @@ import {
   PrinterIcon,
   TriangleAlertIcon,
   UserRoundIcon,
-} from "@/components/icons";
-import { useSearchParams } from "react-router";
-import { SendEmailDialog } from "./dialogs/send-email-dialog";
-import { openRequest } from "@/stores/use-open-requests-store";
+} from "@/components/icons"
+import { useSearchParams } from "react-router"
+import { SendEmailDialog } from "./dialogs/send-email-dialog"
+import { openRequest } from "@/stores/use-open-requests-store"
 
 export function ActionIcons() {
-  const [, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams()
 
-  const { request } = useRequest();
+  const { request } = useRequest()
 
   const { mutate: cloneRequestMutation, isPending } = useCloneRequest({
     onSettled: (data, error) => {
       if (error) {
-        queryClient.cancelQueries({ queryKey: requestKeys.lists() });
+        queryClient.cancelQueries({ queryKey: requestKeys.lists() })
       }
       if (data) {
-        queryClient.invalidateQueries({ queryKey: requestKeys.lists() });
+        queryClient.invalidateQueries({ queryKey: requestKeys.lists() })
         queryClient.invalidateQueries({
           queryKey: requestKeys.statusCounts(),
-        });
-        openRequest(data.id);
+        })
+        openRequest(data.id)
       }
     },
-  });
+  })
   function handleClickContract(id: number | undefined) {
-    if (!id) return;
-    openCenteredPopup(`/crm/requests/${id}/contract`, "_blank", 600, 850);
+    if (!id) return
+    openCenteredPopup(`/crm/requests/${id}/contract`, "_blank", 600, 850)
   }
 
   function handleClickPdf(id: number | undefined) {
-    if (!id) return;
-    openCenteredPopup(`/crm/requests/${id}/pdf`, "_blank", 900, 900);
+    if (!id) return
+    openCenteredPopup(`/crm/requests/${id}/pdf`, "_blank", 900, 900)
   }
 
   function handleClickClone(id: number | undefined) {
-    if (!id) return;
-    cloneRequestMutation({ id });
+    if (!id) return
+    cloneRequestMutation({ id })
   }
 
   // if (!request) return null;
@@ -80,12 +80,12 @@ export function ActionIcons() {
             <Button
               size="icon"
               variant="outline"
-              className="bg-background text-muted-foreground size-11 rounded-full shadow-md"
+              className="size-11 rounded-full bg-background text-muted-foreground shadow-md"
               onClick={() => {
                 setSearchParams((prev) => {
-                  prev.set("send_email", "true");
-                  return prev;
-                });
+                  prev.set("send_email", "true")
+                  return prev
+                })
               }}
             >
               <MailsIcon />
@@ -102,7 +102,7 @@ export function ActionIcons() {
               asChild
               size="icon"
               variant="outline"
-              className="bg-background text-muted-foreground size-11 rounded-full shadow-md"
+              className="size-11 rounded-full bg-background text-muted-foreground shadow-md"
             >
               <a href={`/account/requests/${request?.id}`} target="_blank">
                 <UserRoundIcon />
@@ -125,10 +125,10 @@ export function ActionIcons() {
             <Button
               size="icon"
               variant="outline"
-              className="bg-background text-muted-foreground size-11 rounded-full shadow-md"
+              className="size-11 rounded-full bg-background text-muted-foreground shadow-md"
               onClick={() => {
                 if (request?.id) {
-                  handleClickPdf(request.id);
+                  handleClickPdf(request.id)
                 }
               }}
             >
@@ -146,10 +146,10 @@ export function ActionIcons() {
               <Button
                 size="icon"
                 variant="outline"
-                className="bg-background text-muted-foreground size-11 rounded-full shadow-md"
+                className="size-11 rounded-full bg-background text-muted-foreground shadow-md"
                 onClick={() => {
                   if (request?.id) {
-                    handleClickContract(request.id);
+                    handleClickContract(request.id)
                   }
                 }}
               >
@@ -161,7 +161,7 @@ export function ActionIcons() {
         </TooltipProvider>
       )}
     </div>
-  );
+  )
 }
 
 function CloneRequest({
@@ -169,9 +169,9 @@ function CloneRequest({
   handleClickClone,
   isPending,
 }: {
-  requestId?: number;
-  handleClickClone: (requestId: number) => void;
-  isPending: boolean;
+  requestId?: number
+  handleClickClone: (requestId: number) => void
+  isPending: boolean
 }) {
   return (
     <AlertDialog>
@@ -182,7 +182,7 @@ function CloneRequest({
               <Button
                 size="icon"
                 variant="outline"
-                className="bg-background text-muted-foreground size-11 rounded-full shadow-md"
+                className="size-11 rounded-full bg-background text-muted-foreground shadow-md"
               >
                 <BookCopyIcon />
               </Button>
@@ -208,7 +208,7 @@ function CloneRequest({
           <AlertDialogAction
             onClick={() => {
               if (requestId) {
-                handleClickClone(requestId);
+                handleClickClone(requestId)
               }
             }}
             disabled={isPending}
@@ -218,33 +218,31 @@ function CloneRequest({
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
-  );
+  )
 }
 
 function openCenteredPopup(
   url: string,
   title: string,
   width: number,
-  height: number,
+  height: number
 ): void {
   // Get the screen position and size
-  const screenLeft = window.screenLeft ?? window.screenX;
-  const screenTop = window.screenTop ?? window.screenY;
+  const screenLeft = window.screenLeft ?? window.screenX
+  const screenTop = window.screenTop ?? window.screenY
 
   const screenWidth =
-    window.innerWidth || document.documentElement.clientWidth || screen.width;
+    window.innerWidth || document.documentElement.clientWidth || screen.width
   const screenHeight =
-    window.innerHeight ||
-    document.documentElement.clientHeight ||
-    screen.height;
+    window.innerHeight || document.documentElement.clientHeight || screen.height
 
   // Calculate the centered position
-  const left = screenLeft + (screenWidth - width) / 2;
-  const top = screenTop + (screenHeight - height) / 2;
+  const left = screenLeft + (screenWidth - width) / 2
+  const top = screenTop + (screenHeight - height) / 2
 
   // Create the features string for the popup
-  const features = `width=${width},height=${height},top=${top},left=${left},noopener,noreferrer`;
+  const features = `width=${width},height=${height},top=${top},left=${left},noopener,noreferrer`
 
   // Open the popup window
-  window.open(url, title, features);
+  window.open(url, title, features)
 }

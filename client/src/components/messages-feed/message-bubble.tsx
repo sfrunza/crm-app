@@ -1,16 +1,16 @@
-import { ChatInfoAvatar } from "@/components/chat-info/chat-info";
-import type { Message } from "@/types/index";
-import type { Status } from "@/domains/requests/request.types";
-import { cn } from "@/lib/utils";
-import { CheckCheckIcon, CheckIcon } from "@/components/icons";
-import { formatTime } from "./utils";
+import { ChatInfoAvatar } from "@/components/chat-info/chat-info"
+import type { Message } from "@/types/index"
+import type { Status } from "@/domains/requests/request.types"
+import { cn } from "@/lib/utils"
+import { CheckCheckIcon, CheckIcon } from "@/components/icons"
+import { formatTime } from "./utils"
 
 interface MessageBubbleProps {
-  message: Message;
-  isOwn: boolean;
-  showAvatar: boolean;
-  currentUserId?: number;
-  status?: Status;
+  message: Message
+  isOwn: boolean
+  showAvatar: boolean
+  currentUserId?: number
+  status?: Status
 }
 
 export function MessageBubble({
@@ -20,22 +20,22 @@ export function MessageBubble({
   currentUserId,
   status,
 }: MessageBubbleProps) {
-  const initials = `${message.user?.first_name?.[0] ?? ""}${message.user?.last_name?.[0] ?? ""}`;
+  const initials = `${message.user?.first_name?.[0] ?? ""}${message.user?.last_name?.[0] ?? ""}`
   const fullName =
-    `${message.user?.first_name ?? ""} ${message.user?.last_name ?? ""}`.trim();
-  const time = formatTime(message.created_at);
+    `${message.user?.first_name ?? ""} ${message.user?.last_name ?? ""}`.trim()
+  const time = formatTime(message.created_at)
 
-  const isFromCurrentUser = message.user_id === currentUserId;
+  const isFromCurrentUser = message.user_id === currentUserId
   const isSeenByOther = isFromCurrentUser
     ? message.viewed_by.some((id: number) => id !== currentUserId)
-    : false;
+    : false
 
   return (
     <div
       className={cn(
         "flex gap-2",
         isOwn ? "flex-row-reverse" : "flex-row",
-        showAvatar ? "mt-3" : "mt-0.5",
+        showAvatar ? "mt-3" : "mt-0.5"
       )}
     >
       <div className="w-8 shrink-0">
@@ -47,14 +47,14 @@ export function MessageBubble({
       <div
         className={cn(
           "flex max-w-[75%] min-w-0 flex-col",
-          isOwn ? "items-end" : "items-start",
+          isOwn ? "items-end" : "items-start"
         )}
       >
         {showAvatar && (
           <p
             className={cn(
               "mb-0.5 text-xs font-medium",
-              isOwn ? "text-right" : "text-left",
+              isOwn ? "text-right" : "text-left"
             )}
           >
             <span className="text-foreground">{fullName}</span>
@@ -64,8 +64,8 @@ export function MessageBubble({
           className={cn(
             "inline-block rounded-2xl px-3 py-2 text-sm leading-relaxed shadow",
             isOwn
-              ? "bg-primary text-primary-foreground rounded-tr-md"
-              : "bg-background text-foreground rounded-tl-md",
+              ? "rounded-tr-md bg-primary text-primary-foreground"
+              : "rounded-tl-md bg-background text-foreground"
           )}
         >
           <p className="wrap-break-word whitespace-pre-wrap">
@@ -75,14 +75,14 @@ export function MessageBubble({
         <div
           className={cn(
             "mt-0.5 flex items-center gap-1 text-[10px]",
-            isOwn ? "justify-end" : "justify-start",
+            isOwn ? "justify-end" : "justify-start"
           )}
         >
           <span className="text-muted-foreground">{time}</span>
           {isFromCurrentUser && (
             <span
               className={cn(
-                isSeenByOther ? "text-primary" : "text-muted-foreground",
+                isSeenByOther ? "text-primary" : "text-muted-foreground"
               )}
             >
               {isSeenByOther ? (
@@ -95,5 +95,5 @@ export function MessageBubble({
         </div>
       </div>
     </div>
-  );
+  )
 }

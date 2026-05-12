@@ -4,92 +4,90 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
   Field,
   FieldContent,
   FieldLabel,
   FieldTitle,
-} from "@/components/ui/field";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Spinner } from "@/components/ui/spinner";
-import { hexToRgb } from "@/lib/helpers";
-import { formatDate } from "@/lib/format-date";
-import { useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router";
-import { useRates } from "@/hooks/api/use-rates";
+} from "@/components/ui/field"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Spinner } from "@/components/ui/spinner"
+import { hexToRgb } from "@/lib/helpers"
+import { formatDate } from "@/lib/format-date"
+import { useEffect, useMemo, useState } from "react"
+import { useSearchParams } from "react-router"
+import { useRates } from "@/hooks/api/use-rates"
 import {
   useCalendarRates,
   useCreateCalendarRate,
   useUpdateCalendarRate,
-} from "@/hooks/api/use-calendar-rates";
-import type { CalendarRate } from "@/types/index";
+} from "@/hooks/api/use-calendar-rates"
+import type { CalendarRate } from "@/types/index"
 
 export function EditCalendarRateDialog() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const dateParams = searchParams.get("edit");
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [editDate, setEditDate] = useState<string | null>(null);
-  const [selectedValue, setSelectedValue] = useState<string>("1");
+  const [searchParams, setSearchParams] = useSearchParams()
+  const dateParams = searchParams.get("edit")
+  const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [editDate, setEditDate] = useState<string | null>(null)
+  const [selectedValue, setSelectedValue] = useState<string>("1")
 
   const { data: dbRates, isPending } = useRates({
     select: (data) => data.filter((rate) => rate.active),
-  });
+  })
 
   const defaultRate = useMemo(() => {
-    return dbRates?.find((rate) => rate.is_default) ?? null;
-  }, [dbRates]);
+    return dbRates?.find((rate) => rate.is_default) ?? null
+  }, [dbRates])
 
   const { data: calendarRates, isPending: isCalendarRatesPending } =
-    useCalendarRates();
+    useCalendarRates()
 
-  const { mutate: updateCalendarRateMutation } = useUpdateCalendarRate();
+  const { mutate: updateCalendarRateMutation } = useUpdateCalendarRate()
 
-  const { mutate: createCalendarRateMutation } = useCreateCalendarRate();
+  const { mutate: createCalendarRateMutation } = useCreateCalendarRate()
 
-  const calendarRate = editDate ? calendarRates?.[editDate] : null;
+  const calendarRate = editDate ? calendarRates?.[editDate] : null
 
   useEffect(() => {
     if (dateParams) {
-      setEditDate(dateParams);
-      setIsOpen(true);
+      setEditDate(dateParams)
+      setIsOpen(true)
     }
-  }, [dateParams]);
+  }, [dateParams])
 
   useEffect(() => {
     if (calendarRate) {
-      const value = calendarRate.rate_id
-        ? calendarRate.rate_id.toString()
-        : "0";
-      setSelectedValue(value);
+      const value = calendarRate.rate_id ? calendarRate.rate_id.toString() : "0"
+      setSelectedValue(value)
     } else {
-      if (!defaultRate) return;
-      setSelectedValue(defaultRate.id.toString() ?? "0");
+      if (!defaultRate) return
+      setSelectedValue(defaultRate.id.toString() ?? "0")
     }
-  }, [calendarRate, defaultRate]);
+  }, [calendarRate, defaultRate])
 
   function handleCancel() {
-    setIsOpen(false);
-    setSearchParams();
+    setIsOpen(false)
+    setSearchParams()
   }
 
   function handleSaveRate(id: number, newRateId: number) {
     const newData: Partial<CalendarRate> = {
       is_blocked: newRateId === 0,
       rate_id: newRateId === 0 ? null : newRateId,
-    };
+    }
 
     if (id) {
       updateCalendarRateMutation({
         id,
         data: newData,
-      });
+      })
     } else {
       createCalendarRateMutation({
         date: editDate,
         ...newData,
-      });
+      })
     }
   }
 
@@ -115,11 +113,11 @@ export function EditCalendarRateDialog() {
           <RadioGroup
             value={selectedValue}
             onValueChange={(value) => {
-              setSelectedValue(value);
+              setSelectedValue(value)
               if (calendarRate) {
-                handleSaveRate(calendarRate.id, parseInt(value));
+                handleSaveRate(calendarRate.id, parseInt(value))
               } else {
-                handleSaveRate(0, parseInt(value));
+                handleSaveRate(0, parseInt(value))
               }
             }}
           >
@@ -178,5 +176,5 @@ export function EditCalendarRateDialog() {
         )}
       </DialogContent>
     </Dialog>
-  );
+  )
 }

@@ -1,19 +1,19 @@
-import { ImageOffIcon } from "@/components/icons";
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
-import type { InventoryItem } from "./build-inventory";
-import { QuantitySelector } from "./quantity-selector";
+import { ImageOffIcon } from "@/components/icons"
+import { Badge } from "@/components/ui/badge"
+import { cn } from "@/lib/utils"
+import type { InventoryItem } from "./build-inventory"
+import { QuantitySelector } from "./quantity-selector"
 
 export function ItemRow({
   item,
   onQuantityChange,
   isLoading,
 }: {
-  item: InventoryItem;
-  onQuantityChange: (item: InventoryItem, quantity: number) => void;
-  isLoading?: boolean;
+  item: InventoryItem
+  onQuantityChange: (item: InventoryItem, quantity: number) => void
+  isLoading?: boolean
 }) {
-  const isSelected = item.quantity > 0;
+  const isSelected = item.quantity > 0
 
   return (
     <article
@@ -21,12 +21,12 @@ export function ItemRow({
         "flex h-full flex-col justify-between rounded-xl border p-3 transition",
         {
           "bg-muted/50 shadow-inner": !isSelected,
-          "border-primary/50 bg-primary/5 ring-primary/30 shadow-md ring":
+          "border-primary/50 bg-primary/5 shadow-md ring ring-primary/30":
             isSelected,
           // "border-primary/50 bg-primary/3 ring-primary/15 shadow-sm ring-1":
           //   isSelected,
           "opacity-75": isLoading,
-        },
+        }
       )}
       // className={cn(
       //   "flex h-full flex-col justify-between rounded-xl border p-3 transition",
@@ -40,8 +40,8 @@ export function ItemRow({
       <div className="space-y-3">
         <div
           className={cn(
-            "text-muted-foreground flex aspect-4/3 items-center justify-center overflow-hidden rounded-lg border border-dashed",
-            isSelected ? "border-primary/30" : "bg-muted/50",
+            "flex aspect-4/3 items-center justify-center overflow-hidden rounded-lg border border-dashed text-muted-foreground",
+            isSelected ? "border-primary/30" : "bg-muted/50"
           )}
         >
           {item.image_url ? (
@@ -63,8 +63,8 @@ export function ItemRow({
             className={cn(
               "line-clamp-2 text-sm leading-5",
               isSelected
-                ? "text-foreground font-semibold"
-                : "text-foreground/80 font-medium",
+                ? "font-semibold text-foreground"
+                : "font-medium text-foreground/80"
             )}
           >
             {item.name}
@@ -78,7 +78,7 @@ export function ItemRow({
         <div
           className={cn(
             "text-xs",
-            isSelected ? "text-foreground/80" : "text-muted-foreground",
+            isSelected ? "text-foreground/80" : "text-muted-foreground"
           )}
         >
           {Number(item.volume || 0).toFixed(2)} cu ft each
@@ -93,5 +93,5 @@ export function ItemRow({
         />
       </div>
     </article>
-  );
+  )
 }

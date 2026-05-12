@@ -1,18 +1,18 @@
-import type { Request } from "@/domains/requests/request.types";
-import { timeWindowToString } from "@/lib/helpers";
-import { cn } from "@/lib/utils";
-import { UsersIcon } from "@/components/icons";
+import type { Request } from "@/domains/requests/request.types"
+import { timeWindowToString } from "@/lib/helpers"
+import { cn } from "@/lib/utils"
+import { UsersIcon } from "@/components/icons"
 
 type ParklotJobInfoLargeProps = {
-  request: Request;
-  slotType?: "pickup" | "delivery";
-  isActive: boolean;
-  left: number;
-  width: number;
-  bgClass: string;
-  handleRequestClick: (request: Request) => void;
-  className?: string;
-};
+  request: Request
+  slotType?: "pickup" | "delivery"
+  isActive: boolean
+  left: number
+  width: number
+  bgClass: string
+  handleRequestClick: (request: Request) => void
+  className?: string
+}
 
 export function ParklotJobInfoLarge({
   request,
@@ -24,23 +24,23 @@ export function ParklotJobInfoLarge({
   handleRequestClick,
   className,
 }: ParklotJobInfoLargeProps) {
-  const isDelivery = slotType === "delivery";
+  const isDelivery = slotType === "delivery"
 
   const crewSize = isDelivery
     ? request.crew_size_delivery || request.crew_size
-    : request.crew_size;
+    : request.crew_size
 
   const startTime = isDelivery
     ? (request.start_time_window_delivery ?? request.start_time_window)
-    : request.start_time_window;
+    : request.start_time_window
 
   const endTime = isDelivery
     ? (request.end_time_window_delivery ?? request.end_time_window)
-    : request.end_time_window;
+    : request.end_time_window
 
   const assignedForeman = isDelivery
     ? (request.delivery_foreman ?? request.foreman)
-    : request.foreman;
+    : request.foreman
   return (
     <div
       className={cn(
@@ -48,28 +48,28 @@ export function ParklotJobInfoLarge({
         "cursor-pointer transition select-none",
         bgClass,
         {
-          "after:border-background after:absolute after:inset-0 after:rounded-sm after:border-2 after:border-dashed":
+          "after:absolute after:inset-0 after:rounded-sm after:border-2 after:border-dashed after:border-background":
             isActive,
         },
-        className,
+        className
       )}
       style={{
         left: `${left}%`,
         width: `${width}%`,
       }}
       onClick={(e) => {
-        e.preventDefault();
-        handleRequestClick(request);
+        e.preventDefault()
+        handleRequestClick(request)
       }}
       onMouseDown={(e) => e.stopPropagation()} // important for draggable grids
     >
       <div className="relative h-full w-full overflow-hidden p-2">
         {request.status === "completed" ? (
-          <span className="bg-background/20 absolute top-0 right-0 shrink-0 rounded px-1.5 py-0.5 text-[10px] leading-tight font-semibold uppercase">
+          <span className="absolute top-0 right-0 shrink-0 rounded bg-background/20 px-1.5 py-0.5 text-[10px] leading-tight font-semibold uppercase">
             Completed
           </span>
         ) : assignedForeman ? (
-          <span className="bg-background/20 absolute top-0 right-0 shrink-0 truncate rounded px-1.5 py-0.5 text-[12px] leading-tight font-semibold">
+          <span className="absolute top-0 right-0 shrink-0 truncate rounded bg-background/20 px-1.5 py-0.5 text-[12px] leading-tight font-semibold">
             👷🏻{" "}
             {`${assignedForeman.first_name} ${assignedForeman.last_name[0]}.`}
           </span>
@@ -114,5 +114,5 @@ export function ParklotJobInfoLarge({
         </div>
       </div>
     </div>
-  );
+  )
 }

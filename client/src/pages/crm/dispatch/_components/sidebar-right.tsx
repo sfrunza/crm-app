@@ -1,22 +1,22 @@
-import { Calendar } from "@/components/ui/calendar";
+import { Calendar } from "@/components/ui/calendar"
 import {
   Empty,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
-} from "@/components/ui/empty";
-import { useGetDispatchActiveDates } from "@/domains/dispatch/dispatch.queries";
-import { parseDateOnly } from "@/lib/format-date";
-import { PointerIcon } from "@/components/icons";
-import { useMemo } from "react";
-import { CrewAssignmentForm } from "./crew-assignment-form";
+} from "@/components/ui/empty"
+import { useGetDispatchActiveDates } from "@/domains/dispatch/dispatch.queries"
+import { parseDateOnly } from "@/lib/format-date"
+import { PointerIcon } from "@/components/icons"
+import { useMemo } from "react"
+import { CrewAssignmentForm } from "./crew-assignment-form"
 
 interface SidebarRightProps {
-  selectedDate: string | null;
-  setSelectedDate: (date: Date) => void;
-  selectedMonth: string | null;
-  setSelectedMonth: (month: Date) => void;
-  selectedRequestId: number | null;
+  selectedDate: string | null
+  setSelectedDate: (date: Date) => void
+  selectedMonth: string | null
+  setSelectedMonth: (month: Date) => void
+  selectedRequestId: number | null
 }
 
 export function SidebarRight({
@@ -28,30 +28,30 @@ export function SidebarRight({
 }: SidebarRightProps) {
   const { data: activeDates } = useGetDispatchActiveDates(selectedMonth!, {
     enabled: !!selectedMonth,
-  });
+  })
 
   const highlightDates = useMemo(
     () =>
       activeDates?.map((date) => {
-        const dateArray = date.split("-").map(Number);
-        return new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
+        const dateArray = date.split("-").map(Number)
+        return new Date(dateArray[0], dateArray[1] - 1, dateArray[2])
       }) ?? [],
-    [activeDates],
-  );
+    [activeDates]
+  )
 
   const modifiers = useMemo(
     () => ({
       highlight: highlightDates,
     }),
-    [highlightDates],
-  );
+    [highlightDates]
+  )
 
   const modifiersClassNames = useMemo(
     () => ({
       highlight: "[&>button]:bg-primary [&>button]:text-primary-foreground",
     }),
-    [],
-  );
+    []
+  )
 
   return (
     <div className="p-4 pb-10">
@@ -90,5 +90,5 @@ export function SidebarRight({
         />
       )}
     </div>
-  );
+  )
 }

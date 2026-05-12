@@ -1,31 +1,32 @@
-import { PlusIcon, XIcon } from "@/components/icons";
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { PlusCircleIcon, XCircleIcon } from "@/components/icons"
+import { Button, buttonVariants } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { formatDate } from "@/lib/format-date";
-import { format } from "date-fns";
-import { useMemo, useState } from "react";
-import { type DateRange } from "react-day-picker";
+} from "@/components/ui/popover"
+import { formatDate } from "@/lib/format-date"
+import { cn } from "@/lib/utils"
+import { format } from "date-fns"
+import { useMemo, useState } from "react"
+import { type DateRange } from "react-day-picker"
 
 function rangeSignature(range: DateRange | undefined): string {
-  if (!range?.from) return "";
-  const a = format(range.from, "yyyy-MM-dd");
-  const b = range.to ? format(range.to, "yyyy-MM-dd") : "";
-  return `${a}|${b}`;
+  if (!range?.from) return ""
+  const a = format(range.from, "yyyy-MM-dd")
+  const b = range.to ? format(range.to, "yyyy-MM-dd") : ""
+  return `${a}|${b}`
 }
 
 export interface DatePickerRangePillProps {
   /** Applied range (e.g. from URL). Shown on the pill when the popover is closed. */
-  value: DateRange | undefined;
+  value: DateRange | undefined
   /** Called when the user applies from the popover or clears from the pill. */
-  onApply: (range: DateRange | undefined) => void;
+  onApply: (range: DateRange | undefined) => void
   /** Label before the range (reference UI uses “Date and time”). */
-  label?: string;
-  id?: string;
+  label?: string
+  id?: string
 }
 
 export function DatePickerRangePill({
@@ -34,83 +35,85 @@ export function DatePickerRangePill({
   label = "Date range",
   id,
 }: DatePickerRangePillProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   const [pendingRange, setPendingRange] = useState<DateRange | undefined>(
     undefined
-  );
+  )
 
   const handleOpenChange = (next: boolean) => {
     if (next) {
-      setPendingRange(value);
+      setPendingRange(value)
     }
-    setOpen(next);
-  };
+    setOpen(next)
+  }
 
   const rangeLabel = useMemo(() => {
-    if (!value?.from) return "Select range";
-    const fromLabel = formatDate(value.from, "MMM d, yyyy");
-    if (!value.to) return `${fromLabel} – …`;
-    return `${fromLabel} - ${formatDate(value.to, "MMM d, yyyy")}`;
-  }, [value]);
+    if (!value?.from) return "Select range"
+    const fromLabel = formatDate(value.from, "MMM d, yyyy")
+    if (!value.to) return `${fromLabel} – …`
+    return `${fromLabel} - ${formatDate(value.to, "MMM d, yyyy")}`
+  }, [value])
 
-  const hasRange = Boolean(value?.from);
+  const hasRange = Boolean(value?.from)
 
   const canApply = useMemo(
     () => rangeSignature(pendingRange) !== rangeSignature(value),
     [pendingRange, value]
-  );
+  )
 
   const clear = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    e.preventDefault();
-    onApply(undefined);
-    handleOpenChange(false);
-  };
+    e.stopPropagation()
+    e.preventDefault()
+    onApply(undefined)
+    handleOpenChange(false)
+  }
 
   const handleApply = () => {
-    onApply(pendingRange);
-    handleOpenChange(false);
-  };
+    onApply(pendingRange)
+    handleOpenChange(false)
+  }
 
   return (
     <div>
       <Popover open={open} onOpenChange={handleOpenChange}>
         <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            type="button"
+          <div
             id={id}
-            className="rounded-full"
+            className={cn(
+              buttonVariants({ variant: "outline", size: "sm" }),
+              "rounded-full"
+            )}
           >
-            {hasRange && (
-              <Button
+            {hasRange ? (
+              <button
                 type="button"
                 aria-label="Clear date range"
-                size="icon-xs"
-                className="rounded-full"
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "icon-xs" }),
+                  "shrink-0 rounded-full"
+                )}
                 onClick={clear}
-                variant="ghost"
               >
-                <XIcon />
-              </Button>
-            )}
-            {!hasRange && (
-              <Button
-                aria-label="Add date range"
-                size="icon-xs"
-                className="rounded-full"
-                variant="ghost"
+                <XCircleIcon />
+              </button>
+            ) : (
+              <span
+                className={cn(
+                  buttonVariants({ variant: "ghost", size: "icon-xs" }),
+                  "pointer-events-none inline-flex shrink-0 rounded-full"
+                )}
+                aria-hidden
               >
-                <PlusIcon />
-              </Button>
+                <PlusCircleIcon />
+              </span>
             )}
-            {label}
+            <span>{label}</span>
             {hasRange && (
               <span className="min-w-0 flex-1 truncate font-medium text-primary">
                 {rangeLabel}
               </span>
             )}
-          </Button>
+          </div>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="start">
           <div className="flex flex-col">
@@ -137,5 +140,5 @@ export function DatePickerRangePill({
         </PopoverContent>
       </Popover>
     </div>
-  );
+  )
 }

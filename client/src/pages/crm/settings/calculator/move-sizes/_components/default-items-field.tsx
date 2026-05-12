@@ -1,9 +1,9 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+} from "@/components/ui/collapsible"
 import {
   Command,
   CommandEmpty,
@@ -11,33 +11,33 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
+} from "@/components/ui/command"
 import {
   Field,
   FieldContent,
   FieldDescription,
   FieldLabel,
-} from "@/components/ui/field";
-import { NumberInput } from "@/components/ui/number-input";
+} from "@/components/ui/field"
+import { NumberInput } from "@/components/ui/number-input"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import type { Item } from "@/domains/items/item.types";
-import type { Room } from "@/domains/rooms/room.types";
-import { ChevronDown, Plus, X } from "lucide-react";
-import { useState } from "react";
+} from "@/components/ui/popover"
+import type { Item } from "@/domains/items/item.types"
+import type { Room } from "@/domains/rooms/room.types"
+import { ChevronDown, Plus, X } from "lucide-react"
+import { useState } from "react"
 
 type DefaultItemsFieldProps = {
-  rooms: Room[];
-  items: Item[];
-  selectedRoomIds: number[];
-  value: Record<string, Record<string, number>>;
-  onChange: (value: Record<string, Record<string, number>>) => void;
-  label?: string;
-  description?: string;
-};
+  rooms: Room[]
+  items: Item[]
+  selectedRoomIds: number[]
+  value: Record<string, Record<string, number>>
+  onChange: (value: Record<string, Record<string, number>>) => void
+  label?: string
+  description?: string
+}
 
 export function DefaultItemsField({
   rooms,
@@ -49,53 +49,53 @@ export function DefaultItemsField({
   description = "Configure the typical items and quantities for each default room.",
 }: DefaultItemsFieldProps) {
   const selectedRooms = rooms.filter((room) =>
-    selectedRoomIds.includes(room.id),
-  );
+    selectedRoomIds.includes(room.id)
+  )
 
   function handleUpdateQuantity(
     roomId: number,
     itemId: number,
-    quantity: number,
+    quantity: number
   ) {
-    const roomKey = roomId.toString();
-    const itemKey = itemId.toString();
-    const currentRoomItems = value[roomKey] || {};
+    const roomKey = roomId.toString()
+    const itemKey = itemId.toString()
+    const currentRoomItems = value[roomKey] || {}
 
     if (quantity <= 0) {
-      const { [itemKey]: _, ...rest } = currentRoomItems;
+      const { [itemKey]: _, ...rest } = currentRoomItems
       if (Object.keys(rest).length === 0) {
-        const { [roomKey]: __, ...restRooms } = value;
-        onChange(restRooms);
+        const { [roomKey]: __, ...restRooms } = value
+        onChange(restRooms)
       } else {
-        onChange({ ...value, [roomKey]: rest });
+        onChange({ ...value, [roomKey]: rest })
       }
     } else {
       onChange({
         ...value,
         [roomKey]: { ...currentRoomItems, [itemKey]: quantity },
-      });
+      })
     }
   }
 
   function handleAddItem(roomId: number, itemId: number) {
-    const roomKey = roomId.toString();
-    const itemKey = itemId.toString();
-    const currentRoomItems = value[roomKey] || {};
+    const roomKey = roomId.toString()
+    const itemKey = itemId.toString()
+    const currentRoomItems = value[roomKey] || {}
 
-    if (currentRoomItems[itemKey]) return;
+    if (currentRoomItems[itemKey]) return
 
     onChange({
       ...value,
       [roomKey]: { ...currentRoomItems, [itemKey]: 1 },
-    });
+    })
   }
 
   function handleRemoveItem(roomId: number, itemId: number) {
-    handleUpdateQuantity(roomId, itemId, 0);
+    handleUpdateQuantity(roomId, itemId, 0)
   }
 
   if (selectedRooms.length === 0) {
-    return null;
+    return null
   }
 
   return (
@@ -120,17 +120,17 @@ export function DefaultItemsField({
         ))}
       </div>
     </Field>
-  );
+  )
 }
 
 type RoomItemsCollapsibleProps = {
-  room: Room;
-  allItems: Item[];
-  roomItems: Record<string, number>;
-  onAddItem: (itemId: number) => void;
-  onRemoveItem: (itemId: number) => void;
-  onUpdateQuantity: (itemId: number, quantity: number) => void;
-};
+  room: Room
+  allItems: Item[]
+  roomItems: Record<string, number>
+  onAddItem: (itemId: number) => void
+  onRemoveItem: (itemId: number) => void
+  onUpdateQuantity: (itemId: number, quantity: number) => void
+}
 
 function RoomItemsCollapsible({
   room,
@@ -140,21 +140,18 @@ function RoomItemsCollapsible({
   onRemoveItem,
   onUpdateQuantity,
 }: RoomItemsCollapsibleProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
+  const [searchOpen, setSearchOpen] = useState(false)
 
-  const selectedItemIds = Object.keys(roomItems).map(Number);
+  const selectedItemIds = Object.keys(roomItems).map(Number)
   const selectedItems = allItems.filter((item) =>
-    selectedItemIds.includes(item.id),
-  );
+    selectedItemIds.includes(item.id)
+  )
   const availableItems = allItems.filter(
-    (item) => !selectedItemIds.includes(item.id),
-  );
+    (item) => !selectedItemIds.includes(item.id)
+  )
 
-  const totalItems = Object.values(roomItems).reduce(
-    (sum, qty) => sum + qty,
-    0,
-  );
+  const totalItems = Object.values(roomItems).reduce((sum, qty) => sum + qty, 0)
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
@@ -167,7 +164,7 @@ function RoomItemsCollapsible({
           <span>
             {room.name}
             {totalItems > 0 && (
-              <span className="text-muted-foreground ml-2">
+              <span className="ml-2 text-muted-foreground">
                 ({totalItems} items)
               </span>
             )}
@@ -178,7 +175,7 @@ function RoomItemsCollapsible({
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent className="pt-2">
-        <div className="bg-muted/50 rounded-md border p-3">
+        <div className="rounded-md border bg-muted/50 p-3">
           <div className="mb-3">
             <Popover open={searchOpen} onOpenChange={setSearchOpen}>
               <PopoverTrigger asChild>
@@ -203,13 +200,13 @@ function RoomItemsCollapsible({
                           key={item.id}
                           value={item.name}
                           onSelect={() => {
-                            onAddItem(item.id);
-                            setSearchOpen(false);
+                            onAddItem(item.id)
+                            setSearchOpen(false)
                           }}
                         >
                           <div className="flex flex-col">
                             <span>{item.name}</span>
-                            <span className="text-muted-foreground text-xs">
+                            <span className="text-xs text-muted-foreground">
                               {item.volume || 0} cu ft, {item.weight || 0} lbs
                             </span>
                           </div>
@@ -223,7 +220,7 @@ function RoomItemsCollapsible({
           </div>
 
           {selectedItems.length === 0 ? (
-            <p className="text-muted-foreground text-sm">
+            <p className="text-sm text-muted-foreground">
               No items added yet. Use the button above to add items.
             </p>
           ) : (
@@ -235,7 +232,7 @@ function RoomItemsCollapsible({
                 >
                   <div className="min-w-0 flex-1">
                     <p className="truncate text-sm font-medium">{item.name}</p>
-                    <p className="text-muted-foreground text-xs">
+                    <p className="text-xs text-muted-foreground">
                       {item.volume || 0} cu ft, {item.weight || 0} lbs
                     </p>
                   </div>
@@ -243,7 +240,7 @@ function RoomItemsCollapsible({
                     value={roomItems[item.id.toString()] || 0}
                     onChange={(val) => {
                       if (val) {
-                        onUpdateQuantity(item.id, val);
+                        onUpdateQuantity(item.id, val)
                       }
                     }}
                     min={1}
@@ -253,7 +250,7 @@ function RoomItemsCollapsible({
                     type="button"
                     variant="ghost"
                     size="icon"
-                    className="text-muted-foreground hover:text-destructive size-8"
+                    className="size-8 text-muted-foreground hover:text-destructive"
                     onClick={() => onRemoveItem(item.id)}
                   >
                     <X className="size-4" />
@@ -265,5 +262,5 @@ function RoomItemsCollapsible({
         </div>
       </CollapsibleContent>
     </Collapsible>
-  );
+  )
 }

@@ -4,18 +4,18 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from "@/components/ui/card"
 
-import { FileUpload } from "@/components/request/file-upload";
-import { ImageGallery } from "@/components/request/image-gallery";
-import { useRequest } from "@/hooks/use-request";
+import { FileUpload } from "@/components/request/file-upload"
+import { ImageGallery } from "@/components/request/image-gallery"
+import { useRequest } from "@/hooks/use-request"
 
 export function PhotosCard() {
-  const { request } = useRequest();
+  const { request } = useRequest()
 
-  if (!request) return null;
+  if (!request) return null
 
-  const canEdit = request?.can_edit_request;
+  const canEdit = request?.can_edit_request
 
   return (
     <Card>
@@ -34,5 +34,5 @@ export function PhotosCard() {
         />
       </CardContent>
     </Card>
-  );
+  )
 }

@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { LoadingSwap } from "@/components/ui/loading-swap";
+} from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { LoadingSwap } from "@/components/ui/loading-swap"
 import {
   Sheet,
   SheetClose,
@@ -15,33 +15,37 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
-import { useCreateEntranceType, useEntranceTypes, useUpdateEntranceType } from "@/hooks/api/use-entrance-types";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useMemo, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { useSearchParams } from "react-router";
-import { toast } from "sonner";
-import { z } from "zod";
+} from "@/components/ui/sheet"
+import {
+  useCreateEntranceType,
+  useEntranceTypes,
+  useUpdateEntranceType,
+} from "@/hooks/api/use-entrance-types"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useEffect, useMemo, useState } from "react"
+import { Controller, useForm } from "react-hook-form"
+import { useSearchParams } from "react-router"
+import { toast } from "sonner"
+import { z } from "zod"
 
 const formSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
   form_name: z.string().min(1, { message: "Form name is required" }),
-});
+})
 
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.infer<typeof formSchema>
 
 export function EntranceTypeFormSheet() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [isOpen, setIsOpen] = useState(false);
-  const [editId, setEditId] = useState<number | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [isOpen, setIsOpen] = useState(false)
+  const [editId, setEditId] = useState<number | null>(null)
 
-  const { data: entranceTypes } = useEntranceTypes();
+  const { data: entranceTypes } = useEntranceTypes()
 
   const entranceType = useMemo(
     () => entranceTypes?.find((p) => p.id === editId),
-    [entranceTypes, editId],
-  );
+    [entranceTypes, editId]
+  )
 
   const form = useForm<FormValues>({
     mode: "onChange",
@@ -51,50 +55,50 @@ export function EntranceTypeFormSheet() {
       name: entranceType?.name ?? "",
       form_name: entranceType?.form_name ?? "",
     },
-  });
+  })
 
   const { mutate: createEntranceTypeMutation, isPending: isCreating } =
     useCreateEntranceType({
       onSuccess: () => {
-        toast.success("Entrance type created");
-        handleCancel();
+        toast.success("Entrance type created")
+        handleCancel()
       },
-    });
+    })
 
   const { mutate: updateEntranceTypeMutation, isPending: isUpdating } =
     useUpdateEntranceType({
       onSuccess: () => {
-        toast.success("Entrance type updated");
-        handleCancel();
+        toast.success("Entrance type updated")
+        handleCancel()
       },
-    });
+    })
 
   useEffect(() => {
-    const editParam = searchParams.get("edit_entrance_type");
-    const createParam = searchParams.get("create_entrance_type");
+    const editParam = searchParams.get("edit_entrance_type")
+    const createParam = searchParams.get("create_entrance_type")
 
     if (editParam) {
-      setEditId(Number(editParam));
-      setIsOpen(true);
+      setEditId(Number(editParam))
+      setIsOpen(true)
     } else if (createParam) {
-      setEditId(null);
-      setIsOpen(true);
+      setEditId(null)
+      setIsOpen(true)
     }
-  }, [searchParams]);
+  }, [searchParams])
 
   function onSubmit(values: FormValues) {
     if (entranceType) {
-      updateEntranceTypeMutation({ id: entranceType.id, data: values });
+      updateEntranceTypeMutation({ id: entranceType.id, data: values })
     } else {
-      createEntranceTypeMutation(values);
+      createEntranceTypeMutation(values)
     }
   }
 
   function handleCancel() {
-    form.reset();
-    setIsOpen(false);
-    setEditId(null);
-    setSearchParams();
+    form.reset()
+    setIsOpen(false)
+    setEditId(null)
+    setSearchParams()
   }
   return (
     <Sheet open={isOpen} onOpenChange={handleCancel}>
@@ -169,5 +173,5 @@ export function EntranceTypeFormSheet() {
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

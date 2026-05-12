@@ -3,18 +3,18 @@ import {
   ContentTab,
   ContentTabs,
   ContentTabTitle,
-} from "@/components/content-tabs";
-import { useMemo } from "react";
-import { useSearchParams } from "react-router";
+} from "@/components/content-tabs"
+import { useMemo } from "react"
+import { useSearchParams } from "react-router"
 
-export type Tab = "all" | "admin" | "manager" | "foreman" | "driver" | "helper";
+export type Tab = "all" | "admin" | "manager" | "foreman" | "driver" | "helper"
 
-const tabs: Tab[] = ["all", "admin", "manager", "foreman", "driver", "helper"];
+const tabs: Tab[] = ["all", "admin", "manager", "foreman", "driver", "helper"]
 
 export function FilterTabs() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const filter = searchParams.get("filter") as Tab;
-  const activeTab = filter || "all";
+  const [searchParams, setSearchParams] = useSearchParams()
+  const filter = searchParams.get("role") as Tab
+  const activeTab = filter || "all"
 
   const tabsData = useMemo(() => {
     return (
@@ -23,8 +23,8 @@ export function FilterTabs() {
         label: tab,
         count: 0,
       })) ?? []
-    );
-  }, [tabs]);
+    )
+  }, [tabs])
 
   return (
     <ContentTabs>
@@ -35,14 +35,14 @@ export function FilterTabs() {
           onTabClick={() => {
             if (tab.value === "all") {
               setSearchParams((prev) => {
-                prev.delete("filter");
-                return prev;
-              });
+                prev.delete("role")
+                return prev
+              })
             } else {
               setSearchParams((prev) => {
-                prev.set("filter", tab.value);
-                return prev;
-              });
+                prev.set("role", tab.value)
+                return prev
+              })
             }
           }}
         >
@@ -54,5 +54,5 @@ export function FilterTabs() {
         </ContentTab>
       ))}
     </ContentTabs>
-  );
+  )
 }

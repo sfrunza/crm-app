@@ -3,49 +3,49 @@ import {
   PageContent,
   PageHeader,
   PageTitle,
-} from "@/components/page-component";
-import { Button } from "@/components/ui/button";
-import { PlusIcon } from "@/components/icons";
-import { Fragment, useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "react-router";
-import { DeleteExtraServiceDialog } from "./delete-extra-service-dialog";
-import { ExtraServiceFormSheet } from "./extra-service-form-sheet";
-import { ExtraServicesTable } from "./extra-services-table";
-import { arrayMove } from "@dnd-kit/sortable";
-import type { DragEndEvent, UniqueIdentifier } from "@dnd-kit/core";
-import { Spinner } from "@/components/ui/spinner";
+} from "@/components/page-component"
+import { Button } from "@/components/ui/button"
+import { PlusIcon } from "@/components/icons"
+import { Fragment, useEffect, useMemo, useState } from "react"
+import { useSearchParams } from "react-router"
+import { DeleteExtraServiceDialog } from "./delete-extra-service-dialog"
+import { ExtraServiceFormSheet } from "./extra-service-form-sheet"
+import { ExtraServicesTable } from "./extra-services-table"
+import { arrayMove } from "@dnd-kit/sortable"
+import type { DragEndEvent, UniqueIdentifier } from "@dnd-kit/core"
+import { Spinner } from "@/components/ui/spinner"
 import {
   useExtraServices,
   useUpdateExtraService,
-} from "@/hooks/api/use-extra-services";
-import type { ExtraService } from "@/types/index";
+} from "@/hooks/api/use-extra-services"
+import type { ExtraService } from "@/types/index"
 
 function ExtraServicesPage() {
-  const [_, setSearchParams] = useSearchParams();
-  const { data: extraServices, isLoading, error } = useExtraServices();
-  const [items, setItems] = useState<ExtraService[]>(extraServices ?? []);
+  const [_, setSearchParams] = useSearchParams()
+  const { data: extraServices, isLoading, error } = useExtraServices()
+  const [items, setItems] = useState<ExtraService[]>(extraServices ?? [])
 
   useEffect(() => {
-    setItems(extraServices ?? []);
-  }, [extraServices]);
+    setItems(extraServices ?? [])
+  }, [extraServices])
 
-  const { mutate: updateExtraServiceMutatuon } = useUpdateExtraService();
+  const { mutate: updateExtraServiceMutatuon } = useUpdateExtraService()
 
   const dataIds = useMemo<UniqueIdentifier[]>(
     () => items?.map(({ id }) => id) || [],
     [items]
-  );
+  )
 
   function handleDragEnd(event: DragEndEvent) {
-    const { active, over } = event;
+    const { active, over } = event
     if (active && over && active.id !== over.id) {
       setItems((data) => {
-        const oldIndex = dataIds.indexOf(active.id);
-        const newIndex = dataIds.indexOf(over.id);
-        return arrayMove(data, oldIndex, newIndex);
-      });
+        const oldIndex = dataIds.indexOf(active.id)
+        const newIndex = dataIds.indexOf(over.id)
+        return arrayMove(data, oldIndex, newIndex)
+      })
 
-      const activeItem = items.find((item) => item.id === active.id);
+      const activeItem = items.find((item) => item.id === active.id)
 
       if (activeItem) {
         updateExtraServiceMutatuon({
@@ -53,7 +53,7 @@ function ExtraServicesPage() {
           data: {
             position: dataIds.indexOf(over.id),
           },
-        });
+        })
       }
     }
   }
@@ -70,7 +70,7 @@ function ExtraServicesPage() {
           <Button
             size="sm"
             onClick={() => {
-              setSearchParams({ create_extra_service: "true" });
+              setSearchParams({ create_extra_service: "true" })
             }}
           >
             <PlusIcon />
@@ -102,7 +102,7 @@ function ExtraServicesPage() {
         )}
       </PageContent>
     </Fragment>
-  );
+  )
 }
 
-export const Component = ExtraServicesPage;
+export const Component = ExtraServicesPage

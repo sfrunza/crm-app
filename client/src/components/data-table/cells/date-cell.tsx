@@ -1,33 +1,36 @@
-import { memo } from "react";
-import { TABLE_CONFIG } from "../table.config";
-import { formatDate, parseDateOnly, differenceInDays } from "@/lib/format-date";
+import { memo } from "react"
+import { TABLE_CONFIG } from "../table.config"
+import { formatDate, parseDateOnly, differenceInDays } from "@/lib/format-date"
 
 interface DateCellProps {
-  date: string | null;
-  showRelative?: boolean;
+  date: string | null
+  showRelative?: boolean
 }
 
 export const DateCell = memo(
   ({ date, showRelative = false }: DateCellProps) => {
-    if (!date) return null;
+    if (!date) return null
 
     if (!showRelative) {
-      return <span>{formatDate(date, TABLE_CONFIG.DATE_FORMAT)}</span>;
+      return <span>{formatDate(date, TABLE_CONFIG.DATE_FORMAT)}</span>
     }
 
-    const diffDays = differenceInDays(parseDateOnly(date)!, formatDate(new Date()));
+    const diffDays = differenceInDays(
+      parseDateOnly(date)!,
+      formatDate(new Date())
+    )
 
-    let value = "";
+    let value = ""
     if (diffDays >= 0) {
       switch (diffDays) {
         case 0:
-          value = "today";
-          break;
+          value = "today"
+          break
         case 1:
-          value = "tomorrow";
-          break;
+          value = "tomorrow"
+          break
         default:
-          value = `in ${diffDays} days`;
+          value = `in ${diffDays} days`
       }
     }
 
@@ -39,6 +42,6 @@ export const DateCell = memo(
           {value}
         </span>
       </span>
-    );
-  },
-);
+    )
+  }
+)

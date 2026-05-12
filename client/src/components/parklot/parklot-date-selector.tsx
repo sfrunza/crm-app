@@ -1,29 +1,29 @@
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { Button } from "@/components/ui/button"
+import { Calendar } from "@/components/ui/calendar"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { addDays, formatDate, parseDateOnly } from "@/lib/format-date";
+} from "@/components/ui/popover"
+import { addDays, formatDate, parseDateOnly } from "@/lib/format-date"
 import {
   CalendarDaysIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-} from "@/components/icons";
-import { useState } from "react";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+} from "@/components/icons"
+import { useState } from "react"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface ParklotDateSelectorProps {
-  selectedDate: string | null;
-  setSelectedDate: (date: Date) => void;
-  hideCalendar?: boolean;
-  movingDate?: string | null;
-  deliveryDate?: string | null;
-  scheduleStartDate?: string | null;
-  showDateTabs?: boolean;
-  activeTab?: "pickup" | "delivery";
-  onTabChange?: (tab: "pickup" | "delivery") => void;
+  selectedDate: string | null
+  setSelectedDate: (date: Date) => void
+  hideCalendar?: boolean
+  movingDate?: string | null
+  deliveryDate?: string | null
+  scheduleStartDate?: string | null
+  showDateTabs?: boolean
+  activeTab?: "pickup" | "delivery"
+  onTabChange?: (tab: "pickup" | "delivery") => void
 }
 
 export function ParklotDateSelector({
@@ -37,27 +37,27 @@ export function ParklotDateSelector({
   activeTab = "pickup",
   onTabChange,
 }: ParklotDateSelectorProps) {
-  const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false);
+  const [isCalendarOpen, setIsCalendarOpen] = useState<boolean>(false)
 
   function handleDateChange(date: Date) {
-    if (!date) return;
-    setSelectedDate(date);
+    if (!date) return
+    setSelectedDate(date)
   }
 
   function handlePreviousDate() {
-    if (!selectedDate) return;
-    const parsedDate = parseDateOnly(selectedDate);
-    if (!parsedDate) return;
-    const prevDate = addDays(parsedDate, -1);
-    setSelectedDate(prevDate);
+    if (!selectedDate) return
+    const parsedDate = parseDateOnly(selectedDate)
+    if (!parsedDate) return
+    const prevDate = addDays(parsedDate, -1)
+    setSelectedDate(prevDate)
   }
 
   function handleNextDate() {
-    if (!selectedDate) return;
-    const parsedDate = parseDateOnly(selectedDate);
-    if (!parsedDate) return;
-    const nextDate = addDays(parsedDate, 1);
-    setSelectedDate(nextDate);
+    if (!selectedDate) return
+    const parsedDate = parseDateOnly(selectedDate)
+    if (!parsedDate) return
+    const nextDate = addDays(parsedDate, 1)
+    setSelectedDate(nextDate)
   }
 
   function handleTabChange(tab: "pickup" | "delivery") {
@@ -65,18 +65,18 @@ export function ParklotDateSelector({
     // For delivery: jump to schedule start date (first day the truck needs to drive)
     // which may be earlier than the actual delivery date
     const targetDate =
-      tab === "delivery" ? (scheduleStartDate ?? deliveryDate) : movingDate;
+      tab === "delivery" ? (scheduleStartDate ?? deliveryDate) : movingDate
     if (targetDate) {
-      const parsed = parseDateOnly(targetDate);
-      if (parsed) handleDateChange(parsed);
+      const parsed = parseDateOnly(targetDate)
+      if (parsed) handleDateChange(parsed)
     }
 
     // Notify parent (updates parklotContext)
-    onTabChange?.(tab);
+    onTabChange?.(tab)
   }
 
   return (
-    <div className="bg-background relative border-b py-2">
+    <div className="relative border-b bg-background py-2">
       {showDateTabs && (
         <Tabs
           value={activeTab}
@@ -132,8 +132,8 @@ export function ParklotDateSelector({
                   showOutsideDays={false}
                   onSelect={(date) => {
                     if (date) {
-                      handleDateChange(date);
-                      setIsCalendarOpen(false);
+                      handleDateChange(date)
+                      setIsCalendarOpen(false)
                     }
                   }}
                 />
@@ -150,5 +150,5 @@ export function ParklotDateSelector({
         </div>
       </div>
     </div>
-  );
+  )
 }
