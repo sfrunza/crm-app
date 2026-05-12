@@ -4,8 +4,8 @@ import {
   FieldDescription,
   FieldError,
   FieldLabel,
-} from "@/components/ui/field";
-import { NumberInput } from "@/components/ui/number-input";
+} from "@/components/ui/field"
+import { NumberInput } from "@/components/ui/number-input"
 import {
   Table,
   TableBody,
@@ -13,16 +13,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import type { EntranceType } from "@/types/index";
-import type { FieldError as RHFFieldError } from "react-hook-form";
+} from "@/components/ui/table"
+import type { EntranceType } from "@/types/index"
+import type { FieldError as RHFFieldError } from "react-hook-form"
 
 type CrewSizeFieldProps = {
-  value: number[][] | undefined;
-  onChange: (value: number[][]) => void;
-  fieldError?: RHFFieldError;
-  entranceTypes: EntranceType[] | undefined;
-};
+  value: number[][] | undefined
+  onChange: (value: number[][]) => void
+  fieldError?: RHFFieldError
+  entranceTypes: EntranceType[] | undefined
+}
 
 export function CrewSizeField({
   value,
@@ -44,7 +44,7 @@ export function CrewSizeField({
           No entrance types available. Please add entrance types first.
         </div>
       </Field>
-    );
+    )
   }
 
   const handleCellChange = (
@@ -56,15 +56,15 @@ export function CrewSizeField({
       ? value.map((row) => [...row])
       : Array.from({ length: entranceTypes.length }, () =>
           Array(entranceTypes.length).fill(2)
-        );
+        )
 
     if (!newSettings[rowIdx]) {
-      newSettings[rowIdx] = Array(entranceTypes.length).fill(2);
+      newSettings[rowIdx] = Array(entranceTypes.length).fill(2)
     }
 
-    newSettings[rowIdx][colIdx] = cellValue ?? 2;
-    onChange(newSettings);
-  };
+    newSettings[rowIdx][colIdx] = cellValue ?? 2
+    onChange(newSettings)
+  }
 
   return (
     <Field data-invalid={!!fieldError}>
@@ -91,7 +91,7 @@ export function CrewSizeField({
           </TableHeader>
           <TableBody>
             {entranceTypes.map((originType, rowIdx) => {
-              const row = value?.[rowIdx] ?? [];
+              const row = value?.[rowIdx] ?? []
               return (
                 <TableRow key={originType.id}>
                   <TableCell className="sticky left-0 z-10 bg-background font-medium">
@@ -112,12 +112,12 @@ export function CrewSizeField({
                     </TableCell>
                   ))}
                 </TableRow>
-              );
+              )
             })}
           </TableBody>
         </Table>
       </div>
       {fieldError && <FieldError errors={[fieldError]} />}
     </Field>
-  );
+  )
 }

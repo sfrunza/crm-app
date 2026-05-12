@@ -1,22 +1,22 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   Field,
   FieldContent,
   FieldDescription,
   FieldError,
   FieldLabel,
-} from "@/components/ui/field";
-import { Trash2Icon, UploadIcon } from "@/components/icons";
-import type { FieldError as RHFFieldError } from "react-hook-form";
-import type { RefObject, ChangeEvent } from "react";
+} from "@/components/ui/field"
+import { Trash2Icon, UploadIcon } from "@/components/icons"
+import type { FieldError as RHFFieldError } from "react-hook-form"
+import type { RefObject, ChangeEvent } from "react"
 
 type ImageFieldProps = {
-  imagePreview: string | null;
-  fileInputRef: RefObject<HTMLInputElement | null>;
-  fieldError?: RHFFieldError;
-  onImageChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  onRemoveImage: () => void;
-};
+  imagePreview: string | null
+  fileInputRef: RefObject<HTMLInputElement | null>
+  fieldError?: RHFFieldError
+  onImageChange: (e: ChangeEvent<HTMLInputElement>) => void
+  onRemoveImage: () => void
+}
 
 export function ImageField({
   imagePreview,
@@ -66,7 +66,7 @@ export function ImageField({
         </Button>
       ) : (
         <div className="relative mt-2">
-          <div className="border-border bg-muted/50 relative flex h-20 w-full items-center justify-center rounded-lg border">
+          <div className="relative flex h-20 w-full items-center justify-center rounded-lg border border-border bg-muted/50">
             <img
               src={imagePreview}
               alt="Preview"
@@ -77,5 +77,5 @@ export function ImageField({
       )}
       {fieldError && <FieldError errors={[fieldError]} />}
     </Field>
-  );
+  )
 }

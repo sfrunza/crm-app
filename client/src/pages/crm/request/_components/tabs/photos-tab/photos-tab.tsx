@@ -1,12 +1,12 @@
-import { FileUpload } from "@/components/request/file-upload";
-import { ImageGallery } from "@/components/request/image-gallery";
-import { useRequest } from "@/hooks/use-request";
+import { FileUpload } from "@/components/request/file-upload"
+import { ImageGallery } from "@/components/request/image-gallery"
+import { useRequest } from "@/hooks/use-request"
 // import { FileUpload } from "./file-upload";
 // import { ImageGallery } from "./image-gallery";
 
 export function PhotosTab() {
-  const { request } = useRequest();
-  if (!request) return null;
+  const { request } = useRequest()
+  if (!request) return null
 
   return (
     <div className="p-6">
@@ -17,5 +17,5 @@ export function PhotosTab() {
       </div>
       <ImageGallery images={request.image_urls ?? []} requestId={request.id} />
     </div>
-  );
+  )
 }

@@ -1,26 +1,26 @@
-import { AmountInput } from "@/components/inputs/amount-input";
-import { Button } from "@/components/ui/button";
-import { Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
-import { useCreateInvoice } from "@/domains/payments/payment.mutations";
-import { paymentKeys } from "@/domains/payments/payment.keys";
-import type { Request as RequestType } from "@/domains/requests/request.types";
-import { formatCentsToDollarsString } from "@/lib/helpers";
-import { PlusIcon, Trash2Icon } from "@/components/icons";
-import { useMemo, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { parseCents } from "./utils";
+import { AmountInput } from "@/components/inputs/amount-input"
+import { Button } from "@/components/ui/button"
+import { Field, FieldLabel } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { Separator } from "@/components/ui/separator"
+import { Textarea } from "@/components/ui/textarea"
+import { useCreateInvoice } from "@/domains/payments/payment.mutations"
+import { paymentKeys } from "@/domains/payments/payment.keys"
+import type { Request as RequestType } from "@/domains/requests/request.types"
+import { formatCentsToDollarsString } from "@/lib/helpers"
+import { PlusIcon, Trash2Icon } from "@/components/icons"
+import { useMemo, useState } from "react"
+import { useQueryClient } from "@tanstack/react-query"
+import { parseCents } from "./utils"
 
 // ─── Types ───────────────────────────────────────────────────────
 
 type InvoiceLineItem = {
-  id: string;
-  description: string;
-  quantity: string;
-  unitPrice: string;
-};
+  id: string
+  description: string
+  quantity: string
+  unitPrice: string
+}
 
 function emptyLineItem(): InvoiceLineItem {
   return {
@@ -28,7 +28,7 @@ function emptyLineItem(): InvoiceLineItem {
     description: "",
     quantity: "1",
     unitPrice: "",
-  };
+  }
 }
 
 // ─── Add Invoice Form ────────────────────────────────────────────
@@ -38,140 +38,138 @@ export function AddInvoiceForm({
   draft,
   onSuccess,
 }: {
-  requestId: number;
-  draft: RequestType | null | undefined;
-  onSuccess: () => void;
+  requestId: number
+  draft: RequestType | null | undefined
+  onSuccess: () => void
 }) {
-  const queryClient = useQueryClient();
-  const [error, setError] = useState<string | null>(null);
+  const queryClient = useQueryClient()
+  const [error, setError] = useState<string | null>(null)
 
-  const customer = draft?.customer;
-  const origin = draft?.origin;
+  const customer = draft?.customer
+  const origin = draft?.origin
 
   const defaultAddress = useMemo(() => {
-    if (!origin) return "";
+    if (!origin) return ""
     const parts = [origin.street, origin.apt ? `Apt ${origin.apt}` : ""].filter(
-      Boolean,
-    );
+      Boolean
+    )
     const line2 = [origin.city, origin.state, origin.zip]
       .filter(Boolean)
-      .join(", ");
-    return [parts.join(" "), line2].filter(Boolean).join("\n");
-  }, [origin]);
+      .join(", ")
+    return [parts.join(" "), line2].filter(Boolean).join("\n")
+  }, [origin])
 
-  const [email, setEmail] = useState(customer?.email_address || "");
+  const [email, setEmail] = useState(customer?.email_address || "")
   const [clientName, setClientName] = useState(
-    [customer?.first_name, customer?.last_name].filter(Boolean).join(" ") || "",
-  );
-  const [clientAddress, setClientAddress] = useState(defaultAddress);
-  const [description, setDescription] = useState("");
-  const [notes, setNotes] = useState("");
-  const [dueDate, setDueDate] = useState("");
+    [customer?.first_name, customer?.last_name].filter(Boolean).join(" ") || ""
+  )
+  const [clientAddress, setClientAddress] = useState(defaultAddress)
+  const [description, setDescription] = useState("")
+  const [notes, setNotes] = useState("")
+  const [dueDate, setDueDate] = useState("")
 
   // Line items
-  const [items, setItems] = useState<InvoiceLineItem[]>([emptyLineItem()]);
+  const [items, setItems] = useState<InvoiceLineItem[]>([emptyLineItem()])
 
   // Fees / discounts / tax
-  const [feeMode, setFeeMode] = useState<"percent" | "custom">("percent");
-  const [feePercent, setFeePercent] = useState("0");
-  const [feeCustom, setFeeCustom] = useState("");
+  const [feeMode, setFeeMode] = useState<"percent" | "custom">("percent")
+  const [feePercent, setFeePercent] = useState("0")
+  const [feeCustom, setFeeCustom] = useState("")
 
   const [discountMode, setDiscountMode] = useState<"percent" | "custom">(
-    "percent",
-  );
-  const [discountPercent, setDiscountPercent] = useState("0");
-  const [discountCustom, setDiscountCustom] = useState("");
+    "percent"
+  )
+  const [discountPercent, setDiscountPercent] = useState("0")
+  const [discountCustom, setDiscountCustom] = useState("")
 
-  const [taxMode, setTaxMode] = useState<"percent" | "custom">("percent");
-  const [taxPercent, setTaxPercent] = useState("0");
-  const [taxCustom, setTaxCustom] = useState("");
+  const [taxMode, setTaxMode] = useState<"percent" | "custom">("percent")
+  const [taxPercent, setTaxPercent] = useState("0")
+  const [taxCustom, setTaxCustom] = useState("")
 
   // Computed totals
   const subtotalCents = useMemo(() => {
     return items.reduce((sum, item) => {
-      const qty = parseInt(item.quantity) || 0;
-      const price = parseCents(item.unitPrice);
-      return sum + qty * (price ?? 0);
-    }, 0);
-  }, [items]);
+      const qty = parseInt(item.quantity) || 0
+      const price = parseCents(item.unitPrice)
+      return sum + qty * (price ?? 0)
+    }, 0)
+  }, [items])
 
   const feeCents = useMemo(() => {
-    if (feeMode === "custom") return parseCents(feeCustom) ?? 0;
-    const pct = parseFloat(feePercent) || 0;
-    return Math.round((subtotalCents * pct) / 100);
-  }, [feeMode, feePercent, feeCustom, subtotalCents]);
+    if (feeMode === "custom") return parseCents(feeCustom) ?? 0
+    const pct = parseFloat(feePercent) || 0
+    return Math.round((subtotalCents * pct) / 100)
+  }, [feeMode, feePercent, feeCustom, subtotalCents])
 
   const discountCents = useMemo(() => {
-    if (discountMode === "custom") return parseCents(discountCustom) ?? 0;
-    const pct = parseFloat(discountPercent) || 0;
-    return Math.round((subtotalCents * pct) / 100);
-  }, [discountMode, discountPercent, discountCustom, subtotalCents]);
+    if (discountMode === "custom") return parseCents(discountCustom) ?? 0
+    const pct = parseFloat(discountPercent) || 0
+    return Math.round((subtotalCents * pct) / 100)
+  }, [discountMode, discountPercent, discountCustom, subtotalCents])
 
-  const taxableCents = subtotalCents + feeCents - discountCents;
+  const taxableCents = subtotalCents + feeCents - discountCents
 
   const taxCents = useMemo(() => {
-    if (taxMode === "custom") return parseCents(taxCustom) ?? 0;
-    const pct = parseFloat(taxPercent) || 0;
-    return Math.round((taxableCents * pct) / 100);
-  }, [taxMode, taxPercent, taxCustom, taxableCents]);
+    if (taxMode === "custom") return parseCents(taxCustom) ?? 0
+    const pct = parseFloat(taxPercent) || 0
+    return Math.round((taxableCents * pct) / 100)
+  }, [taxMode, taxPercent, taxCustom, taxableCents])
 
-  const totalCents = subtotalCents + feeCents - discountCents + taxCents;
+  const totalCents = subtotalCents + feeCents - discountCents + taxCents
 
   // Line item handlers
   function addLineItem() {
-    setItems((prev) => [...prev, emptyLineItem()]);
+    setItems((prev) => [...prev, emptyLineItem()])
   }
 
   function removeLineItem(id: string) {
     setItems((prev) =>
-      prev.length === 1 ? prev : prev.filter((i) => i.id !== id),
-    );
+      prev.length === 1 ? prev : prev.filter((i) => i.id !== id)
+    )
   }
 
   function updateLineItem(
     id: string,
     field: keyof InvoiceLineItem,
-    value: string,
+    value: string
   ) {
     setItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, [field]: value } : item)),
-    );
+      prev.map((item) => (item.id === id ? { ...item, [field]: value } : item))
+    )
   }
 
   const createInvoice = useCreateInvoice({
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: paymentKeys.invoicesForRequest(requestId),
-      });
-      onSuccess();
+      })
+      onSuccess()
     },
     onError: (err) => {
-      setError(err.message || "Failed to create invoice");
+      setError(err.message || "Failed to create invoice")
     },
-  });
+  })
 
   function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
+    e.preventDefault()
+    setError(null)
 
     if (!email.trim()) {
-      setError("Please enter an email address");
-      return;
+      setError("Please enter an email address")
+      return
     }
     if (!clientName.trim()) {
-      setError("Please enter a client name");
-      return;
+      setError("Please enter a client name")
+      return
     }
 
     const validItems = items.filter(
-      (item) => item.description.trim() && parseCents(item.unitPrice) !== null,
-    );
+      (item) => item.description.trim() && parseCents(item.unitPrice) !== null
+    )
 
     if (validItems.length === 0) {
-      setError(
-        "Please add at least one line item with a description and price",
-      );
-      return;
+      setError("Please add at least one line item with a description and price")
+      return
     }
 
     createInvoice.mutate({
@@ -202,7 +200,7 @@ export function AddInvoiceForm({
           unit_price: parseCents(item.unitPrice) ?? 0,
         })),
       },
-    });
+    })
   }
 
   return (
@@ -260,7 +258,7 @@ export function AddInvoiceForm({
         </div>
 
         <div className="rounded-md border">
-          <div className="text-muted-foreground bg-muted/50 grid grid-cols-[1fr_64px_100px_100px_32px] gap-2 border-b px-3 py-2 text-xs font-medium">
+          <div className="grid grid-cols-[1fr_64px_100px_100px_32px] gap-2 border-b bg-muted/50 px-3 py-2 text-xs font-medium text-muted-foreground">
             <span>Description</span>
             <span className="text-right">Qty</span>
             <span className="text-right">Unit Price</span>
@@ -269,9 +267,9 @@ export function AddInvoiceForm({
           </div>
 
           {items.map((item) => {
-            const qty = parseInt(item.quantity) || 0;
-            const price = parseCents(item.unitPrice) ?? 0;
-            const lineAmount = qty * price;
+            const qty = parseInt(item.quantity) || 0
+            const price = parseCents(item.unitPrice) ?? 0
+            const lineAmount = qty * price
 
             return (
               <div
@@ -314,7 +312,7 @@ export function AddInvoiceForm({
                   <Trash2Icon className="size-3.5" />
                 </Button>
               </div>
-            );
+            )
           })}
         </div>
       </div>
@@ -363,7 +361,7 @@ export function AddInvoiceForm({
       <Separator />
 
       {/* Totals Summary */}
-      <div className="bg-muted/50 rounded-md p-3 text-sm">
+      <div className="rounded-md bg-muted/50 p-3 text-sm">
         <div className="flex justify-between py-1">
           <span className="text-muted-foreground">Subtotal</span>
           <span className="tabular-nums">
@@ -438,12 +436,12 @@ export function AddInvoiceForm({
           onChange={(e) => setDueDate(e.target.value)}
           min={new Date().toISOString().split("T")[0]}
         />
-        <p className="text-muted-foreground mt-1 text-xs">
+        <p className="mt-1 text-xs text-muted-foreground">
           Defaults to 7 days from today if not set.
         </p>
       </Field>
 
-      {error && <p className="text-destructive text-sm">{error}</p>}
+      {error && <p className="text-sm text-destructive">{error}</p>}
 
       <Button
         type="submit"
@@ -453,7 +451,7 @@ export function AddInvoiceForm({
         {createInvoice.isPending ? "Sending..." : "Create & Send Invoice"}
       </Button>
     </form>
-  );
+  )
 }
 
 // ─── Adjustment Row ──────────────────────────────────────────────
@@ -469,19 +467,19 @@ function AdjustmentRow({
   computedCents,
   isNegative,
 }: {
-  label: string;
-  mode: "percent" | "custom";
-  onModeChange: (mode: "percent" | "custom") => void;
-  percentValue: string;
-  onPercentChange: (value: string) => void;
-  customValue: string;
-  onCustomChange: (value: string) => void;
-  computedCents: number;
-  isNegative?: boolean;
+  label: string
+  mode: "percent" | "custom"
+  onModeChange: (mode: "percent" | "custom") => void
+  percentValue: string
+  onPercentChange: (value: string) => void
+  customValue: string
+  onCustomChange: (value: string) => void
+  computedCents: number
+  isNegative?: boolean
 }) {
   return (
     <div className="flex items-center gap-3">
-      <span className="text-muted-foreground w-28 shrink-0 text-sm">
+      <span className="w-28 shrink-0 text-sm text-muted-foreground">
         {label}
       </span>
 
@@ -515,7 +513,7 @@ function AdjustmentRow({
             step="0.5"
             className="h-8 w-20 text-right text-sm"
           />
-          <span className="text-muted-foreground text-sm">%</span>
+          <span className="text-sm text-muted-foreground">%</span>
         </div>
       ) : (
         <AmountInput
@@ -532,5 +530,5 @@ function AdjustmentRow({
         {formatCentsToDollarsString(computedCents)}
       </span>
     </div>
-  );
+  )
 }

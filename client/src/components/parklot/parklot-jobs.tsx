@@ -1,14 +1,14 @@
-import { STATUS_BG_COLOR } from "@/domains/requests/request.constants";
+import { STATUS_BG_COLOR } from "@/domains/requests/request.constants"
 import type {
   ParklotSlot,
   Request,
   Status,
-} from "@/domains/requests/request.types";
-import type { Truck } from "@/types/index";
-import { cn } from "@/lib/utils";
-import { Fragment } from "react";
-import { ParklotJobInfoLarge } from "./parklot-job-info-large";
-import { ParklotJobInfoSmall } from "./parklot-job-info-small";
+} from "@/domains/requests/request.types"
+import type { Truck } from "@/types/index"
+import { cn } from "@/lib/utils"
+import { Fragment } from "react"
+import { ParklotJobInfoLarge } from "./parklot-job-info-large"
+import { ParklotJobInfoSmall } from "./parklot-job-info-small"
 
 const TIME_SLOTS = [
   "07 AM",
@@ -26,34 +26,34 @@ const TIME_SLOTS = [
   "07 PM",
   "08 PM",
   "09 PM",
-];
+]
 
-const GRID_START_HOUR = 7; // 7 AM
-const TOTAL_SLOTS = TIME_SLOTS.length;
-const SCHEDULE_BG_COLOR = "bg-yellow-300";
+const GRID_START_HOUR = 7 // 7 AM
+const TOTAL_SLOTS = TIME_SLOTS.length
+const SCHEDULE_BG_COLOR = "bg-yellow-300"
 // const DELIVERY_BG_COLOR = "bg-blue-300";
 
 const minutesToGridPosition = (minutes: number): number => {
-  const hours = minutes / 60;
-  return ((hours - GRID_START_HOUR) / TOTAL_SLOTS) * 100;
-};
+  const hours = minutes / 60
+  return ((hours - GRID_START_HOUR) / TOTAL_SLOTS) * 100
+}
 
 const durationToWidth = (durationMinutes: number): number => {
-  return (durationMinutes / 60 / TOTAL_SLOTS) * 100;
-};
+  return (durationMinutes / 60 / TOTAL_SLOTS) * 100
+}
 
 const getRequestDurationMinutes = (request: Request): number => {
-  const totalMax = (request.work_time?.max ?? 0) + (request.travel_time ?? 0);
-  const minTotal = request.min_total_time ?? 0;
-  return Math.max(totalMax, minTotal);
-};
+  const totalMax = (request.work_time?.max ?? 0) + (request.travel_time ?? 0)
+  const minTotal = request.min_total_time ?? 0
+  return Math.max(totalMax, minTotal)
+}
 
 interface ParklotJobsProps {
-  selectedRequestId: number | null;
-  trucks: Truck[];
-  slots: Record<number, ParklotSlot[]>;
-  handleRequestClick: (request: Request) => void;
-  size?: "sm" | "lg";
+  selectedRequestId: number | null
+  trucks: Truck[]
+  slots: Record<number, ParklotSlot[]>
+  handleRequestClick: (request: Request) => void
+  size?: "sm" | "lg"
 }
 
 export function ParklotJobs({
@@ -66,12 +66,12 @@ export function ParklotJobs({
   const rowHight = {
     sm: "auto-rows-[55px]",
     lg: "auto-rows-[100px]",
-  };
+  }
 
   const border = {
     sm: "border-b border-r",
     lg: "border-b",
-  };
+  }
 
   return (
     <div className={cn("grid", rowHight[size])}>
@@ -85,22 +85,20 @@ export function ParklotJobs({
             ))}
           </div>
           {(slots?.[truck.id] ?? []).map((slot) => {
-            const left = minutesToGridPosition(slot.start_minutes);
-            const width = durationToWidth(
-              slot.end_minutes - slot.start_minutes
-            );
-            const isActive = selectedRequestId === slot.request.id;
-            const bgColor = SCHEDULE_BG_COLOR;
+            const left = minutesToGridPosition(slot.start_minutes)
+            const width = durationToWidth(slot.end_minutes - slot.start_minutes)
+            const isActive = selectedRequestId === slot.request.id
+            const bgColor = SCHEDULE_BG_COLOR
 
             const statusDurationMinutes = getRequestDurationMinutes(
               slot.request
-            );
+            )
             const jobWidth = Math.min(
               durationToWidth(statusDurationMinutes),
               100
-            );
+            )
 
-            console.log("slot", slot);
+            console.log("slot", slot)
 
             const jobNode =
               size === "lg" ? (
@@ -152,12 +150,12 @@ export function ParklotJobs({
                     />
                   )}
                 </div>
-              );
+              )
 
-            return <Fragment key={slot.id}>{jobNode}</Fragment>;
+            return <Fragment key={slot.id}>{jobNode}</Fragment>
           })}
         </div>
       ))}
     </div>
-  );
+  )
 }

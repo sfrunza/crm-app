@@ -1,11 +1,11 @@
-import { Spinner } from "@/components/ui/spinner";
+import { Spinner } from "@/components/ui/spinner"
 
 interface ParklotGridProps {
-  isLoading: boolean;
-  DateSelector: React.ComponentType;
-  Trucks: React.ComponentType;
-  Timeline: React.ComponentType;
-  Jobs: React.ComponentType;
+  isLoading: boolean
+  DateSelector: React.ComponentType
+  Trucks: React.ComponentType
+  Timeline: React.ComponentType
+  Jobs: React.ComponentType
 }
 
 export function ParklotGrid({
@@ -31,5 +31,5 @@ export function ParklotGrid({
         </div>
       </div>
     </>
-  );
+  )
 }

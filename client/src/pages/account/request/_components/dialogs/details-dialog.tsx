@@ -1,5 +1,5 @@
-import { DetailsForm } from '@/components/request/details-form';
-import { Button } from '@/components/ui/button';
+import { DetailsForm } from "@/components/request/details-form"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogClose,
@@ -9,38 +9,38 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { LoadingSwap } from '@/components/ui/loading-swap';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { requestKeys } from '@/domains/requests/request.keys';
-import { useUpdateRequest } from '@/domains/requests/request.mutations';
-import type { Request } from '@/domains/requests/request.types';
-import { useRequest } from '@/hooks/use-request';
-import { queryClient } from '@/lib/query-client';
-import { CheckCircleIcon, InfoIcon } from '@/components/icons';
-import { useState } from 'react';
-import { toast } from 'sonner';
+} from "@/components/ui/dialog"
+import { LoadingSwap } from "@/components/ui/loading-swap"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { requestKeys } from "@/domains/requests/request.keys"
+import { useUpdateRequest } from "@/domains/requests/request.mutations"
+import type { Request } from "@/domains/requests/request.types"
+import { useRequest } from "@/hooks/use-request"
+import { queryClient } from "@/lib/query-client"
+import { CheckCircleIcon, InfoIcon } from "@/components/icons"
+import { useState } from "react"
+import { toast } from "sonner"
 
 export function DetailsDialog() {
-  const [isOpen, setIsOpen] = useState(false);
-  const { request } = useRequest();
+  const [isOpen, setIsOpen] = useState(false)
+  const { request } = useRequest()
 
-  if (!request) return null;
+  if (!request) return null
 
-  const isTouched = request.details.is_touched;
-  const canEdit = request.can_edit_request;
+  const isTouched = request.details.is_touched
+  const canEdit = request.can_edit_request
 
-  function onSave(details: Request['details']) {
-    if (!request || !canEdit) return;
+  function onSave(details: Request["details"]) {
+    if (!request || !canEdit) return
 
     updateRequestMutation({
       id: request.id,
       data: { details },
-    });
+    })
   }
 
   function onCancel() {
-    setIsOpen(false);
+    setIsOpen(false)
   }
 
   const { mutate: updateRequestMutation, isPending: isUpdating } =
@@ -48,24 +48,24 @@ export function DetailsDialog() {
       {
         onSettled: (_, error) => {
           if (error) {
-            toast.error('Failed to save details');
+            toast.error("Failed to save details")
           } else {
             queryClient.invalidateQueries({
               queryKey: requestKeys.detail(request.id),
-            });
-            toast.success('Details saved');
-            onCancel();
+            })
+            toast.success("Details saved")
+            onCancel()
           }
         },
       },
       { forceCalculate: true }
-    );
+    )
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button
-          variant={isTouched ? 'default' : 'outline'}
+          variant={isTouched ? "default" : "outline"}
           className="h-16 w-full gap-6 rounded-xl"
         >
           {isTouched ? (
@@ -74,7 +74,7 @@ export function DetailsDialog() {
             <InfoIcon className="size-6" />
           )}
           <span className="flex flex-col items-start">
-            {isTouched ? 'View or modify details' : 'Add details'}
+            {isTouched ? "View or modify details" : "Add details"}
             <span className="text-sm font-normal">Optional</span>
           </span>
         </Button>
@@ -111,5 +111,5 @@ export function DetailsDialog() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

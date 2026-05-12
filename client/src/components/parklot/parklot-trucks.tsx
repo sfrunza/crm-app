@@ -1,11 +1,11 @@
-import type { Truck } from "@/types/index";
-import { cn } from "@/lib/utils";
+import type { Truck } from "@/types/index"
+import { cn } from "@/lib/utils"
 
 interface ParklotTrucksProps {
-  trucks: Truck[];
-  selectedTrucks?: number[];
-  onTruckClick?: (truckId: number) => void;
-  size?: "sm" | "lg";
+  trucks: Truck[]
+  selectedTrucks?: number[]
+  onTruckClick?: (truckId: number) => void
+  size?: "sm" | "lg"
 }
 export function ParklotTrucks({
   trucks,
@@ -16,7 +16,7 @@ export function ParklotTrucks({
   const rowHight = {
     sm: "auto-rows-[55px]",
     lg: "auto-rows-[100px]",
-  };
+  }
 
   return (
     <div
@@ -32,8 +32,8 @@ export function ParklotTrucks({
             onClick={
               onTruckClick
                 ? (e) => {
-                    e.stopPropagation();
-                    onTruckClick(truck.id);
+                    e.stopPropagation()
+                    onTruckClick(truck.id)
                   }
                 : undefined
             }
@@ -49,8 +49,8 @@ export function ParklotTrucks({
           >
             {truck.name} #{truck.id}
           </div>
-        );
+        )
       })}
     </div>
-  );
+  )
 }

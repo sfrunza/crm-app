@@ -66,7 +66,7 @@ function LoginPage() {
                     id={field.name}
                     aria-invalid={fieldState.invalid}
                     placeholder="m@example.com"
-                    autoComplete="email"
+                    autoComplete="username"
                     required
                   />
                   {fieldState.invalid && (
@@ -85,7 +85,7 @@ function LoginPage() {
                     {...field}
                     id={field.name}
                     aria-invalid={fieldState.invalid}
-                    autoComplete="password"
+                    autoComplete="current-password"
                     required
                   />
                   {fieldState.invalid && (

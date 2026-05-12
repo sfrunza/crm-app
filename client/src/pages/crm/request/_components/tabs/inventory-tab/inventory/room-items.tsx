@@ -1,6 +1,6 @@
-import { Spinner } from "@/components/ui/spinner";
-import type { InventoryItem } from "./build-inventory";
-import { ItemRow } from "./item-row";
+import { Spinner } from "@/components/ui/spinner"
+import type { InventoryItem } from "./build-inventory"
+import { ItemRow } from "./item-row"
 
 export function RoomItems({
   suggestedItems,
@@ -12,21 +12,21 @@ export function RoomItems({
   selectedRoomId,
   onQuantityChange,
 }: {
-  suggestedItems: InventoryItem[];
-  otherItems: InventoryItem[];
-  isLoading: boolean;
-  hasSelectedRoom: boolean;
-  search: string;
-  pendingItemKeys: Record<string, boolean>;
-  selectedRoomId?: number;
-  onQuantityChange: (item: InventoryItem, quantity: number) => void;
+  suggestedItems: InventoryItem[]
+  otherItems: InventoryItem[]
+  isLoading: boolean
+  hasSelectedRoom: boolean
+  search: string
+  pendingItemKeys: Record<string, boolean>
+  selectedRoomId?: number
+  onQuantityChange: (item: InventoryItem, quantity: number) => void
 }) {
   if (isLoading) {
     return (
       <div className="flex flex-1 items-center justify-center">
         <Spinner />
       </div>
-    );
+    )
   }
 
   if (!hasSelectedRoom) {
@@ -34,7 +34,7 @@ export function RoomItems({
       <div className="flex flex-1 items-center justify-center px-6 text-sm text-muted-foreground">
         Select a room to start managing inventory.
       </div>
-    );
+    )
   }
 
   if (suggestedItems.length === 0 && otherItems.length === 0) {
@@ -42,7 +42,7 @@ export function RoomItems({
       <div className="flex flex-1 items-center justify-center px-6 text-sm text-muted-foreground">
         {search ? "No items match your search." : "No items in this room yet."}
       </div>
-    );
+    )
   }
 
   return (
@@ -93,5 +93,5 @@ export function RoomItems({
         </section>
       )}
     </div>
-  );
+  )
 }

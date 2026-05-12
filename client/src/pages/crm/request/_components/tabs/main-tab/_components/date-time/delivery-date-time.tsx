@@ -1,13 +1,13 @@
-import { TIME_OPTIONS_WITH_MERIDIEM } from "@/domains/requests/request.constants";
+import { TIME_OPTIONS_WITH_MERIDIEM } from "@/domains/requests/request.constants"
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { DatePickerRange } from "@/components/inputs/date-picker-range";
-import { SelectWithSearch } from "@/components/inputs/select-with-search";
-import { Separator } from "@/components/ui/separator";
-import { Switch } from "@/components/ui/switch";
-import { useRequest } from "@/hooks/use-request";
-import { formatDate, parseDateOnly } from "@/lib/format-date";
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { DatePickerRange } from "@/components/inputs/date-picker-range"
+import { SelectWithSearch } from "@/components/inputs/select-with-search"
+import { Separator } from "@/components/ui/separator"
+import { Switch } from "@/components/ui/switch"
+import { useRequest } from "@/hooks/use-request"
+import { formatDate, parseDateOnly } from "@/lib/format-date"
 // import { useRequestStore } from '@/stores/use-draft-store';
 // import { useRequestDraft } from '@/stores/use-draft-draft';
 
@@ -15,12 +15,12 @@ export function DeliveryDateTime() {
   // const draft = useRequestStore((state) => state.draft);
   // const updateField = useRequestStore((state) => state.updateField);
 
-  const { draft, setField } = useRequest();
+  const { draft, setField } = useRequest()
 
-  if (!draft) return null;
+  if (!draft) return null
 
   return (
-    <div className="bg-background flex flex-wrap justify-start gap-4 p-4">
+    <div className="flex flex-wrap justify-start gap-4 bg-background p-4">
       {/* Move Date */}
       <div className="space-y-2">
         <Label htmlFor="delivery-date-window">Delivery window</Label>
@@ -36,12 +36,12 @@ export function DeliveryDateTime() {
           onChange={(dateRange) => {
             setField(
               "delivery_date_window_start",
-              formatDate(dateRange?.from, "yyyy-MM-dd") ?? null,
-            );
+              formatDate(dateRange?.from, "yyyy-MM-dd") ?? null
+            )
             setField(
               "delivery_date_window_end",
-              formatDate(dateRange?.to, "yyyy-MM-dd") ?? null,
-            );
+              formatDate(dateRange?.to, "yyyy-MM-dd") ?? null
+            )
           }}
           id="delivery-date-window"
         />
@@ -82,9 +82,9 @@ export function DeliveryDateTime() {
           inputMode="numeric"
           value={draft.crew_size_delivery || ""}
           onChange={(e) => {
-            const value = e.target.value;
+            const value = e.target.value
             if (/^\d*$/.test(value)) {
-              setField("crew_size_delivery", parseInt(value));
+              setField("crew_size_delivery", parseInt(value))
             }
           }}
           className="w-16"
@@ -103,5 +103,5 @@ export function DeliveryDateTime() {
         </div>
       </div>
     </div>
-  );
+  )
 }

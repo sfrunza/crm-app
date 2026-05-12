@@ -1,21 +1,21 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Switch } from "@/components/ui/switch";
-import { TableCell, TableRow } from "@/components/ui/table";
-import type { Employee } from "@/domains/employees/employee.types";
-import { formatPhone } from "@/lib/format-phone";
-import { MoreHorizontalIcon } from "@/components/icons";
-import { useSearchParams } from "react-router";
+} from "@/components/ui/dropdown-menu"
+import { Switch } from "@/components/ui/switch"
+import { TableCell, TableRow } from "@/components/ui/table"
+import type { Employee } from "@/domains/employees/employee.types"
+import { formatPhone } from "@/lib/format-phone"
+import { MoreHorizontalIcon } from "@/components/icons"
+import { useSearchParams } from "react-router"
 
 export function EmployeesTableRow({ employee }: { employee: Employee }) {
   return (
     <TableRow>
-      <TableCell className="text-foreground font-medium">{`${employee.first_name} ${employee.last_name}`}</TableCell>
+      <TableCell className="font-medium text-foreground">{`${employee.first_name} ${employee.last_name}`}</TableCell>
       <TableCell>
         {employee.phone ? formatPhone(employee.phone) : "-"}
       </TableCell>
@@ -28,11 +28,11 @@ export function EmployeesTableRow({ employee }: { employee: Employee }) {
         <Actions employeeId={employee.id} />
       </TableCell>
     </TableRow>
-  );
+  )
 }
 
 function Actions({ employeeId }: { employeeId: number }) {
-  const [_, setSearchParams] = useSearchParams();
+  const [_, setSearchParams] = useSearchParams()
   return (
     <>
       <DropdownMenu>
@@ -46,9 +46,9 @@ function Actions({ employeeId }: { employeeId: number }) {
           <DropdownMenuItem
             onClick={() => {
               setSearchParams((prev) => {
-                prev.set("edit_employee", employeeId.toString());
-                return prev;
-              });
+                prev.set("edit_employee", employeeId.toString())
+                return prev
+              })
             }}
           >
             Edit employee
@@ -56,5 +56,5 @@ function Actions({ employeeId }: { employeeId: number }) {
         </DropdownMenuContent>
       </DropdownMenu>
     </>
-  );
+  )
 }

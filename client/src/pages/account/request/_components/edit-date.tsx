@@ -1,23 +1,23 @@
-import { CalendarWithRates } from "@/components/calendar-with-rates";
-import { PencilLineIcon } from "@/components/icons";
-import { Button } from "@/components/ui/button";
+import { CalendarWithRates } from "@/components/calendar-with-rates"
+import { PencilLineIcon } from "@/components/icons"
+import { Button } from "@/components/ui/button"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { Spinner } from "@/components/ui/spinner";
-import type { CalendarRateMap, Rate } from "@/types/index";
-import { parseDateOnly } from "@/lib/format-date";
-import { useMemo, useState } from "react";
+} from "@/components/ui/popover"
+import { Spinner } from "@/components/ui/spinner"
+import type { CalendarRateMap, Rate } from "@/types/index"
+import { parseDateOnly } from "@/lib/format-date"
+import { useMemo, useState } from "react"
 
 interface EditDateProps {
-  rates: Rate[] | undefined;
-  calendarRates: CalendarRateMap | undefined;
-  id?: string;
-  selected: Date | undefined;
-  onSelectDate: (date: Date) => void;
-  isLoading: boolean;
+  rates: Rate[] | undefined
+  calendarRates: CalendarRateMap | undefined
+  id?: string
+  selected: Date | undefined
+  onSelectDate: (date: Date) => void
+  isLoading: boolean
 }
 
 export function EditDate({
@@ -29,7 +29,7 @@ export function EditDate({
   isLoading,
   ...props
 }: EditDateProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
   const disabledDates = useMemo(() => {
     return Object.values(calendarRates ?? {})
@@ -38,8 +38,8 @@ export function EditDate({
           ? (parseDateOnly(rate.formatted_date) ?? new Date())
           : null
       )
-      .filter((date) => date !== null);
-  }, [calendarRates]);
+      .filter((date) => date !== null)
+  }, [calendarRates])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -57,9 +57,9 @@ export function EditDate({
           selected={selected}
           isLoading={!calendarRates}
           onDayClick={(date) => {
-            onSelectDate(date);
+            onSelectDate(date)
             if (!isLoading) {
-              setOpen(false);
+              setOpen(false)
             }
           }}
           modifiers={{
@@ -80,5 +80,5 @@ export function EditDate({
         )}
       </PopoverContent>
     </Popover>
-  );
+  )
 }

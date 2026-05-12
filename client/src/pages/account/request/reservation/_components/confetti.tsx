@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
+import { useEffect, useState } from "react"
+import { cn } from "@/lib/utils"
 
 interface ConfettiPiece {
-  id: number;
-  left: number;
-  delay: number;
-  duration: number;
-  size: number;
-  color: string;
-  rotation: number;
+  id: number
+  left: number
+  delay: number
+  duration: number
+  size: number
+  color: string
+  rotation: number
 }
 
 const COLORS = [
@@ -20,10 +20,10 @@ const COLORS = [
   "bg-pink-500",
   "bg-orange-500",
   "bg-cyan-500",
-];
+]
 
 export function Confetti() {
-  const [pieces, setPieces] = useState<ConfettiPiece[]>([]);
+  const [pieces, setPieces] = useState<ConfettiPiece[]>([])
 
   useEffect(() => {
     const confettiPieces = Array.from({ length: 40 }, (_, i) => ({
@@ -34,9 +34,9 @@ export function Confetti() {
       size: 8 + Math.random() * 8,
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
       rotation: Math.random() * 360,
-    }));
-    setPieces(confettiPieces);
-  }, []);
+    }))
+    setPieces(confettiPieces)
+  }, [])
 
   return (
     <div className="pointer-events-none fixed inset-0 overflow-hidden">
@@ -66,5 +66,5 @@ export function Confetti() {
         }
       `}</style>
     </div>
-  );
+  )
 }

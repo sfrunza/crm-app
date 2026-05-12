@@ -58,4 +58,4 @@ export const usStates = [
   "WV",
   "WI",
   "WY",
-];
+]

@@ -6,10 +6,10 @@ import {
   type Row,
   type SortingState,
   useReactTable,
-} from "@tanstack/react-table";
+} from "@tanstack/react-table"
 
-import { Button } from "@/components/ui/button";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Button } from "@/components/ui/button"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 import {
   Table,
   TableBody,
@@ -17,34 +17,34 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { queryClient } from "@/lib/query-client";
-import { cn } from "@/lib/utils";
-import { type SortOrder } from "@/stores/use-table-requests-store";
-import { useCallback, useMemo, useState } from "react";
-import { useSearchParams } from "react-router";
-import { TABLE_CONFIG } from "./table.config";
-import { requestKeys } from "@/domains/requests/request.keys";
-import { getRequestById } from "@/domains/requests/request.api";
-import { openRequest } from "@/stores/use-open-requests-store";
+} from "@/components/ui/table"
+import { queryClient } from "@/lib/query-client"
+import { cn } from "@/lib/utils"
+import { type SortOrder } from "@/stores/use-table-requests-store"
+import { useCallback, useMemo, useState } from "react"
+import { useSearchParams } from "react-router"
+import { TABLE_CONFIG } from "./table.config"
+import { requestKeys } from "@/domains/requests/request.keys"
+import { getRequestById } from "@/domains/requests/request.api"
+import { openRequest } from "@/stores/use-open-requests-store"
 // import { DataTablePagination } from "./data-table-pagination";
 
 interface DataTableProps<T extends { id: number }> {
-  className?: string;
-  columns: ColumnDef<T>[];
-  data: T[];
-  totalCount: number;
-  isFetching: boolean;
-  page: number;
-  pageSize: number;
-  sortBy?: string;
-  sortOrder?: SortOrder;
-  setPage: (page: number) => void;
-  setSort?: (field: string, order: SortOrder) => void;
+  className?: string
+  columns: ColumnDef<T>[]
+  data: T[]
+  totalCount: number
+  isFetching: boolean
+  page: number
+  pageSize: number
+  sortBy?: string
+  sortOrder?: SortOrder
+  setPage: (page: number) => void
+  setSort?: (field: string, order: SortOrder) => void
   /** Used when sorting is cleared (e.g. third header click). Defaults to id/desc. */
-  defaultSortField?: string;
-  defaultSortOrder?: SortOrder;
-  onRowClick?: (row: T) => void;
+  defaultSortField?: string
+  defaultSortOrder?: SortOrder
+  onRowClick?: (row: T) => void
 }
 
 function getPaginationRangeText(
@@ -53,26 +53,26 @@ function getPaginationRangeText(
   totalCount: number
 ): React.ReactNode {
   if (totalCount === 0) {
-    return <p className="text-sm text-muted-foreground">No results</p>;
+    return <p className="text-sm text-muted-foreground">No results</p>
   }
 
-  const start = pageIndex * pageSize + 1;
-  const end = Math.min((pageIndex + 1) * pageSize, totalCount);
+  const start = pageIndex * pageSize + 1
+  const end = Math.min((pageIndex + 1) * pageSize, totalCount)
 
   return (
     <p className="text-sm text-muted-foreground">
       Viewing <strong>{start}</strong>-<strong>{end}</strong> of{" "}
       <strong>{totalCount}</strong> results
     </p>
-  );
+  )
 }
 
 const getSortValue = (
   isSorted: false | "asc" | "desc"
 ): "none" | "ascending" | "descending" => {
-  if (!isSorted) return "none";
-  return isSorted === "asc" ? "ascending" : "descending";
-};
+  if (!isSorted) return "none"
+  return isSorted === "asc" ? "ascending" : "descending"
+}
 
 export function DataTable<T extends { id: number }>({
   className,
@@ -90,8 +90,8 @@ export function DataTable<T extends { id: number }>({
   defaultSortOrder = "desc",
   onRowClick,
 }: DataTableProps<T>) {
-  const [selectedId, setSelectedId] = useState<number | null>(null);
-  const [, setSearchParams] = useSearchParams();
+  const [selectedId, setSelectedId] = useState<number | null>(null)
+  const [, setSearchParams] = useSearchParams()
 
   const sorting: SortingState = useMemo(() => {
     if (sortBy) {
@@ -100,10 +100,10 @@ export function DataTable<T extends { id: number }>({
           id: sortBy,
           desc: sortOrder === "desc",
         },
-      ];
+      ]
     }
-    return [];
-  }, [sortBy, sortOrder]);
+    return []
+  }, [sortBy, sortOrder])
 
   const table = useReactTable<T>({
     data,
@@ -125,63 +125,63 @@ export function DataTable<T extends { id: number }>({
         const newState = updater({
           pageIndex: page,
           pageSize,
-        });
-        setPage(newState.pageIndex);
+        })
+        setPage(newState.pageIndex)
       } else {
-        setPage(updater.pageIndex);
+        setPage(updater.pageIndex)
       }
     },
     onSortingChange: (updater) => {
-      if (!setSort) return;
+      if (!setSort) return
       const newSorting =
-        typeof updater === "function" ? updater(sorting) : updater;
+        typeof updater === "function" ? updater(sorting) : updater
 
       if (newSorting.length > 0) {
-        const { id, desc } = newSorting[0];
-        const order: "asc" | "desc" = desc ? "desc" : "asc";
-        setSort(id, order);
+        const { id, desc } = newSorting[0]
+        const order: "asc" | "desc" = desc ? "desc" : "asc"
+        setSort(id, order)
       } else {
-        setSort(defaultSortField, defaultSortOrder);
+        setSort(defaultSortField, defaultSortOrder)
       }
     },
-  });
+  })
 
   const handleRowClick = useCallback(
     (row: Row<T>) => {
-      const id = row.original.id;
+      const id = row.original.id
 
       if (onRowClick) {
-        onRowClick(row.original);
-        return;
+        onRowClick(row.original)
+        return
       }
 
       // Default behavior for requests (backward compatibility)
       if (selectedId === id) {
         setSearchParams((prev) => {
-          prev.delete("tab");
-          return prev;
-        });
-        openRequest(id);
+          prev.delete("tab")
+          return prev
+        })
+        openRequest(id)
       } else {
-        setSelectedId(id);
+        setSelectedId(id)
         queryClient.prefetchQuery({
           queryKey: requestKeys.detail(id),
           queryFn: () => getRequestById(id),
           staleTime: TABLE_CONFIG.STALE_TIME,
-        });
+        })
       }
     },
     [selectedId, onRowClick]
-  );
+  )
 
   const paginationText = useMemo(() => {
-    const { pageIndex, pageSize } = table.getState().pagination;
-    return getPaginationRangeText(pageIndex, pageSize, totalCount);
+    const { pageIndex, pageSize } = table.getState().pagination
+    return getPaginationRangeText(pageIndex, pageSize, totalCount)
   }, [
     table.getState().pagination.pageIndex,
     table.getState().pagination.pageSize,
     totalCount,
-  ]);
+  ])
 
   return (
     <>
@@ -217,7 +217,7 @@ export function DataTable<T extends { id: number }>({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows.map((row) => {
-              const isSelected = row.original.id === selectedId;
+              const isSelected = row.original.id === selectedId
               return (
                 <TableRow
                   key={row.id}
@@ -226,7 +226,7 @@ export function DataTable<T extends { id: number }>({
                   onClick={() => handleRowClick(row)}
                   onKeyDown={(e) => {
                     if (e.key === "Enter" || e.key === " ") {
-                      handleRowClick(row);
+                      handleRowClick(row)
                     }
                   }}
                   role="row"
@@ -246,7 +246,7 @@ export function DataTable<T extends { id: number }>({
                     </TableCell>
                   ))}
                 </TableRow>
-              );
+              )
             })}
             {table.getRowModel().rows.length === 0 && (
               <TableRow>
@@ -286,5 +286,5 @@ export function DataTable<T extends { id: number }>({
         </div>
       </div>
     </>
-  );
+  )
 }

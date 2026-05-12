@@ -5,12 +5,12 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { EmployeesTableRow } from "./employees-table-row";
-import type { Employee } from "@/domains/employees/employee.types";
+} from "@/components/ui/table"
+import { EmployeesTableRow } from "./employees-table-row"
+import type { Employee } from "@/domains/employees/employee.types"
 
 interface EmployeesTableProps {
-  employees: Employee[];
+  employees: Employee[]
 }
 
 export function EmployeesTable({ employees }: EmployeesTableProps) {
@@ -39,5 +39,5 @@ export function EmployeesTable({ employees }: EmployeesTableProps) {
         )}
       </TableBody>
     </Table>
-  );
+  )
 }

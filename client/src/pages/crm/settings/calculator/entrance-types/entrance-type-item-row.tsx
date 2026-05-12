@@ -1,24 +1,24 @@
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { GripVerticalIcon, MoreHorizontalIcon } from "@/components/icons";
+import { useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
+import { GripVerticalIcon, MoreHorizontalIcon } from "@/components/icons"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { TableCell, TableRow } from "@/components/ui/table";
-import { useSearchParams } from "react-router";
-import type { EntranceType } from "@/types/index";
+} from "@/components/ui/dropdown-menu"
+import { TableCell, TableRow } from "@/components/ui/table"
+import { useSearchParams } from "react-router"
+import type { EntranceType } from "@/types/index"
 
 export function EntranceTypeRow({
   id,
   item,
 }: {
-  id: number;
-  item: EntranceType;
+  id: number
+  item: EntranceType
 }) {
   const {
     attributes,
@@ -27,7 +27,7 @@ export function EntranceTypeRow({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: id });
+  } = useSortable({ id: id })
 
   return (
     <TableRow
@@ -58,11 +58,11 @@ export function EntranceTypeRow({
         <Actions entranceType={item} />
       </TableCell>
     </TableRow>
-  );
+  )
 }
 
 function Actions({ entranceType }: { entranceType: EntranceType }) {
-  const [_, setSearchParams] = useSearchParams();
+  const [_, setSearchParams] = useSearchParams()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -76,7 +76,7 @@ function Actions({ entranceType }: { entranceType: EntranceType }) {
           onClick={() => {
             setSearchParams({
               edit_entrance_type: entranceType.id.toString(),
-            });
+            })
           }}
         >
           Edit entrance type
@@ -85,7 +85,7 @@ function Actions({ entranceType }: { entranceType: EntranceType }) {
           onClick={() => {
             setSearchParams({
               delete_entrance_type: entranceType.id.toString(),
-            });
+            })
           }}
           variant="destructive"
         >
@@ -93,5 +93,5 @@ function Actions({ entranceType }: { entranceType: EntranceType }) {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

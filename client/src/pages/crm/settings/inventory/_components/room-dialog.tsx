@@ -1,6 +1,6 @@
-import { Trash2 } from "lucide-react";
-import { Trash2Icon, UploadIcon } from "@/components/icons";
-import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react"
+import { Trash2Icon, UploadIcon } from "@/components/icons"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -8,31 +8,31 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { useRef, type ChangeEvent } from "react";
+} from "@/components/ui/dialog"
+import { Field, FieldGroup, FieldLabel, FieldSet } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { useRef, type ChangeEvent } from "react"
 
 type RoomDraft = {
-  name: string;
-  image: File | null;
-  imagePreview: string | null;
-};
+  name: string
+  image: File | null
+  imagePreview: string | null
+}
 
 type RoomDialogProps = {
-  open: boolean;
-  mode: "create" | "edit";
-  draft: RoomDraft;
-  editingRoomId: number | null;
-  isCreatingRoom: boolean;
-  isUpdatingRoom: boolean;
-  isDeletingRoom: boolean;
-  onOpenChange: (open: boolean) => void;
-  onDraftChange: (updater: (prev: RoomDraft) => RoomDraft) => void;
-  onSave: () => void;
-  onDelete: () => void;
-  onCancel: () => void;
-};
+  open: boolean
+  mode: "create" | "edit"
+  draft: RoomDraft
+  editingRoomId: number | null
+  isCreatingRoom: boolean
+  isUpdatingRoom: boolean
+  isDeletingRoom: boolean
+  onOpenChange: (open: boolean) => void
+  onDraftChange: (updater: (prev: RoomDraft) => RoomDraft) => void
+  onSave: () => void
+  onDelete: () => void
+  onCancel: () => void
+}
 
 export function RoomDialog({
   open,
@@ -48,21 +48,21 @@ export function RoomDialog({
   onDelete,
   onCancel,
 }: RoomDialogProps) {
-  const roomImageInputRef = useRef<HTMLInputElement>(null);
+  const roomImageInputRef = useRef<HTMLInputElement>(null)
 
   function handleRoomImageChange(event: ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
+    const file = event.target.files?.[0]
+    if (!file) return
 
-    const reader = new FileReader();
+    const reader = new FileReader()
     reader.onloadend = () => {
       onDraftChange((prev) => ({
         ...prev,
         image: file,
         imagePreview: reader.result as string,
-      }));
-    };
-    reader.readAsDataURL(file);
+      }))
+    }
+    reader.readAsDataURL(file)
   }
 
   function handleRemoveRoomImage() {
@@ -70,10 +70,10 @@ export function RoomDialog({
       ...prev,
       image: null,
       imagePreview: null,
-    }));
+    }))
 
     if (roomImageInputRef.current) {
-      roomImageInputRef.current.value = "";
+      roomImageInputRef.current.value = ""
     }
   }
 
@@ -142,7 +142,7 @@ export function RoomDialog({
                   Upload
                 </Button>
               ) : (
-                <div className="border-border bg-muted/50 relative mt-2 flex h-20 w-full items-center justify-center rounded-lg border">
+                <div className="relative mt-2 flex h-20 w-full items-center justify-center rounded-lg border border-border bg-muted/50">
                   <img
                     src={draft.imagePreview}
                     alt="Room preview"
@@ -185,5 +185,5 @@ export function RoomDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

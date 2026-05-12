@@ -5,23 +5,23 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select"
 import {
   STATUS_BG_COLOR,
   STATUS_OPTIONS,
-} from '@/domains/requests/request.constants';
-import { useRequest } from '@/hooks/use-request';
-import { cn } from '@/lib/utils';
-import type { Status } from '@/domains/requests/request.types';
+} from "@/domains/requests/request.constants"
+import { useRequest } from "@/hooks/use-request"
+import { cn } from "@/lib/utils"
+import type { Status } from "@/domains/requests/request.types"
 
 export function StatusSelect() {
-  const { draft, setField } = useRequest();
+  const { draft, setField } = useRequest()
 
   return (
     <Select
-      value={draft?.status ?? ''}
+      value={draft?.status ?? ""}
       onValueChange={(val: Status) => {
-        setField('status', val);
+        setField("status", val)
       }}
     >
       <SelectTrigger
@@ -39,10 +39,10 @@ export function StatusSelect() {
               <SelectItem key={i} value={status.value}>
                 {status.label}
               </SelectItem>
-            );
+            )
           })}
         </SelectGroup>
       </SelectContent>
     </Select>
-  );
+  )
 }

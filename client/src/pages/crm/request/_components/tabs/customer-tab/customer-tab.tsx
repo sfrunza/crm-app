@@ -1,5 +1,5 @@
-import { CustomerForm } from "./customer-form";
-import { RequestsTable } from "./requests-table";
+import { CustomerForm } from "./customer-form"
+import { RequestsTable } from "./requests-table"
 
 export function CustomerTab() {
   return (
@@ -7,5 +7,5 @@ export function CustomerTab() {
       <CustomerForm />
       <RequestsTable />
     </div>
-  );
+  )
 }

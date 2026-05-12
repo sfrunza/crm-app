@@ -2,14 +2,14 @@ import {
   STATUS_SOFT_BG_COLOR,
   STATUS_TEXT_COLOR,
   statusesMap,
-} from "@/lib/constants";
-import { useRequest } from "@/hooks/use-request";
-import { cn } from "@/lib/utils";
+} from "@/lib/constants"
+import { useRequest } from "@/hooks/use-request"
+import { cn } from "@/lib/utils"
 
 export function StatusCard() {
-  const { request } = useRequest();
+  const { request } = useRequest()
 
-  if (!request) return null;
+  if (!request) return null
   return (
     <div
       className={cn(
@@ -32,5 +32,5 @@ export function StatusCard() {
         </p>
       </div>
     </div>
-  );
+  )
 }

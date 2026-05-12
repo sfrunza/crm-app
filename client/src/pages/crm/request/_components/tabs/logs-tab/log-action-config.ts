@@ -1,18 +1,21 @@
-import type { RequestLog, RequestLogAction } from "@/domains/request-logs/request-log.types";
+import type {
+  RequestLog,
+  RequestLogAction,
+} from "@/domains/request-logs/request-log.types"
 import {
   EyeIcon,
   MailIcon,
   MessageCircleIcon,
   PlusIcon,
   RefreshCwIcon,
-} from "@/components/icons";
+} from "@/components/icons"
 
 export type ActionConfig = {
-  label: string;
-  icon: React.ElementType;
-  color: string;
-  bg: string;
-};
+  label: string
+  icon: React.ElementType
+  color: string
+  bg: string
+}
 
 const ACTION_CONFIG: Record<RequestLogAction, ActionConfig> = {
   request_created: {
@@ -45,7 +48,7 @@ const ACTION_CONFIG: Record<RequestLogAction, ActionConfig> = {
     color: "text-amber-600",
     bg: "bg-amber-50",
   },
-};
+}
 
 export function getActionConfig(action: string): ActionConfig {
   return (
@@ -55,30 +58,30 @@ export function getActionConfig(action: string): ActionConfig {
       color: "text-muted-foreground",
       bg: "bg-muted",
     }
-  );
+  )
 }
 
 export function getActionDescription(log: RequestLog): string {
-  const details = log.details;
+  const details = log.details
 
   switch (log.action) {
     case "request_created":
-      return "created this request";
+      return "created this request"
     case "request_viewed":
-      return "viewed this request";
+      return "viewed this request"
     case "field_updated": {
-      if (details.field === "status") return "changed the status";
+      if (details.field === "status") return "changed the status"
       const label =
         (details.label as string) ||
         (details.field as string)?.replace(/_/g, " ") ||
-        "a field";
-      return `updated ${label.toLowerCase()}`;
+        "a field"
+      return `updated ${label.toLowerCase()}`
     }
     case "message_sent":
-      return "sent a message";
+      return "sent a message"
     case "email_sent":
-      return "sent an email";
+      return "sent an email"
     default:
-      return (log.action as RequestLogAction).replace(/_/g, " ");
+      return (log.action as RequestLogAction).replace(/_/g, " ")
   }
 }

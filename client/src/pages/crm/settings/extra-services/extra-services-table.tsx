@@ -5,7 +5,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
+} from "@/components/ui/table"
 import {
   DndContext,
   KeyboardSensor,
@@ -14,32 +14,29 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
-} from "@dnd-kit/core";
-import { restrictToParentElement } from "@dnd-kit/modifiers";
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-} from "@dnd-kit/sortable";
-import * as React from "react";
-import { ExtraServiceRow } from "./extra-service-row";
-import type { ExtraService } from "@/types/index";
+} from "@dnd-kit/core"
+import { restrictToParentElement } from "@dnd-kit/modifiers"
+import { SortableContext, sortableKeyboardCoordinates } from "@dnd-kit/sortable"
+import * as React from "react"
+import { ExtraServiceRow } from "./extra-service-row"
+import type { ExtraService } from "@/types/index"
 
 interface ExtraServicesTableProps {
-  extraServices: ExtraService[];
-  handleDragEnd: (event: DragEndEvent) => void;
+  extraServices: ExtraService[]
+  handleDragEnd: (event: DragEndEvent) => void
 }
 
 export function ExtraServicesTable({
   extraServices,
   handleDragEnd,
 }: ExtraServicesTableProps) {
-  const sortableId = React.useId();
+  const sortableId = React.useId()
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
-  );
+  )
 
   return (
     <DndContext
@@ -76,5 +73,5 @@ export function ExtraServicesTable({
         </SortableContext>
       </Table>
     </DndContext>
-  );
+  )
 }

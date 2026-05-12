@@ -1,6 +1,6 @@
-import { z } from "zod";
+import { z } from "zod"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogClose,
@@ -10,100 +10,101 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
   Field,
   FieldContent,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { usePackingTypes } from "@/hooks/api/use-packing-types";
-import type { PackingType } from "@/types/index";
-import { requestKeys } from "@/domains/requests/request.keys";
-import { useUpdateRequest } from "@/domains/requests/request.mutations";
-import { queryClient } from "@/lib/query-client";
-import { PencilLineIcon } from "@/components/icons";
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+} from "@/components/ui/field"
+import { LoadingSwap } from "@/components/ui/loading-swap"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { usePackingTypes } from "@/hooks/api/use-packing-types"
+import type { PackingType } from "@/types/index"
+import { requestKeys } from "@/domains/requests/request.keys"
+import { useUpdateRequest } from "@/domains/requests/request.mutations"
+import { queryClient } from "@/lib/query-client"
+import { PencilLineIcon } from "@/components/icons"
+import { useEffect, useState } from "react"
+import { toast } from "sonner"
+import { TipTapEditor } from "@/components/tip-tap-editor"
 
 const formSchema = z.object({
   packing_type_id: z.string(),
-});
+})
 
-export type Inputs = z.infer<typeof formSchema>;
+export type Inputs = z.infer<typeof formSchema>
 
 export function PackingDialog({
   requestId,
   packingTypeId,
 }: {
-  requestId: number;
-  packingTypeId: number;
+  requestId: number
+  packingTypeId: number
 }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
 
-  const { data: packingTypes } = usePackingTypes();
+  const { data: packingTypes } = usePackingTypes()
 
   const [selectedPackingType, setSelectedPackingType] = useState<
     PackingType | undefined
-  >(undefined);
+  >(undefined)
 
   useEffect(() => {
     if (packingTypeId) {
       setSelectedPackingType(
         packingTypes?.find((p) => p.id === packingTypeId) ?? undefined
-      );
+      )
     }
-  }, [packingTypeId, packingTypes]);
+  }, [packingTypeId, packingTypes])
 
   const { mutate: updateRequestMutation, isPending: isUpdating } =
     useUpdateRequest(
       {
         onSettled: (_, error) => {
           if (error) {
-            toast.error("Failed to save packing service");
+            toast.error("Failed to save packing service")
           } else {
             queryClient.invalidateQueries({
               queryKey: requestKeys.detail(requestId),
-            });
-            toast.success("Packing service saved");
-            handleSuccessClose();
+            })
+            toast.success("Packing service saved")
+            handleSuccessClose()
           }
         },
       },
       { forceCalculate: true }
-    );
+    )
 
   function onSubmit(e: React.SubmitEvent) {
-    e.preventDefault();
+    e.preventDefault()
 
-    if (!selectedPackingType) return;
+    if (!selectedPackingType) return
 
     updateRequestMutation({
       id: requestId,
       data: { packing_type_id: selectedPackingType?.id ?? 0 },
-    });
+    })
   }
 
   function handleOpenChange(open: boolean) {
-    setIsOpen(open);
+    setIsOpen(open)
   }
 
   function handleSuccessClose() {
-    setIsOpen(false);
+    setIsOpen(false)
   }
 
   function handlePackingTypeChange(packingTypeId: string) {
-    if (packingTypeId === "") return;
+    if (packingTypeId === "") return
 
     const selectedPackingType = packingTypes?.find(
       (packingType) => packingType.id === parseInt(packingTypeId)
-    );
+    )
 
     if (selectedPackingType) {
-      setSelectedPackingType(selectedPackingType);
+      setSelectedPackingType(selectedPackingType)
     }
   }
 
@@ -147,12 +148,16 @@ export function PackingDialog({
                     Description
                   </FieldLabel>
                 </FieldContent>
-                <div
+                {/* <div
                   id="packing-description"
                   dangerouslySetInnerHTML={{
-                    __html: selectedPackingType?.description ?? "",
+                    __html: selectedPackingType?.description ?? '',
                   }}
-                  className="prose-sm rounded-md border p-4 prose-neutral"
+                  className="prose prose-sm rounded-md border p-4 prose-neutral"
+                /> */}
+                <TipTapEditor
+                  value={selectedPackingType?.description ?? ""}
+                  readOnly={true}
                 />
               </Field>
             </FieldGroup>
@@ -171,5 +176,5 @@ export function PackingDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

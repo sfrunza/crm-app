@@ -1,17 +1,17 @@
-import { Button } from "@/components/ui/button";
-import { ChevronLeftIcon, PrinterIcon } from "@/components/icons";
-import { useNavigate } from "react-router";
+import { Button } from "@/components/ui/button"
+import { ChevronLeftIcon, PrinterIcon } from "@/components/icons"
+import { useNavigate } from "react-router"
 
 interface ConfirmationPageHeaderProps {
-  requestId: number;
-  onPrint: () => void;
+  requestId: number
+  onPrint: () => void
 }
 
 export function ConfirmationPageHeader({
   requestId,
   onPrint,
 }: ConfirmationPageHeaderProps) {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   return (
     <div className="mb-4 flex w-full items-center justify-between">
@@ -29,5 +29,5 @@ export function ConfirmationPageHeader({
         Print
       </Button>
     </div>
-  );
+  )
 }

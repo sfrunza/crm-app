@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { PencilLineIcon } from "@/components/icons";
-import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
+import { Button } from "@/components/ui/button"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { PencilLineIcon } from "@/components/icons"
+import { Controller, useForm } from "react-hook-form"
+import { z } from "zod"
 
 import {
   Dialog,
@@ -13,14 +13,14 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field";
-import { LoadingSwap } from "@/components/ui/loading-swap";
+} from "@/components/ui/field"
+import { LoadingSwap } from "@/components/ui/loading-swap"
 import {
   Select,
   SelectContent,
@@ -28,73 +28,73 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { requestKeys } from "@/domains/requests/request.keys";
-import { useUpdateRequest } from "@/domains/requests/request.mutations";
-import { queryClient } from "@/lib/query-client";
-import { useState } from "react";
-import { toast } from "sonner";
-import { useMoveSizes } from "@/hooks/api/use-move-sizes";
-import type { MoveSize } from "@/types/index";
+} from "@/components/ui/select"
+import { requestKeys } from "@/domains/requests/request.keys"
+import { useUpdateRequest } from "@/domains/requests/request.mutations"
+import { queryClient } from "@/lib/query-client"
+import { useState } from "react"
+import { toast } from "sonner"
+import { useMoveSizes } from "@/hooks/api/use-move-sizes"
+import type { MoveSize } from "@/types/index"
 
 const formSchema = z.object({
   move_size_id: z.string(),
-});
+})
 
-export type Inputs = z.infer<typeof formSchema>;
+export type Inputs = z.infer<typeof formSchema>
 
 export function MoveSizeDialog({
   requestId,
   moveSize,
 }: {
-  requestId: number;
-  moveSize: MoveSize | null;
+  requestId: number
+  moveSize: MoveSize | null
 }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
 
-  const { data: moveSizes } = useMoveSizes();
+  const { data: moveSizes } = useMoveSizes()
 
   const form = useForm<Inputs>({
     resolver: zodResolver(formSchema),
     reValidateMode: "onChange",
     values: { move_size_id: moveSize?.id?.toString() ?? "" },
-  });
+  })
 
   const { mutate: updateRequestMutation, isPending: isUpdating } =
     useUpdateRequest(
       {
         onSettled: (_, error) => {
           if (error) {
-            toast.error("Failed to save move size");
+            toast.error("Failed to save move size")
           } else {
             queryClient.invalidateQueries({
               queryKey: requestKeys.detail(requestId),
-            });
-            toast.success("Move size saved");
-            handleSuccessClose();
+            })
+            toast.success("Move size saved")
+            handleSuccessClose()
           }
         },
       },
       { forceCalculate: true }
-    );
+    )
 
   function onSubmit(values: Inputs) {
     updateRequestMutation({
       id: requestId,
       data: { move_size_id: parseInt(values.move_size_id) },
-    });
+    })
   }
 
   function handleOpenChange(open: boolean) {
-    setIsOpen(open);
+    setIsOpen(open)
     if (!open) {
-      form.reset({ move_size_id: moveSize?.id?.toString() ?? "" });
+      form.reset({ move_size_id: moveSize?.id?.toString() ?? "" })
     }
   }
 
   function handleSuccessClose() {
-    setIsOpen(false);
-    form.reset({ move_size_id: moveSize?.id?.toString() ?? "" });
+    setIsOpen(false)
+    form.reset({ move_size_id: moveSize?.id?.toString() ?? "" })
   }
 
   return (
@@ -167,5 +167,5 @@ export function MoveSizeDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

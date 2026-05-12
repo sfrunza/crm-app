@@ -1,8 +1,8 @@
-import type { CSSProperties } from "react";
+import type { CSSProperties } from "react"
 
-import { GripVerticalIcon, Trash2Icon } from "@/components/icons";
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
+import { GripVerticalIcon, Trash2Icon } from "@/components/icons"
+import { useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
 
 import {
   AlertDialog,
@@ -13,23 +13,23 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { useDeleteFolder } from "@/hooks/api/use-folders";
-import { cn } from "@/lib/utils";
-import type { Folder } from "@/types/index";
-import { toast } from "sonner";
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { LoadingSwap } from "@/components/ui/loading-swap"
+import { useDeleteFolder } from "@/hooks/api/use-folders"
+import { cn } from "@/lib/utils"
+import type { Folder } from "@/types/index"
+import { toast } from "sonner"
 
 export function FolderItem({
   id,
   item,
   onInputChange,
 }: {
-  id: number;
-  item: Folder;
-  onInputChange: (itemId: number, value: Partial<Folder>) => void;
+  id: number
+  item: Folder
+  onInputChange: (itemId: number, value: Partial<Folder>) => void
 }) {
   const {
     attributes,
@@ -38,20 +38,20 @@ export function FolderItem({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: id });
+  } = useSortable({ id: id })
 
   const style: CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
     zIndex: isDragging ? 1000 : "auto",
     position: isDragging ? "relative" : "static",
-  };
+  }
 
   const { mutate: deleteFolderMutation, isPending } = useDeleteFolder({
     onSuccess: () => {
-      toast.success("Folder deleted");
+      toast.success("Folder deleted")
     },
-  });
+  })
 
   return (
     <div
@@ -81,7 +81,7 @@ export function FolderItem({
         name={item.name}
         value={item.name}
         onChange={(e) => {
-          onInputChange(item.id, { name: e.target.value });
+          onInputChange(item.id, { name: e.target.value })
         }}
         disabled={isPending}
       />
@@ -111,7 +111,7 @@ export function FolderItem({
               disabled={isPending}
               variant="destructive"
               onClick={() => {
-                deleteFolderMutation({ id: item.id });
+                deleteFolderMutation({ id: item.id })
               }}
             >
               <LoadingSwap isLoading={isPending}>Delete</LoadingSwap>
@@ -120,5 +120,5 @@ export function FolderItem({
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  );
+  )
 }

@@ -1,52 +1,58 @@
-import { DataTable } from "@/components/data-table/data-table";
-import { TABLE_CONFIG } from "@/components/data-table/table.config";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useGetRequests } from "@/domains/requests/request.queries";
-import type { TableRequest } from "@/domains/requests/request.types";
-import { useMemo } from "react";
-import { useNavigate, useSearchParams } from "react-router";
-import { CustomerCard } from "./_components/customer-card";
-import { useTableColumns } from "./table-columns";
+import { DataTable } from "@/components/data-table/data-table"
+import { TABLE_CONFIG } from "@/components/data-table/table.config"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { Separator } from "@/components/ui/separator"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useGetRequests } from "@/domains/requests/request.queries"
+import type { TableRequest } from "@/domains/requests/request.types"
+import { useMemo } from "react"
+import { useNavigate, useSearchParams } from "react-router"
+import { CustomerCard } from "./_components/customer-card"
+import { useTableColumns } from "./table-columns"
+import { useAuthStore } from "@/stores/auth-store"
+import { useUser } from "@/hooks/api/use-users"
 
-const PAGE_SIZE = 10;
+const PAGE_SIZE = 10
 
 function AccountPage() {
-  const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const filter =
-    (searchParams.get("filter") as "current" | "past") || "current";
-  const page = Number(searchParams.get("page")) || 1;
-  const columns = useTableColumns();
+  const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const filter = (searchParams.get("filter") as "current" | "past") || "current"
+  const page = Number(searchParams.get("page")) || 1
+  const columns = useTableColumns()
 
   const params = useMemo(
     () => ({ page, filter, per_page: PAGE_SIZE }),
     [page, filter]
-  );
+  )
 
   const { data, isFetching } = useGetRequests(params, {
     staleTime: TABLE_CONFIG.STALE_TIME,
     retry: TABLE_CONFIG.RETRY_COUNT,
     refetchOnMount: true,
     placeholderData: (prev) => prev,
-  });
+  })
+
+  const { user: sessionUser } = useAuthStore()
+  const { data: user } = useUser(sessionUser?.id!, {
+    enabled: !!sessionUser?.id,
+  })
 
   function setPage(page: number) {
     setSearchParams((prev) => {
-      prev.set("page", page.toString());
-      return prev;
-    });
+      prev.set("page", page.toString())
+      return prev
+    })
   }
 
   function setFilter(value: "current" | "past") {
-    setSearchParams({ filter: value });
+    setSearchParams({ filter: value })
   }
 
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
-      <CustomerCard />
+      <CustomerCard user={user} />
 
       <div className="lg:col-span-3">
         <Card>
@@ -76,14 +82,14 @@ function AccountPage() {
               pageSize={PAGE_SIZE}
               setPage={setPage}
               onRowClick={(row) => {
-                navigate(`/account/requests/${row.id}`);
+                navigate(`/account/requests/${row.id}`)
               }}
             />
           </CardContent>
         </Card>
       </div>
     </div>
-  );
+  )
 }
 
-export const Component = AccountPage;
+export const Component = AccountPage

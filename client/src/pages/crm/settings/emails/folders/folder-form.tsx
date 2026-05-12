@@ -1,22 +1,22 @@
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupButton,
   InputGroupInput,
-} from "@/components/ui/input-group";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { useCreateFolder } from "@/hooks/api/use-folders";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
+} from "@/components/ui/input-group"
+import { LoadingSwap } from "@/components/ui/loading-swap"
+import { useCreateFolder } from "@/hooks/api/use-folders"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Controller, useForm } from "react-hook-form"
+import { toast } from "sonner"
+import { z } from "zod"
 
 const formSchema = z.object({
   name: z.string().min(1),
-});
+})
 
-type FormValues = z.infer<typeof formSchema>;
+type FormValues = z.infer<typeof formSchema>
 
 export function FolderForm() {
   const form = useForm<FormValues>({
@@ -26,18 +26,18 @@ export function FolderForm() {
     values: {
       name: "",
     },
-  });
+  })
 
   const { mutate: createFolderMutation, isPending } = useCreateFolder({
     onSuccess: (data) => {
-      console.log("data", data);
-      toast.success("Folder created");
-      form.reset();
+      console.log("data", data)
+      toast.success("Folder created")
+      form.reset()
     },
-  });
+  })
 
   function onSubmit(values: FormValues) {
-    createFolderMutation(values);
+    createFolderMutation(values)
   }
 
   return (
@@ -74,5 +74,5 @@ export function FolderForm() {
         />
       </FieldGroup>
     </form>
-  );
+  )
 }

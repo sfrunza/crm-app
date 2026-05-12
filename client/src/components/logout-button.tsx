@@ -1,17 +1,17 @@
-import { Button, buttonVariants } from '@/components/ui/button';
-import { useAuth } from '@/hooks/use-auth';
-import { cn } from '@/lib/utils';
-import type { VariantProps } from 'class-variance-authority';
-import { LoadingSwap } from './ui/loading-swap';
+import { Button, buttonVariants } from "@/components/ui/button"
+import { useAuth } from "@/hooks/use-auth"
+import { cn } from "@/lib/utils"
+import type { VariantProps } from "class-variance-authority"
+import { LoadingSwap } from "./ui/loading-swap"
 
 export function LogoutButton({
   className,
   ...props
-}: React.ComponentProps<'button'> &
+}: React.ComponentProps<"button"> &
   VariantProps<typeof buttonVariants> & {
-    asChild?: boolean;
+    asChild?: boolean
   }) {
-  const { logout, isPendingLogout } = useAuth();
+  const { logout, isPendingLogout } = useAuth()
 
   return (
     <Button
@@ -22,5 +22,5 @@ export function LogoutButton({
     >
       <LoadingSwap isLoading={isPendingLogout}>Log out</LoadingSwap>
     </Button>
-  );
+  )
 }

@@ -1,5 +1,5 @@
-import { PageContainer, PageNavTabs } from "@/components/page-component";
-import { Outlet } from "react-router";
+import { PageContainer, PageNavTabs } from "@/components/page-component"
+import { Outlet } from "react-router"
 
 const tabs = [
   {
@@ -10,7 +10,7 @@ const tabs = [
     name: "Payments",
     href: "payments",
   },
-];
+]
 
 function TransactionsPage() {
   return (
@@ -21,7 +21,7 @@ function TransactionsPage() {
       </div>
       <Outlet />
     </PageContainer>
-  );
+  )
 }
 
-export const Component = TransactionsPage;
+export const Component = TransactionsPage

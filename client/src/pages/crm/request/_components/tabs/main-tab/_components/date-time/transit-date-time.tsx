@@ -1,18 +1,18 @@
-import { TIME_OPTIONS_WITH_MERIDIEM } from "@/domains/requests/request.constants";
+import { TIME_OPTIONS_WITH_MERIDIEM } from "@/domains/requests/request.constants"
 
-import { DatePickerRange } from "@/components/inputs/date-picker-range";
-import { SelectWithSearch } from "@/components/inputs/select-with-search";
-import { Label } from "@/components/ui/label";
-import { useRequest } from "@/hooks/use-request";
-import { formatDate, parseDateOnly } from "@/lib/format-date";
+import { DatePickerRange } from "@/components/inputs/date-picker-range"
+import { SelectWithSearch } from "@/components/inputs/select-with-search"
+import { Label } from "@/components/ui/label"
+import { useRequest } from "@/hooks/use-request"
+import { formatDate, parseDateOnly } from "@/lib/format-date"
 
 export function TransitDateTime() {
-  const { draft, setField } = useRequest();
-  if (!draft) return null;
+  const { draft, setField } = useRequest()
+  if (!draft) return null
 
   return (
-    <div className="bg-muted flex flex-wrap justify-start gap-4 p-4">
-      <div className="text-muted-foreground w-full md:w-auto">
+    <div className="flex flex-wrap justify-start gap-4 bg-muted p-4">
+      <div className="w-full text-muted-foreground md:w-auto">
         <p className="text-xl font-semibold uppercase">In Transit:</p>
         <p className="text-sm">Visible only in schedule</p>
       </div>
@@ -31,12 +31,12 @@ export function TransitDateTime() {
           onChange={(dateRange) => {
             setField(
               "schedule_date_window_start",
-              formatDate(dateRange?.from, "yyyy-MM-dd") ?? null,
-            );
+              formatDate(dateRange?.from, "yyyy-MM-dd") ?? null
+            )
             setField(
               "schedule_date_window_end",
-              formatDate(dateRange?.to, "yyyy-MM-dd") ?? null,
-            );
+              formatDate(dateRange?.to, "yyyy-MM-dd") ?? null
+            )
           }}
           id="schedule-date-window"
         />
@@ -68,5 +68,5 @@ export function TransitDateTime() {
         />
       </div>
     </div>
-  );
+  )
 }

@@ -1,10 +1,10 @@
-import { useState } from 'react';
+import { useState } from "react"
 
-import { CheckIcon, ChevronsUpDownIcon, XIcon } from '@/components/icons';
+import { CheckIcon, ChevronsUpDownIcon, XIcon } from "@/components/icons"
 
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils"
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button"
 import {
   Command,
   CommandEmpty,
@@ -12,23 +12,23 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/components/ui/command';
+} from "@/components/ui/command"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
+} from "@/components/ui/popover"
 
-import { Separator } from '@/components/ui/separator';
-import { TIME_OPTIONS_WITH_MERIDIEM } from '@/domains/requests/request.constants';
+import { Separator } from "@/components/ui/separator"
+import { TIME_OPTIONS_WITH_MERIDIEM } from "@/domains/requests/request.constants"
 
 interface StartTimeRangeSelectProps {
-  startTimeWindow: number | null;
-  endTimeWindow: number | null;
+  startTimeWindow: number | null
+  endTimeWindow: number | null
   handleSelect: (
-    filed: 'start_time_window' | 'end_time_window',
+    filed: "start_time_window" | "end_time_window",
     value: number | null
-  ) => void;
+  ) => void
 }
 
 export function StartTimeRangeSelect({
@@ -36,15 +36,15 @@ export function StartTimeRangeSelect({
   endTimeWindow,
   handleSelect,
 }: StartTimeRangeSelectProps) {
-  const [openStart, setOpenStart] = useState(false);
-  const [openEnd, setOpenEnd] = useState(false);
+  const [openStart, setOpenStart] = useState(false)
+  const [openEnd, setOpenEnd] = useState(false)
 
   const selectedStartTime = TIME_OPTIONS_WITH_MERIDIEM.find(
     (framework) => framework.value === startTimeWindow
-  )?.label;
+  )?.label
   const selectedEndTime = TIME_OPTIONS_WITH_MERIDIEM.find(
     (framework) => framework.value === endTimeWindow
-  )?.label;
+  )?.label
 
   return (
     <div className="flex h-9">
@@ -74,21 +74,21 @@ export function StartTimeRangeSelect({
                     onSelect={(currentValue) => {
                       const newStartTimeValue = TIME_OPTIONS_WITH_MERIDIEM.find(
                         (time) => time.label === currentValue
-                      )?.value;
+                      )?.value
                       handleSelect(
-                        'start_time_window',
+                        "start_time_window",
                         Number(newStartTimeValue)
-                      );
-                      setOpenStart(false);
+                      )
+                      setOpenStart(false)
                     }}
                   >
                     {framework.label}
                     <CheckIcon
                       className={cn(
-                        'ml-auto',
+                        "ml-auto",
                         startTimeWindow === framework.value
-                          ? 'opacity-100'
-                          : 'opacity-0'
+                          ? "opacity-100"
+                          : "opacity-0"
                       )}
                     />
                   </CommandItem>
@@ -115,10 +115,10 @@ export function StartTimeRangeSelect({
           {/* Clear button OUTSIDE PopoverTrigger */}
           {endTimeWindow && (
             <XIcon
-              className="hover:text-muted-foreground absolute top-1/2 right-1 size-4 -translate-y-1/2 cursor-pointer"
+              className="absolute top-1/2 right-1 size-4 -translate-y-1/2 cursor-pointer hover:text-muted-foreground"
               onClick={(e) => {
-                e.stopPropagation();
-                handleSelect('end_time_window', null);
+                e.stopPropagation()
+                handleSelect("end_time_window", null)
               }}
             />
           )}
@@ -136,21 +136,18 @@ export function StartTimeRangeSelect({
                     onSelect={(currentValue) => {
                       const newStartTimeValue = TIME_OPTIONS_WITH_MERIDIEM.find(
                         (time) => time.label === currentValue
-                      )?.value;
-                      handleSelect(
-                        'end_time_window',
-                        Number(newStartTimeValue)
-                      );
-                      setOpenEnd(false);
+                      )?.value
+                      handleSelect("end_time_window", Number(newStartTimeValue))
+                      setOpenEnd(false)
                     }}
                   >
                     {framework.label}
                     <CheckIcon
                       className={cn(
-                        'ml-auto',
+                        "ml-auto",
                         endTimeWindow === framework.value
-                          ? 'opacity-100'
-                          : 'opacity-0'
+                          ? "opacity-100"
+                          : "opacity-0"
                       )}
                     />
                   </CommandItem>
@@ -161,5 +158,5 @@ export function StartTimeRangeSelect({
         </PopoverContent>
       </Popover>
     </div>
-  );
+  )
 }

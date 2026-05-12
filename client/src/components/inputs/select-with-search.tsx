@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState } from "react"
 
-import { cn } from '@/lib/utils';
+import { cn } from "@/lib/utils"
 
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button"
 import {
   Command,
   CommandEmpty,
@@ -10,20 +10,20 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/components/ui/command';
+} from "@/components/ui/command"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
-import { CheckIcon, ChevronsUpDownIcon } from '@/components/icons';
+} from "@/components/ui/popover"
+import { CheckIcon, ChevronsUpDownIcon } from "@/components/icons"
 
 interface SelectWithSearchProps<T> {
-  options: { label: string; value: T }[];
-  value: T | null;
-  handleSelect: (value: T) => void;
-  id?: string;
-  className?: string;
+  options: { label: string; value: T }[]
+  value: T | null
+  handleSelect: (value: T) => void
+  id?: string
+  className?: string
 }
 
 export function SelectWithSearch<T>({
@@ -33,15 +33,15 @@ export function SelectWithSearch<T>({
   id,
   className,
 }: SelectWithSearchProps<T>) {
-  const [open, setOpen] = useState<boolean>(false);
-  const selected = options.find((o) => o.value === value)?.label;
+  const [open, setOpen] = useState<boolean>(false)
+  const selected = options.find((o) => o.value === value)?.label
 
   function _onSelect(val: string) {
-    const selectedValue = options.find((o) => o.label === val)?.value;
+    const selectedValue = options.find((o) => o.label === val)?.value
     if (selectedValue) {
-      handleSelect(selectedValue);
+      handleSelect(selectedValue)
     }
-    setOpen(false);
+    setOpen(false)
   }
 
   return (
@@ -51,7 +51,7 @@ export function SelectWithSearch<T>({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className={cn('min-w-20 justify-between', className)}
+          className={cn("min-w-20 justify-between", className)}
         >
           <span className="">{selected}</span>
           <ChevronsUpDownIcon />
@@ -72,8 +72,8 @@ export function SelectWithSearch<T>({
                   {option.label}
                   <CheckIcon
                     className={cn(
-                      'ml-auto size-4',
-                      selected === option.label ? 'opacity-100' : 'opacity-0'
+                      "ml-auto size-4",
+                      selected === option.label ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>
@@ -83,5 +83,5 @@ export function SelectWithSearch<T>({
         </Command>
       </PopoverContent>
     </Popover>
-  );
+  )
 }

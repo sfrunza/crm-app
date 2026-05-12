@@ -1,51 +1,51 @@
-import { ImageOffIcon, PlusIcon, SearchIcon } from "@/components/icons";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { ImageOffIcon, PlusIcon, SearchIcon } from "@/components/icons"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
   Field,
   FieldContent,
   FieldGroup,
   FieldLabel,
   FieldSet,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
-import { Switch } from "@/components/ui/switch";
+} from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { Spinner } from "@/components/ui/spinner"
+import { Switch } from "@/components/ui/switch"
 import {
   useCreateRequestItem,
   useDeleteRequestItem,
   useUpdateRequestItem,
-} from "@/domains/request-items/request-item.mutations";
-import type { RequestItem } from "@/domains/request-items/request-item.types";
-import { useCreateRequestRoom } from "@/domains/request-rooms/request-room.mutations";
-import type { RequestRoom } from "@/domains/request-rooms/request-room.types";
+} from "@/domains/request-items/request-item.mutations"
+import type { RequestItem } from "@/domains/request-items/request-item.types"
+import { useCreateRequestRoom } from "@/domains/request-rooms/request-room.mutations"
+import type { RequestRoom } from "@/domains/request-rooms/request-room.types"
 import {
   type InventoryItem,
   type InventoryRoom,
-} from "@/pages/crm/request/_components/tabs/inventory-tab/inventory/build-inventory";
-import { cn } from "@/lib/utils";
-import { MinusIcon } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
-import { useOutletContext, useParams } from "react-router";
-import type { InventoryOutletContext } from "../page";
+} from "@/pages/crm/request/_components/tabs/inventory-tab/inventory/build-inventory"
+import { cn } from "@/lib/utils"
+import { MinusIcon } from "lucide-react"
+import { useEffect, useMemo, useRef, useState } from "react"
+import { useOutletContext, useParams } from "react-router"
+import type { InventoryOutletContext } from "../page"
 
-const SAVE_DEBOUNCE_MS = 800;
+const SAVE_DEBOUNCE_MS = 800
 
 function QuantitySelector({
   quantity,
   onChange,
   isLoading,
 }: {
-  quantity: number;
-  onChange: (quantity: number) => void;
-  isLoading?: boolean;
+  quantity: number
+  onChange: (quantity: number) => void
+  isLoading?: boolean
 }) {
   if (quantity < 1) {
     return (
@@ -58,7 +58,7 @@ function QuantitySelector({
       >
         Add item
       </Button>
-    );
+    )
   }
 
   return (
@@ -87,7 +87,7 @@ function QuantitySelector({
         <PlusIcon />
       </Button>
     </div>
-  );
+  )
 }
 
 function ItemCard({
@@ -95,11 +95,11 @@ function ItemCard({
   onQuantityChange,
   isLoading,
 }: {
-  item: InventoryItem;
-  onQuantityChange: (item: InventoryItem, quantity: number) => void;
-  isLoading?: boolean;
+  item: InventoryItem
+  onQuantityChange: (item: InventoryItem, quantity: number) => void
+  isLoading?: boolean
 }) {
-  const isSelected = item.quantity > 0;
+  const isSelected = item.quantity > 0
 
   return (
     <article
@@ -171,7 +171,7 @@ function ItemCard({
         />
       </div>
     </article>
-  );
+  )
 }
 
 function ItemsSection({
@@ -181,13 +181,13 @@ function ItemsSection({
   selectedRoomId,
   onQuantityChange,
 }: {
-  label: string;
-  items: InventoryItem[];
-  pendingItemKeys: Record<string, boolean>;
-  selectedRoomId?: number;
-  onQuantityChange: (item: InventoryItem, quantity: number) => void;
+  label: string
+  items: InventoryItem[]
+  pendingItemKeys: Record<string, boolean>
+  selectedRoomId?: number
+  onQuantityChange: (item: InventoryItem, quantity: number) => void
 }) {
-  if (items.length === 0) return null;
+  if (items.length === 0) return null
 
   return (
     <section className="flex flex-col gap-3">
@@ -210,154 +210,154 @@ function ItemsSection({
         </div>
       </div>
     </section>
-  );
+  )
 }
 
 function InventoryRoomsPage() {
-  const { roomId } = useParams<{ roomId: string }>();
+  const { roomId } = useParams<{ roomId: string }>()
   const { inventoryRooms, requestId, isPending } =
-    useOutletContext<InventoryOutletContext>();
+    useOutletContext<InventoryOutletContext>()
 
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState("")
   const [pendingItemKeys, setPendingItemKeys] = useState<
     Record<string, boolean>
-  >({});
+  >({})
   const [quantityOverrides, setQuantityOverrides] = useState<
     Record<string, number>
-  >({});
+  >({})
   const [requestItemIdOverrides, setRequestItemIdOverrides] = useState<
     Record<string, number>
-  >({});
-  const [isAddItemOpen, setIsAddItemOpen] = useState(false);
-  const [customItemName, setCustomItemName] = useState("");
-  const [customItemQuantity, setCustomItemQuantity] = useState(1);
-  const [customItemVolume, setCustomItemVolume] = useState(0);
-  const [customItemIsBox, setCustomItemIsBox] = useState(false);
-  const [isCreatingItem, setIsCreatingItem] = useState(false);
+  >({})
+  const [isAddItemOpen, setIsAddItemOpen] = useState(false)
+  const [customItemName, setCustomItemName] = useState("")
+  const [customItemQuantity, setCustomItemQuantity] = useState(1)
+  const [customItemVolume, setCustomItemVolume] = useState(0)
+  const [customItemIsBox, setCustomItemIsBox] = useState(false)
+  const [isCreatingItem, setIsCreatingItem] = useState(false)
 
   const saveTimersRef = useRef<Record<string, ReturnType<typeof setTimeout>>>(
     {}
-  );
-  const latestQuantityRef = useRef<Record<string, number>>({});
+  )
+  const latestQuantityRef = useRef<Record<string, number>>({})
   const queuedPersistRef = useRef<
     Record<
       string,
       { item: InventoryItem; room: InventoryRoom; quantity: number }
     >
-  >({});
-  const isFlushingQueueRef = useRef(false);
-  const ensuredRoomIdsRef = useRef<Record<number, number>>({});
+  >({})
+  const isFlushingQueueRef = useRef(false)
+  const ensuredRoomIdsRef = useRef<Record<number, number>>({})
   const ensureRoomPromisesRef = useRef<
     Record<number, Promise<RequestRoom | null>>
-  >({});
+  >({})
 
-  const { mutateAsync: createRequestRoom } = useCreateRequestRoom();
-  const { mutateAsync: createRequestItem } = useCreateRequestItem();
-  const { mutateAsync: updateRequestItem } = useUpdateRequestItem();
-  const { mutateAsync: deleteRequestItem } = useDeleteRequestItem();
+  const { mutateAsync: createRequestRoom } = useCreateRequestRoom()
+  const { mutateAsync: createRequestItem } = useCreateRequestItem()
+  const { mutateAsync: updateRequestItem } = useUpdateRequestItem()
+  const { mutateAsync: deleteRequestItem } = useDeleteRequestItem()
 
   const selectedRoom = useMemo(() => {
-    if (!roomId) return null;
-    return inventoryRooms.find((r) => r.id === Number(roomId)) ?? null;
-  }, [inventoryRooms, roomId]);
+    if (!roomId) return null
+    return inventoryRooms.find((r) => r.id === Number(roomId)) ?? null
+  }, [inventoryRooms, roomId])
 
   const inventoryItemStateMap = useMemo(() => {
     const map = new Map<
       string,
       { quantity: number; request_item_id?: number }
-    >();
+    >()
     inventoryRooms.forEach((room) => {
       room.items.forEach((item) => {
         map.set(`${room.id}-${item.id}`, {
           quantity: item.quantity,
           request_item_id: item.request_item_id,
-        });
-      });
-    });
-    return map;
-  }, [inventoryRooms]);
+        })
+      })
+    })
+    return map
+  }, [inventoryRooms])
 
   const filteredItems = useMemo(() => {
-    if (!selectedRoom) return [];
-    const term = search.trim().toLowerCase();
+    if (!selectedRoom) return []
+    const term = search.trim().toLowerCase()
 
     const withOverrides = selectedRoom.items.map((item) => {
-      const key = `${selectedRoom.id}-${item.id}`;
-      const overrideQty = quantityOverrides[key];
-      const overrideId = requestItemIdOverrides[key];
-      if (overrideQty === undefined && overrideId === undefined) return item;
+      const key = `${selectedRoom.id}-${item.id}`
+      const overrideQty = quantityOverrides[key]
+      const overrideId = requestItemIdOverrides[key]
+      if (overrideQty === undefined && overrideId === undefined) return item
       return {
         ...item,
         quantity: overrideQty ?? item.quantity,
         request_item_id: overrideId ?? item.request_item_id,
-      };
-    });
+      }
+    })
 
-    if (!term) return withOverrides;
+    if (!term) return withOverrides
     return withOverrides.filter((item) =>
       item.name.toLowerCase().includes(term)
-    );
-  }, [quantityOverrides, requestItemIdOverrides, search, selectedRoom]);
+    )
+  }, [quantityOverrides, requestItemIdOverrides, search, selectedRoom])
 
-  const suggestedItems = filteredItems.filter((item) => item.is_suggested);
-  const otherItems = filteredItems.filter((item) => !item.is_suggested);
+  const suggestedItems = filteredItems.filter((item) => item.is_suggested)
+  const otherItems = filteredItems.filter((item) => !item.is_suggested)
 
   useEffect(() => {
-    const timers = saveTimersRef;
+    const timers = saveTimersRef
     return () => {
-      Object.values(timers.current).forEach(clearTimeout);
-    };
-  }, []);
+      Object.values(timers.current).forEach(clearTimeout)
+    }
+  }, [])
 
   useEffect(() => {
-    const ensuredMap: Record<number, number> = {};
+    const ensuredMap: Record<number, number> = {}
     inventoryRooms.forEach((room) => {
       if (room.request_room?.id) {
-        ensuredMap[room.id] = room.request_room.id;
+        ensuredMap[room.id] = room.request_room.id
       }
-    });
-    ensuredRoomIdsRef.current = ensuredMap;
-  }, [inventoryRooms]);
+    })
+    ensuredRoomIdsRef.current = ensuredMap
+  }, [inventoryRooms])
 
   useEffect(() => {
     setQuantityOverrides((current) => {
-      let changed = false;
-      const next: Record<string, number> = {};
+      let changed = false
+      const next: Record<string, number> = {}
       Object.entries(current).forEach(([key, qty]) => {
-        const source = inventoryItemStateMap.get(key);
+        const source = inventoryItemStateMap.get(key)
         if (!source || source.quantity !== qty) {
-          next[key] = qty;
-          return;
+          next[key] = qty
+          return
         }
-        changed = true;
-      });
-      return changed ? next : current;
-    });
+        changed = true
+      })
+      return changed ? next : current
+    })
 
     setRequestItemIdOverrides((current) => {
-      let changed = false;
-      const next: Record<string, number> = {};
+      let changed = false
+      const next: Record<string, number> = {}
       Object.entries(current).forEach(([key, id]) => {
-        const source = inventoryItemStateMap.get(key);
+        const source = inventoryItemStateMap.get(key)
         if (!source || source.request_item_id !== id) {
-          next[key] = id;
-          return;
+          next[key] = id
+          return
         }
-        changed = true;
-      });
-      return changed ? next : current;
-    });
-  }, [inventoryItemStateMap]);
+        changed = true
+      })
+      return changed ? next : current
+    })
+  }, [inventoryItemStateMap])
 
   async function ensureRequestRoom(room: InventoryRoom) {
-    if (!requestId) return null;
-    if (room.request_room) return room.request_room;
+    if (!requestId) return null
+    if (room.request_room) return room.request_room
 
-    const cachedId = ensuredRoomIdsRef.current[room.id];
-    if (cachedId) return { id: cachedId } as RequestRoom;
+    const cachedId = ensuredRoomIdsRef.current[room.id]
+    if (cachedId) return { id: cachedId } as RequestRoom
 
-    const ongoing = ensureRoomPromisesRef.current[room.id];
-    if (ongoing) return ongoing;
+    const ongoing = ensureRoomPromisesRef.current[room.id]
+    if (ongoing) return ongoing
 
     const promise = createRequestRoom({
       requestId,
@@ -368,15 +368,15 @@ function InventoryRoomsPage() {
       },
     })
       .then((created) => {
-        ensuredRoomIdsRef.current[room.id] = created.id;
-        return created;
+        ensuredRoomIdsRef.current[room.id] = created.id
+        return created
       })
       .finally(() => {
-        delete ensureRoomPromisesRef.current[room.id];
-      });
+        delete ensureRoomPromisesRef.current[room.id]
+      })
 
-    ensureRoomPromisesRef.current[room.id] = promise;
-    return promise;
+    ensureRoomPromisesRef.current[room.id] = promise
+    return promise
   }
 
   async function persistQuantityChange(
@@ -384,17 +384,17 @@ function InventoryRoomsPage() {
     room: InventoryRoom,
     quantity: number
   ) {
-    if (!requestId) return;
-    const nextQty = Math.max(0, quantity);
-    const key = `${room.id}-${item.id}`;
+    if (!requestId) return
+    const nextQty = Math.max(0, quantity)
+    const key = `${room.id}-${item.id}`
 
-    setPendingItemKeys((c) => ({ ...c, [key]: true }));
+    setPendingItemKeys((c) => ({ ...c, [key]: true }))
 
     try {
-      const requestRoom = await ensureRequestRoom(room);
-      if (!requestRoom) return;
+      const requestRoom = await ensureRequestRoom(room)
+      if (!requestRoom) return
 
-      const requestItemId = requestItemIdOverrides[key] ?? item.request_item_id;
+      const requestItemId = requestItemIdOverrides[key] ?? item.request_item_id
 
       if (nextQty < 1) {
         if (requestItemId) {
@@ -402,14 +402,14 @@ function InventoryRoomsPage() {
             requestId,
             requestRoomId: requestRoom.id,
             id: requestItemId,
-          });
+          })
           setRequestItemIdOverrides((c) => {
-            const next = { ...c };
-            delete next[key];
-            return next;
-          });
+            const next = { ...c }
+            delete next[key]
+            return next
+          })
         }
-        return;
+        return
       }
 
       if (requestItemId) {
@@ -418,9 +418,9 @@ function InventoryRoomsPage() {
           requestRoomId: requestRoom.id,
           id: requestItemId,
           data: { quantity: nextQty } as Partial<RequestItem>,
-        });
-        setRequestItemIdOverrides((c) => ({ ...c, [key]: updated.id }));
-        return;
+        })
+        setRequestItemIdOverrides((c) => ({ ...c, [key]: updated.id }))
+        return
       }
 
       const created = await createRequestItem({
@@ -433,15 +433,15 @@ function InventoryRoomsPage() {
           volume: item.volume,
           is_custom: item.is_custom,
         } as Partial<RequestItem>,
-      });
-      setRequestItemIdOverrides((c) => ({ ...c, [key]: created.id }));
+      })
+      setRequestItemIdOverrides((c) => ({ ...c, [key]: created.id }))
     } finally {
       setPendingItemKeys((c) => {
-        const next = { ...c };
-        delete next[key];
-        return next;
-      });
-      delete latestQuantityRef.current[key];
+        const next = { ...c }
+        delete next[key]
+        return next
+      })
+      delete latestQuantityRef.current[key]
     }
   }
 
@@ -450,46 +450,46 @@ function InventoryRoomsPage() {
     room: InventoryRoom,
     quantity: number
   ) {
-    const key = `${room.id}-${item.id}`;
-    const nextQty = Math.max(0, quantity);
+    const key = `${room.id}-${item.id}`
+    const nextQty = Math.max(0, quantity)
 
-    latestQuantityRef.current[key] = nextQty;
-    setQuantityOverrides((c) => ({ ...c, [key]: nextQty }));
+    latestQuantityRef.current[key] = nextQty
+    setQuantityOverrides((c) => ({ ...c, [key]: nextQty }))
 
-    if (saveTimersRef.current[key]) clearTimeout(saveTimersRef.current[key]);
+    if (saveTimersRef.current[key]) clearTimeout(saveTimersRef.current[key])
 
     saveTimersRef.current[key] = setTimeout(() => {
-      const latestQty = latestQuantityRef.current[key] ?? 0;
-      queuedPersistRef.current[key] = { item, room, quantity: latestQty };
-      void flushPersistQueue();
-      delete saveTimersRef.current[key];
-    }, SAVE_DEBOUNCE_MS);
+      const latestQty = latestQuantityRef.current[key] ?? 0
+      queuedPersistRef.current[key] = { item, room, quantity: latestQty }
+      void flushPersistQueue()
+      delete saveTimersRef.current[key]
+    }, SAVE_DEBOUNCE_MS)
   }
 
   async function flushPersistQueue() {
-    if (isFlushingQueueRef.current) return;
-    isFlushingQueueRef.current = true;
+    if (isFlushingQueueRef.current) return
+    isFlushingQueueRef.current = true
     try {
       while (true) {
-        const [key, op] = Object.entries(queuedPersistRef.current)[0] ?? [];
-        if (!key || !op) break;
-        delete queuedPersistRef.current[key];
-        await persistQuantityChange(op.item, op.room, op.quantity);
+        const [key, op] = Object.entries(queuedPersistRef.current)[0] ?? []
+        if (!key || !op) break
+        delete queuedPersistRef.current[key]
+        await persistQuantityChange(op.item, op.room, op.quantity)
       }
     } finally {
-      isFlushingQueueRef.current = false;
+      isFlushingQueueRef.current = false
     }
   }
 
   async function handleCreateCustomItem() {
-    if (!requestId || !selectedRoom) return;
-    const name = customItemName.trim();
-    if (!name) return;
+    if (!requestId || !selectedRoom) return
+    const name = customItemName.trim()
+    if (!name) return
 
-    setIsCreatingItem(true);
+    setIsCreatingItem(true)
     try {
-      const requestRoom = await ensureRequestRoom(selectedRoom);
-      if (!requestRoom) return;
+      const requestRoom = await ensureRequestRoom(selectedRoom)
+      if (!requestRoom) return
 
       await createRequestItem({
         requestId,
@@ -505,15 +505,15 @@ function InventoryRoomsPage() {
           is_furniture: !customItemIsBox,
           is_special_handling: false,
         } as Partial<RequestItem>,
-      });
+      })
 
-      setIsAddItemOpen(false);
-      setCustomItemName("");
-      setCustomItemQuantity(1);
-      setCustomItemVolume(0);
-      setCustomItemIsBox(false);
+      setIsAddItemOpen(false)
+      setCustomItemName("")
+      setCustomItemQuantity(1)
+      setCustomItemVolume(0)
+      setCustomItemIsBox(false)
     } finally {
-      setIsCreatingItem(false);
+      setIsCreatingItem(false)
     }
   }
 
@@ -522,7 +522,7 @@ function InventoryRoomsPage() {
       <div className="flex flex-1 items-center justify-center">
         <Spinner />
       </div>
-    );
+    )
   }
 
   if (!selectedRoom) {
@@ -530,7 +530,7 @@ function InventoryRoomsPage() {
       <div className="flex flex-1 items-center justify-center px-6 text-sm text-muted-foreground">
         Room not found.
       </div>
-    );
+    )
   }
 
   return (
@@ -583,7 +583,7 @@ function InventoryRoomsPage() {
               pendingItemKeys={pendingItemKeys}
               selectedRoomId={selectedRoom.id}
               onQuantityChange={(item, qty) => {
-                scheduleQuantityPersist(item, selectedRoom, qty);
+                scheduleQuantityPersist(item, selectedRoom, qty)
               }}
             />
             <ItemsSection
@@ -592,7 +592,7 @@ function InventoryRoomsPage() {
               pendingItemKeys={pendingItemKeys}
               selectedRoomId={selectedRoom.id}
               onQuantityChange={(item, qty) => {
-                scheduleQuantityPersist(item, selectedRoom, qty);
+                scheduleQuantityPersist(item, selectedRoom, qty)
               }}
             />
           </div>
@@ -681,7 +681,7 @@ function InventoryRoomsPage() {
         </DialogContent>
       </Dialog>
     </div>
-  );
+  )
 }
 
-export const Component = InventoryRoomsPage;
+export const Component = InventoryRoomsPage

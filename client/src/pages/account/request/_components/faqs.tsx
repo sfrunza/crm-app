@@ -3,13 +3,13 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
+} from "@/components/ui/accordion"
 
 type Faq = {
-  id: number;
-  question: string;
-  answer: string;
-};
+  id: number
+  question: string
+  answer: string
+}
 
 const faqs: Faq[] = [
   {
@@ -78,7 +78,7 @@ const faqs: Faq[] = [
     answer:
       "While most moving companies offer only basic option of $0.60 per pound for a damaged or lost item, Brave Movers offer value protection up to $10,000 in household goods coverage.",
   },
-];
+]
 
 export function Faqs() {
   return (
@@ -93,5 +93,5 @@ export function Faqs() {
         ))}
       </Accordion>
     </div>
-  );
+  )
 }

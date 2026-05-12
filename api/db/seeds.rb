@@ -154,9 +154,21 @@ MoveSize.create(name: "3 Bedroom house", description: "3 Bedroom house", truck_c
 MoveSize.create(name: "4 Bedroom house", description: "4 Bedroom house", truck_count: 1)
 MoveSize.create(name: "Commercial move", description: "Commercial move", truck_count: 1)
 
+
+### Create entrance types
+EntranceType.create(name: "1st floor", form_name: "1")
+EntranceType.create(name: "2nd floor", form_name: "2")
+EntranceType.create(name: "3rd floor", form_name: "3")
+EntranceType.create(name: "4th floor", form_name: "4")
+EntranceType.create(name: "5th floor", form_name: "5")
+EntranceType.create(name: "Evevator", form_name: "Evevator")
+EntranceType.create(name: "Private Home", form_name: "Private Home")
+
+### Create rooms
 Room.create(name: "Living Room")
 Room.create(name: "Kitchen")
 
+### Create items
 Item.create(name: "Bed", volume: 100, weight: 100)
 Item.create(name: "Chair", volume: 100, weight: 100)
 Item.create(name: "Table", volume: 100, weight: 100)

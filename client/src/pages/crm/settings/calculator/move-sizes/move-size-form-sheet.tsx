@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   Field,
   FieldContent,
@@ -6,10 +6,10 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { NumberInput } from "@/components/ui/number-input";
+} from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { LoadingSwap } from "@/components/ui/loading-swap"
+import { NumberInput } from "@/components/ui/number-input"
 import {
   Sheet,
   SheetClose,
@@ -18,16 +18,16 @@ import {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
-import { Textarea } from "@/components/ui/textarea";
-import { Controller, useWatch } from "react-hook-form";
-import { CrewSizeField } from "./_components/crew-size-field";
-import { DefaultItemsField } from "./_components/default-items-field";
-import { DefaultRoomsField } from "./_components/default-rooms-field";
-import { ImageField } from "./_components/image-field";
-import { SuggestedRoomsField } from "./_components/suggested-rooms-field";
-import { VolumeDisplay } from "./_components/volume-display";
-import { useMoveSizeForm } from "./_hooks/use-move-size-form";
+} from "@/components/ui/sheet"
+import { Textarea } from "@/components/ui/textarea"
+import { Controller, useWatch } from "react-hook-form"
+import { CrewSizeField } from "./_components/crew-size-field"
+import { DefaultItemsField } from "./_components/default-items-field"
+import { DefaultRoomsField } from "./_components/default-rooms-field"
+import { ImageField } from "./_components/image-field"
+import { SuggestedRoomsField } from "./_components/suggested-rooms-field"
+import { VolumeDisplay } from "./_components/volume-display"
+import { useMoveSizeForm } from "./_hooks/use-move-size-form"
 
 export function MoveSizeFormSheet() {
   const {
@@ -44,23 +44,23 @@ export function MoveSizeFormSheet() {
     handleSubmit,
     handleImageChange,
     handleRemoveImage,
-  } = useMoveSizeForm();
+  } = useMoveSizeForm()
 
   const defaultRoomIds =
-    useWatch({ control: form.control, name: "default_room_ids" }) || [];
+    useWatch({ control: form.control, name: "default_room_ids" }) || []
   const suggestedRoomIds =
-    useWatch({ control: form.control, name: "suggested_room_ids" }) || [];
+    useWatch({ control: form.control, name: "suggested_room_ids" }) || []
   const defaultRoomItems =
-    useWatch({ control: form.control, name: "default_room_items" }) || {};
+    useWatch({ control: form.control, name: "default_room_items" }) || {}
   const suggestedRoomItems =
-    useWatch({ control: form.control, name: "suggested_room_items" }) || {};
+    useWatch({ control: form.control, name: "suggested_room_items" }) || {}
   const dispersion =
-    useWatch({ control: form.control, name: "dispersion" }) || 0;
+    useWatch({ control: form.control, name: "dispersion" }) || 0
 
   const mergedRoomItems = {
     ...defaultRoomItems,
     ...suggestedRoomItems,
-  };
+  }
   return (
     <Sheet open={isOpen} onOpenChange={handleClose}>
       <SheetContent className="data-[side=right]:w-full data-[side=right]:sm:max-w-xl">
@@ -186,7 +186,9 @@ export function MoveSizeFormSheet() {
                 itemQuantities={mergedRoomItems}
                 dispersion={dispersion}
                 savedVolume={moveSize?.totals?.volume}
-                savedVolumeWithDispersion={moveSize?.totals?.volume_with_dispersion}
+                savedVolumeWithDispersion={
+                  moveSize?.totals?.volume_with_dispersion
+                }
               />
 
               <Controller
@@ -198,18 +200,18 @@ export function MoveSizeFormSheet() {
                     value={field.value}
                     onChange={(newRoomIds) => {
                       const removedRoomIds = field.value.filter(
-                        (id) => !newRoomIds.includes(id),
-                      );
+                        (id) => !newRoomIds.includes(id)
+                      )
                       if (removedRoomIds.length > 0) {
                         const currentItems =
-                          form.getValues("default_room_items") || {};
-                        const nextItems = { ...currentItems };
+                          form.getValues("default_room_items") || {}
+                        const nextItems = { ...currentItems }
                         for (const roomId of removedRoomIds) {
-                          delete nextItems[roomId.toString()];
+                          delete nextItems[roomId.toString()]
                         }
-                        form.setValue("default_room_items", nextItems);
+                        form.setValue("default_room_items", nextItems)
                       }
-                      field.onChange(newRoomIds);
+                      field.onChange(newRoomIds)
                     }}
                   />
                 )}
@@ -238,18 +240,18 @@ export function MoveSizeFormSheet() {
                     value={field.value}
                     onChange={(newRoomIds) => {
                       const removedRoomIds = field.value.filter(
-                        (id) => !newRoomIds.includes(id),
-                      );
+                        (id) => !newRoomIds.includes(id)
+                      )
                       if (removedRoomIds.length > 0) {
                         const currentItems =
-                          form.getValues("suggested_room_items") || {};
-                        const nextItems = { ...currentItems };
+                          form.getValues("suggested_room_items") || {}
+                        const nextItems = { ...currentItems }
                         for (const roomId of removedRoomIds) {
-                          delete nextItems[roomId.toString()];
+                          delete nextItems[roomId.toString()]
                         }
-                        form.setValue("suggested_room_items", nextItems);
+                        form.setValue("suggested_room_items", nextItems)
                       }
-                      field.onChange(newRoomIds);
+                      field.onChange(newRoomIds)
                     }}
                   />
                 )}
@@ -300,5 +302,5 @@ export function MoveSizeFormSheet() {
         </SheetFooter>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

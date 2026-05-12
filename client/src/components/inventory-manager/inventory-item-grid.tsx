@@ -1,44 +1,37 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardFooter,
   CardHeader,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+} from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Empty, EmptyMedia } from "@/components/ui/empty";
-import {
-  ImageOff,
-  Minus,
-  PencilLine,
-  Plus,
-  Search,
-  Trash2,
-} from "lucide-react";
-import { useState } from "react";
-import type { Item } from "@/domains/items/item.types";
+} from "@/components/ui/select"
+import { Empty, EmptyMedia } from "@/components/ui/empty"
+import { ImageOff, Minus, PencilLine, Plus, Search, Trash2 } from "lucide-react"
+import { useState } from "react"
+import type { Item } from "@/domains/items/item.types"
 // import type { ItemTypeFilter } from "@/pages/crm/settings/inventory/_components/inventory-settings.utils"
 // import type { ItemTypeFilter } from "@/types/index"
-import { Spinner } from "../ui/spinner";
+import { Spinner } from "../ui/spinner"
 
-type ItemTypeFilter = "all" | "furniture" | "box";
+type ItemTypeFilter = "all" | "furniture" | "box"
 
 function ItemImage({
   imageUrl,
   alt,
 }: {
-  imageUrl?: string | null;
-  alt: string;
+  imageUrl?: string | null
+  alt: string
 }) {
-  const [hasError, setHasError] = useState(false);
+  const [hasError, setHasError] = useState(false)
 
   if (!imageUrl || hasError) {
     return (
@@ -47,7 +40,7 @@ function ItemImage({
           <ImageOff className="size-6" />
         </EmptyMedia>
       </Empty>
-    );
+    )
   }
 
   return (
@@ -57,7 +50,7 @@ function ItemImage({
       className="aspect-video w-full object-contain"
       onError={() => setHasError(true)}
     />
-  );
+  )
 }
 
 function QuantityControl({
@@ -65,9 +58,9 @@ function QuantityControl({
   onIncrement,
   onDecrement,
 }: {
-  quantity: number;
-  onIncrement: () => void;
-  onDecrement: () => void;
+  quantity: number
+  onIncrement: () => void
+  onDecrement: () => void
 }) {
   return (
     <div className="inline-flex items-center gap-2 rounded-md border px-2 py-1">
@@ -93,38 +86,38 @@ function QuantityControl({
         <Plus className="h-3.5 w-3.5" />
       </Button>
     </div>
-  );
+  )
 }
 
 type InventoryItemGridProps =
   | {
-      variant: "admin";
-      items: [string, Item[]][];
-      isLoading: boolean;
-      search: string;
-      onSearchChange: (value: string) => void;
-      typeFilter: ItemTypeFilter;
-      onTypeFilterChange: (value: ItemTypeFilter) => void;
-      onEdit: (item: Item) => void;
-      onDelete?: (item: Item) => void;
-      emptyText?: string;
-      searchPlaceholder?: string;
+      variant: "admin"
+      items: [string, Item[]][]
+      isLoading: boolean
+      search: string
+      onSearchChange: (value: string) => void
+      typeFilter: ItemTypeFilter
+      onTypeFilterChange: (value: ItemTypeFilter) => void
+      onEdit: (item: Item) => void
+      onDelete?: (item: Item) => void
+      emptyText?: string
+      searchPlaceholder?: string
     }
   | {
-      variant: "request";
-      items: [string, Item[]][];
-      isLoading: boolean;
-      search: string;
-      onSearchChange: (value: string) => void;
-      typeFilter: ItemTypeFilter;
-      onTypeFilterChange: (value: ItemTypeFilter) => void;
-      getQuantity: (item: Item) => number;
-      onIncrement: (item: Item) => void;
-      onDecrement: (item: Item) => void;
-      onEdit?: (item: Item) => void;
-      emptyText?: string;
-      searchPlaceholder?: string;
-    };
+      variant: "request"
+      items: [string, Item[]][]
+      isLoading: boolean
+      search: string
+      onSearchChange: (value: string) => void
+      typeFilter: ItemTypeFilter
+      onTypeFilterChange: (value: ItemTypeFilter) => void
+      getQuantity: (item: Item) => number
+      onIncrement: (item: Item) => void
+      onDecrement: (item: Item) => void
+      onEdit?: (item: Item) => void
+      emptyText?: string
+      searchPlaceholder?: string
+    }
 
 export function InventoryItemGrid(props: InventoryItemGridProps) {
   const {
@@ -135,7 +128,7 @@ export function InventoryItemGrid(props: InventoryItemGridProps) {
     typeFilter,
     onTypeFilterChange,
     searchPlaceholder = "Search for an item",
-  } = props;
+  } = props
 
   return (
     <div className="space-y-4">
@@ -249,5 +242,5 @@ export function InventoryItemGrid(props: InventoryItemGridProps) {
         ))}
       </div>
     </div>
-  );
+  )
 }

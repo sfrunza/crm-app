@@ -1,21 +1,21 @@
-import { useState } from "react";
-import { type DateRange } from "react-day-picker";
+import { useState } from "react"
+import { type DateRange } from "react-day-picker"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from "@/components/ui/popover"
 
-import { Calendar } from "@/components/ui/calendar";
-import { Button } from "@/components/ui/button";
-import { formatDate } from "@/lib/format-date";
-import { ChevronDownIcon, XIcon } from "@/components/icons";
-import { Separator } from "@/components/ui/separator";
+import { Calendar } from "@/components/ui/calendar"
+import { Button } from "@/components/ui/button"
+import { formatDate } from "@/lib/format-date"
+import { ChevronDownIcon, XIcon } from "@/components/icons"
+import { Separator } from "@/components/ui/separator"
 
 interface DatePickerRangeProps {
-  dateRange: DateRange | undefined;
-  id?: string;
-  onChange: (dateRange: DateRange | undefined) => void;
+  dateRange: DateRange | undefined
+  id?: string
+  onChange: (dateRange: DateRange | undefined) => void
 }
 
 export function DatePickerRange({
@@ -23,10 +23,10 @@ export function DatePickerRange({
   id,
   onChange,
 }: DatePickerRangeProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
   const [selectedDateRange, setSelectedDateRange] = useState<
     DateRange | undefined
-  >(dateRange);
+  >(dateRange)
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -45,17 +45,17 @@ export function DatePickerRange({
             </Button>
             {selectedDateRange?.from && (
               <XIcon
-                className="hover:text-muted-foreground absolute top-1/2 right-1 size-4 -translate-y-1/2 cursor-pointer"
+                className="absolute top-1/2 right-1 size-4 -translate-y-1/2 cursor-pointer hover:text-muted-foreground"
                 onClick={(e) => {
-                  e.stopPropagation();
+                  e.stopPropagation()
                   setSelectedDateRange({
                     from: undefined,
                     to: selectedDateRange?.to,
-                  });
+                  })
                   onChange({
                     from: undefined,
                     to: selectedDateRange?.to,
-                  });
+                  })
                 }}
               />
             )}
@@ -74,17 +74,17 @@ export function DatePickerRange({
             </Button>
             {selectedDateRange?.to && (
               <XIcon
-                className="hover:text-muted-foreground absolute top-1/2 right-1 size-4 -translate-y-1/2 cursor-pointer"
+                className="absolute top-1/2 right-1 size-4 -translate-y-1/2 cursor-pointer hover:text-muted-foreground"
                 onClick={(e) => {
-                  e.stopPropagation();
+                  e.stopPropagation()
                   setSelectedDateRange({
                     from: selectedDateRange?.from,
                     to: undefined,
-                  });
+                  })
                   onChange({
                     from: selectedDateRange?.from,
                     to: undefined,
-                  });
+                  })
                 }}
               />
             )}
@@ -97,13 +97,13 @@ export function DatePickerRange({
           defaultMonth={selectedDateRange?.from}
           selected={selectedDateRange}
           onSelect={(date) => {
-            setSelectedDateRange(date);
-            onChange(date);
+            setSelectedDateRange(date)
+            onChange(date)
           }}
           numberOfMonths={1}
           showOutsideDays={false}
         />
       </PopoverContent>
     </Popover>
-  );
+  )
 }

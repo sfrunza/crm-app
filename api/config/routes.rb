@@ -107,6 +107,12 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :payments, only: %i[index] do
+        collection do
+          get :status_counts
+        end
+      end
+
       # Public invoice endpoints (no auth required)
       get "invoices/:token", to: "public_invoices#show", as: :public_invoice
       post "invoices/:token/pay", to: "public_invoices#pay", as: :pay_invoice

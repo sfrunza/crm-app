@@ -5,8 +5,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import type { PackingItem } from "@/types/index";
+} from "@/components/ui/table"
+import type { PackingItem } from "@/types/index"
 import {
   DndContext,
   KeyboardSensor,
@@ -15,31 +15,28 @@ import {
   useSensor,
   useSensors,
   type DragEndEvent,
-} from "@dnd-kit/core";
-import { restrictToParentElement } from "@dnd-kit/modifiers";
-import {
-  SortableContext,
-  sortableKeyboardCoordinates,
-} from "@dnd-kit/sortable";
-import { useId } from "react";
-import { PackingItemRow } from "./packing-item-row";
+} from "@dnd-kit/core"
+import { restrictToParentElement } from "@dnd-kit/modifiers"
+import { SortableContext, sortableKeyboardCoordinates } from "@dnd-kit/sortable"
+import { useId } from "react"
+import { PackingItemRow } from "./packing-item-row"
 
 interface PackingItemsTableProps {
-  packingItems: PackingItem[];
-  handleDragEnd: (event: DragEndEvent) => void;
+  packingItems: PackingItem[]
+  handleDragEnd: (event: DragEndEvent) => void
 }
 
 export function PackingItemsTable({
   packingItems,
   handleDragEnd,
 }: PackingItemsTableProps) {
-  const sortableId = useId();
+  const sortableId = useId()
   const sensors = useSensors(
     useSensor(PointerSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
-  );
+  )
   return (
     <DndContext
       sensors={sensors}
@@ -73,5 +70,5 @@ export function PackingItemsTable({
         </SortableContext>
       </Table>
     </DndContext>
-  );
+  )
 }

@@ -1,12 +1,12 @@
-import { Button } from "@/components/ui/button";
-import { formatPhone } from "@/lib/format-phone";
+import { Button } from "@/components/ui/button"
+import { formatPhone } from "@/lib/format-phone"
 import {
   ChevronDownIcon,
   MailIcon,
   PhoneIcon,
   TriangleAlertIcon,
   XIcon,
-} from "@/components/icons";
+} from "@/components/icons"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,24 +18,24 @@ import {
   AlertDialogMedia,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { useState } from "react";
-import { useRequest } from "@/hooks/use-request";
-import { useOpenRequestsStore } from "@/stores/use-open-requests-store";
+} from "@/components/ui/alert-dialog"
+import { useState } from "react"
+import { useRequest } from "@/hooks/use-request"
+import { useOpenRequestsStore } from "@/stores/use-open-requests-store"
 
 export function RequestHeader() {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false)
 
-  const { request, isDirty, clear } = useRequest();
+  const { request, isDirty, clear } = useRequest()
 
-  const minimizeRequest = useOpenRequestsStore((s) => s.minimize);
-  const closeRequest = useOpenRequestsStore((s) => s.close);
+  const minimizeRequest = useOpenRequestsStore((s) => s.minimize)
+  const closeRequest = useOpenRequestsStore((s) => s.close)
 
-  if (!request) return null;
+  if (!request) return null
 
   function handleClose() {
-    closeRequest(request!.id);
-    clear();
+    closeRequest(request!.id)
+    clear()
   }
 
   function CloseButton() {
@@ -44,7 +44,7 @@ export function RequestHeader() {
         <Button variant="ghost" size="icon" onClick={handleClose}>
           <XIcon />
         </Button>
-      );
+      )
     }
 
     return (
@@ -74,7 +74,7 @@ export function RequestHeader() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    );
+    )
   }
 
   function MinimizeButton() {
@@ -82,7 +82,7 @@ export function RequestHeader() {
       <Button variant="ghost" size="icon" onClick={minimizeRequest}>
         <ChevronDownIcon />
       </Button>
-    );
+    )
   }
 
   return (
@@ -115,5 +115,5 @@ export function RequestHeader() {
         <CloseButton />
       </div>
     </div>
-  );
+  )
 }

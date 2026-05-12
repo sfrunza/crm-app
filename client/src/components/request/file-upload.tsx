@@ -1,173 +1,173 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   Empty,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
   EmptyTitle,
-} from "@/components/ui/empty";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { Progress } from "@/components/ui/progress";
-import { api } from "@/lib/axios";
-import { cn } from "@/lib/utils";
-import { ImagePlusIcon, XCircleIcon } from "@/components/icons";
-import React, { useCallback, useState } from "react";
-import { toast } from "sonner";
-import { queryClient } from "@/lib/query-client";
-import { requestKeys } from "@/domains/requests/request.keys";
+} from "@/components/ui/empty"
+import { LoadingSwap } from "@/components/ui/loading-swap"
+import { Progress } from "@/components/ui/progress"
+import { api } from "@/lib/axios"
+import { cn } from "@/lib/utils"
+import { ImagePlusIcon, XCircleIcon } from "@/components/icons"
+import React, { useCallback, useState } from "react"
+import { toast } from "sonner"
+import { queryClient } from "@/lib/query-client"
+import { requestKeys } from "@/domains/requests/request.keys"
 
-const MAX_FILE_SIZE_MB = 10;
-const MAX_FILES = 10;
-const BATCH_SIZE = 3;
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"];
+const MAX_FILE_SIZE_MB = 10
+const MAX_FILES = 10
+const BATCH_SIZE = 3
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp"]
 
 interface FileUploadProps {
-  requestId: number;
-  disabled?: boolean;
+  requestId: number
+  disabled?: boolean
 }
 
 const FileUpload: React.FC<FileUploadProps> = ({
   requestId,
   disabled = false,
 }) => {
-  const [files, setFiles] = useState<File[]>([]);
-  const [isUploading, setIsUploading] = useState<boolean>(false);
-  const [uploadProgress, setUploadProgress] = useState(0);
-  const [isDragOver, setIsDragOver] = useState<boolean>(false);
+  const [files, setFiles] = useState<File[]>([])
+  const [isUploading, setIsUploading] = useState<boolean>(false)
+  const [uploadProgress, setUploadProgress] = useState(0)
+  const [isDragOver, setIsDragOver] = useState<boolean>(false)
 
-  const remaining = MAX_FILES - files.length;
+  const remaining = MAX_FILES - files.length
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = e.target.files;
-    if (!selected) return;
+    const selected = e.target.files
+    if (!selected) return
 
-    const validFiles: File[] = [];
-    const errors: string[] = [];
+    const validFiles: File[] = []
+    const errors: string[] = []
 
     Array.from(selected).forEach((file) => {
       if (!ALLOWED_TYPES.includes(file.type)) {
-        errors.push(`${file.name}: unsupported file type (${file.type})`);
+        errors.push(`${file.name}: unsupported file type (${file.type})`)
       } else if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-        errors.push(`${file.name}: exceeds 10MB size limit`);
+        errors.push(`${file.name}: exceeds 10MB size limit`)
       } else {
-        validFiles.push(file);
+        validFiles.push(file)
       }
-    });
+    })
 
     if (errors.length) {
-      toast.error("Upload failed:\n" + errors.join("\n"));
-      return;
+      toast.error("Upload failed:\n" + errors.join("\n"))
+      return
     }
 
     if (files.length + validFiles.length > MAX_FILES) {
-      toast.error(`You can select up to ${MAX_FILES} images at once.`);
-      return;
+      toast.error(`You can select up to ${MAX_FILES} images at once.`)
+      return
     }
 
-    setFiles((prev) => [...prev, ...validFiles]);
-  };
+    setFiles((prev) => [...prev, ...validFiles])
+  }
 
   const handleDragOver = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(true);
-  }, []);
+    e.preventDefault()
+    setIsDragOver(true)
+  }, [])
 
   const handleDragLeave = useCallback((e: React.DragEvent) => {
-    e.preventDefault();
-    setIsDragOver(false);
-  }, []);
+    e.preventDefault()
+    setIsDragOver(false)
+  }, [])
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
-      e.preventDefault();
-      setIsDragOver(false);
+      e.preventDefault()
+      setIsDragOver(false)
 
-      const droppedFiles = Array.from(e.dataTransfer.files);
+      const droppedFiles = Array.from(e.dataTransfer.files)
 
-      const validFiles: File[] = [];
-      const errors: string[] = [];
+      const validFiles: File[] = []
+      const errors: string[] = []
 
       droppedFiles.forEach((file) => {
         if (!ALLOWED_TYPES.includes(file.type)) {
-          errors.push(`${file.name}: unsupported file type (${file.type})`);
+          errors.push(`${file.name}: unsupported file type (${file.type})`)
         } else if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-          errors.push(`${file.name}: exceeds 10MB size limit`);
+          errors.push(`${file.name}: exceeds 10MB size limit`)
         } else {
-          validFiles.push(file);
+          validFiles.push(file)
         }
-      });
+      })
 
       if (errors.length) {
-        toast.error("Upload failed:\n" + errors.join("\n"));
-        return;
+        toast.error("Upload failed:\n" + errors.join("\n"))
+        return
       }
 
       if (files.length + validFiles.length > MAX_FILES) {
-        toast.error(`You can select up to ${MAX_FILES} images at once.`);
-        return;
+        toast.error(`You can select up to ${MAX_FILES} images at once.`)
+        return
       }
 
       if (validFiles.length > 0) {
-        setFiles((prev) => [...prev, ...validFiles]);
+        setFiles((prev) => [...prev, ...validFiles])
       }
     },
     [files.length]
-  );
+  )
 
   const removeFile = (index: number) => {
-    setFiles((prev) => prev.filter((_, i) => i !== index));
-  };
+    setFiles((prev) => prev.filter((_, i) => i !== index))
+  }
 
   const handleFileUpload = async () => {
-    if (files.length < 1) return;
+    if (files.length < 1) return
 
-    const batches: File[][] = [];
+    const batches: File[][] = []
     for (let i = 0; i < files.length; i += BATCH_SIZE) {
-      batches.push(files.slice(i, i + BATCH_SIZE));
+      batches.push(files.slice(i, i + BATCH_SIZE))
     }
 
-    setIsUploading(true);
-    setUploadProgress(0);
+    setIsUploading(true)
+    setUploadProgress(0)
 
-    let failed = 0;
+    let failed = 0
 
     for (let i = 0; i < batches.length; i++) {
-      const batch = batches[i];
-      const formData = new FormData();
-      batch.forEach((file) => formData.append("images[]", file));
+      const batch = batches[i]
+      const formData = new FormData()
+      batch.forEach((file) => formData.append("images[]", file))
 
-      const batchBase = (i / batches.length) * 100;
-      const batchWeight = (1 / batches.length) * 100;
+      const batchBase = (i / batches.length) * 100
+      const batchWeight = (1 / batches.length) * 100
 
       try {
         await api.post(`requests/${requestId}/images`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
           onUploadProgress: (e) => {
             if (e.total) {
-              const batchPct = (e.loaded / e.total) * batchWeight;
-              setUploadProgress(Math.round(batchBase + batchPct));
+              const batchPct = (e.loaded / e.total) * batchWeight
+              setUploadProgress(Math.round(batchBase + batchPct))
             }
           },
-        });
+        })
 
         queryClient.invalidateQueries({
           queryKey: requestKeys.detail(requestId),
-        });
+        })
       } catch {
-        failed += batch.length;
+        failed += batch.length
       }
     }
 
     if (failed > 0) {
       toast.error(
         `Failed to upload ${failed} ${failed === 1 ? "image" : "images"}.`
-      );
+      )
     }
 
-    setFiles([]);
-    setIsUploading(false);
-    setUploadProgress(0);
-  };
+    setFiles([])
+    setIsUploading(false)
+    setUploadProgress(0)
+  }
 
   const UploadArea = ({ className }: { className?: string }) => (
     // <div
@@ -229,7 +229,7 @@ const FileUpload: React.FC<FileUploadProps> = ({
       </EmptyHeader>
     </Empty>
     // </div>
-  );
+  )
 
   return (
     <div className="space-y-6">
@@ -276,8 +276,8 @@ const FileUpload: React.FC<FileUploadProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
 const ImagePreview = ({
   url,
@@ -287,12 +287,12 @@ const ImagePreview = ({
   isUploading = false,
   isDeleting = false,
 }: {
-  url: string;
-  onRemove: () => void;
-  onClick?: () => void;
-  className?: string;
-  isUploading?: boolean;
-  isDeleting?: boolean;
+  url: string
+  onRemove: () => void
+  onClick?: () => void
+  className?: string
+  isUploading?: boolean
+  isDeleting?: boolean
 }) => (
   <div
     className={cn(
@@ -305,8 +305,8 @@ const ImagePreview = ({
       <button
         className="absolute top-0 right-0 z-10 translate-x-1/2 -translate-y-1/2"
         onClick={(e) => {
-          e.stopPropagation();
-          onRemove();
+          e.stopPropagation()
+          onRemove()
         }}
       >
         <XCircleIcon className="h-5 w-5 fill-primary text-primary-foreground" />
@@ -325,6 +325,6 @@ const ImagePreview = ({
       </div>
     )}
   </div>
-);
+)
 
-export { FileUpload, ImagePreview };
+export { FileUpload, ImagePreview }

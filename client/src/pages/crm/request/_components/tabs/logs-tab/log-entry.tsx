@@ -1,16 +1,16 @@
-import type { RequestLog } from "@/domains/request-logs/request-log.types";
-import { formatDate } from "@/lib/format-date";
-import { cn } from "@/lib/utils";
-import { FieldChangeDetail } from "./field-change-detail";
-import { getActionConfig, getActionDescription } from "./log-action-config";
+import type { RequestLog } from "@/domains/request-logs/request-log.types"
+import { formatDate } from "@/lib/format-date"
+import { cn } from "@/lib/utils"
+import { FieldChangeDetail } from "./field-change-detail"
+import { getActionConfig, getActionDescription } from "./log-action-config"
 
 export function LogEntry({ log }: { log: RequestLog }) {
-  const config = getActionConfig(log.action);
-  const Icon = config.icon;
-  const details = log.details;
+  const config = getActionConfig(log.action)
+  const Icon = config.icon
+  const details = log.details
   const userName = log.user
     ? `${log.user.first_name} ${log.user.last_name}`
-    : "System";
+    : "System"
 
   return (
     <div className="group relative flex gap-3 py-3">
@@ -18,7 +18,7 @@ export function LogEntry({ log }: { log: RequestLog }) {
       <div
         className={cn(
           "flex h-8 w-8 shrink-0 items-center justify-center rounded-full",
-          config.bg,
+          config.bg
         )}
       >
         <Icon className={cn("h-4 w-4", config.color)} />
@@ -47,7 +47,7 @@ export function LogEntry({ log }: { log: RequestLog }) {
             {/* Message preview */}
             {log.action === "message_sent" &&
               typeof details.content_preview === "string" && (
-                <p className="text-muted-foreground mt-1 text-xs italic">
+                <p className="mt-1 text-xs text-muted-foreground italic">
                   &ldquo;{details.content_preview}&rdquo;
                 </p>
               )}
@@ -55,13 +55,13 @@ export function LogEntry({ log }: { log: RequestLog }) {
             {/* Email preview */}
             {log.action === "email_sent" &&
               typeof details.template_name === "string" && (
-                <p className="text-muted-foreground mt-1 text-xs italic">
+                <p className="mt-1 text-xs text-muted-foreground italic">
                   {details.template_name}
                 </p>
               )}
 
             {/* Timestamp */}
-            <span className="text-muted-foreground/70 max-w-24 shrink-0 text-xs">
+            <span className="max-w-24 shrink-0 text-xs text-muted-foreground/70">
               {formatDate(log.created_at, "PPPPpp")} &bull; {log.ip_address}
             </span>
           </div>
@@ -73,5 +73,5 @@ export function LogEntry({ log }: { log: RequestLog }) {
         </div>
       </div>
     </div>
-  );
+  )
 }

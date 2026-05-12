@@ -1,13 +1,13 @@
-import { Button } from '@/components/ui/button';
-import { Link, useRouteError } from 'react-router';
+import { Button } from "@/components/ui/button"
+import { Link, useRouteError } from "react-router"
 
 type Error = {
-  statusText?: string;
-  message?: string;
-};
+  statusText?: string
+  message?: string
+}
 
 export function ErrorPage() {
-  const error: unknown = useRouteError();
+  const error: unknown = useRouteError()
 
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center gap-6">
@@ -21,5 +21,5 @@ export function ErrorPage() {
         <Button variant="outline">Home page</Button>
       </Link>
     </div>
-  );
+  )
 }

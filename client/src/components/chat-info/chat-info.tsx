@@ -1,7 +1,7 @@
-import { cn } from "@/lib/utils";
-import type { Status } from "@/domains/requests/request.types";
-import { Avatar, AvatarFallback } from "../ui/avatar";
-import { STATUS_BG_COLOR } from "@/domains/requests/request.constants";
+import { cn } from "@/lib/utils"
+import type { Status } from "@/domains/requests/request.types"
+import { Avatar, AvatarFallback } from "../ui/avatar"
+import { STATUS_BG_COLOR } from "@/domains/requests/request.constants"
 
 function ChatInfo({
   className,
@@ -17,22 +17,22 @@ function ChatInfo({
       className={cn(
         "flex w-full min-w-0 items-center gap-3 rounded-lg p-2.5 text-left transition-colors",
         "data-[active=true]:bg-muted",
-        { "hover:bg-muted/60 hover:cursor-pointer": onClick },
-        className,
+        { "hover:cursor-pointer hover:bg-muted/60": onClick },
+        className
       )}
       onClick={onClick}
       {...props}
     />
-  );
+  )
 }
 function ChatInfoAvatar({
   size = "default",
   status,
   initials,
 }: {
-  size?: "default" | "sm" | "lg";
-  status?: Status;
-  initials: string;
+  size?: "default" | "sm" | "lg"
+  status?: Status
+  initials: string
 }) {
   return (
     <Avatar data-size={size}>
@@ -40,13 +40,13 @@ function ChatInfoAvatar({
         className={cn(
           // "bg-foreground text-background",
           status && STATUS_BG_COLOR[status],
-          status && "text-white",
+          status && "text-white"
         )}
       >
         {initials.toUpperCase()}
       </AvatarFallback>
     </Avatar>
-  );
+  )
 }
 
 function ChatInfoHeader({ className, ...props }: React.ComponentProps<"div">) {
@@ -55,11 +55,11 @@ function ChatInfoHeader({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="chat-info-header"
       className={cn(
         "group/chat-info-header @container/chat-info-header grid auto-rows-min items-start rounded-t-xl group-data-[size=sm]/chat-info:px-4 has-data-[slot=chat-info-action]:grid-cols-[1fr_auto] has-data-[slot=chat-info-description]:grid-rows-[auto_auto] [.border-b]:pb-6 group-data-[size=sm]/chat-info:[.border-b]:pb-4",
-        className,
+        className
       )}
       {...props}
     />
-  );
+  )
 }
 
 function ChatInfoTitle({ className, ...props }: React.ComponentProps<"div">) {
@@ -68,11 +68,11 @@ function ChatInfoTitle({ className, ...props }: React.ComponentProps<"div">) {
       data-slot="chat-info-title"
       className={cn(
         "truncate text-sm leading-normal font-medium group-data-[size=sm]/chat-info:text-sm",
-        className,
+        className
       )}
       {...props}
     />
-  );
+  )
 }
 
 function ChatInfoDescription({
@@ -82,10 +82,10 @@ function ChatInfoDescription({
   return (
     <div
       data-slot="chat-info-description"
-      className={cn("text-muted-foreground truncate text-xs", className)}
+      className={cn("truncate text-xs text-muted-foreground", className)}
       {...props}
     />
-  );
+  )
 }
 
 function ChatInfoAction({ className, ...props }: React.ComponentProps<"div">) {
@@ -93,12 +93,12 @@ function ChatInfoAction({ className, ...props }: React.ComponentProps<"div">) {
     <div
       data-slot="chat-info-action"
       className={cn(
-        "text-muted-foreground col-start-2 row-span-2 row-start-1 shrink-0 self-start justify-self-end text-[11px]",
-        className,
+        "col-start-2 row-span-2 row-start-1 shrink-0 self-start justify-self-end text-[11px] text-muted-foreground",
+        className
       )}
       {...props}
     />
-  );
+  )
 }
 
 function ChatInfoContent({ className, ...props }: React.ComponentProps<"div">) {
@@ -108,7 +108,7 @@ function ChatInfoContent({ className, ...props }: React.ComponentProps<"div">) {
       className={cn("flex-1", className)}
       {...props}
     />
-  );
+  )
 }
 
 export {
@@ -119,4 +119,4 @@ export {
   ChatInfoDescription,
   ChatInfoAction,
   ChatInfoContent,
-};
+}

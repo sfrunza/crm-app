@@ -1,14 +1,13 @@
-import { PageContent } from "@/components/page-component";
-import { PackingItems } from "./packing-items/page";
-import { PackingTypes } from "./packing-types/page";
+import { PackingItems } from "./packing-items/page"
+import { PackingTypes } from "./packing-types/page"
 
 function PackingPage() {
   return (
-    <PageContent className="space-y-8">
+    <div className="space-y-8">
       <PackingItems />
       <PackingTypes />
-    </PageContent>
-  );
+    </div>
+  )
 }
 
-export const Component = PackingPage;
+export const Component = PackingPage

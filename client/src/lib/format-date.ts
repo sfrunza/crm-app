@@ -1,12 +1,12 @@
-import { format, parseISO, isValid, addDays, differenceInDays } from 'date-fns'
+import { format, parseISO, isValid, addDays, differenceInDays } from "date-fns"
 
 export type DateInput = Date | string | number | null | undefined
 
 export function formatDate(
   value: DateInput,
-  formatStr: string = 'MMM d, yyyy'
+  formatStr: string = "MMM d, yyyy"
 ): string {
-  if (!value) return 'TBD'
+  if (!value) return "TBD"
 
   let date: Date
 
@@ -14,17 +14,16 @@ export function formatDate(
 
   if (value instanceof Date) {
     date = value
-  } else if (typeof value === 'string') {
+  } else if (typeof value === "string") {
     date = parseISO(value)
   } else {
     date = new Date(value)
   }
 
-  if (!isValid(date)) return 'TBD'
+  if (!isValid(date)) return "TBD"
 
   return format(date, formatStr)
 }
-
 
 export function parseDateOnly(value?: string | null): Date | undefined {
   if (!value) return undefined

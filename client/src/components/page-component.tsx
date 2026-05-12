@@ -30,7 +30,7 @@ function PageHeader({ children, className }: PageContainerProps) {
     <div
       data-slot="page-header"
       className={cn(
-        "group/page-header @container/page-header grid auto-rows-min items-start gap-1 rounded-t-xl px-4 pt-1.5 group-data-[size=sm]/card:px-4 has-data-[slot=page-action]:grid-cols-[1fr_auto] has-data-[slot=page-description]:grid-rows-[auto_auto] [.border-b]:pb-4 group-data-[size=sm]/card:[.border-b]:pb-4",
+        "group/page-header @container/page-header grid auto-rows-min items-start gap-1 rounded-t-xl px-4 pt-2.5 group-data-[size=sm]/card:px-4 has-data-[slot=page-action]:grid-cols-[1fr_auto] has-data-[slot=page-description]:grid-rows-[auto_auto] [.border-b]:pb-2.5 group-data-[size=sm]/card:[.border-b]:pb-4",
         className
       )}
     >

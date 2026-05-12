@@ -1,26 +1,26 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
-import { ActionIcons } from "./_components/action-icons";
-import { Addresses } from "./_components/addresses/addresses";
-import { DeliveryDateTime } from "./_components/date-time/delivery-date-time";
-import { PickupDateTime } from "./_components/date-time/pickup-date-time";
-import { TransitDateTime } from "./_components/date-time/transit-date-time";
-import { Details } from "./_components/details";
-import { Extras } from "./_components/extras";
-import { Notes } from "./_components/notes";
+import { Card, CardContent } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
+import { ActionIcons } from "./_components/action-icons"
+import { Addresses } from "./_components/addresses/addresses"
+import { DeliveryDateTime } from "./_components/date-time/delivery-date-time"
+import { PickupDateTime } from "./_components/date-time/pickup-date-time"
+import { TransitDateTime } from "./_components/date-time/transit-date-time"
+import { Details } from "./_components/details"
+import { Extras } from "./_components/extras"
+import { Notes } from "./_components/notes"
 // import { Parklot } from "./_components/parklot";
-import { ServiceSelect } from "./_components/service-select";
-import { StatusSelect } from "./_components/status-select";
-import { TabFooter } from "./_components/tab-footer";
-import { UpdateRequestButton } from "./_components/update-request-button";
-import { getRequestUIBehavior } from "@/domains/requests/request.behavior";
-import { useRequest } from "@/hooks/use-request";
-import { Parklot } from "./_components/parklot";
+import { ServiceSelect } from "./_components/service-select"
+import { StatusSelect } from "./_components/status-select"
+import { TabFooter } from "./_components/tab-footer"
+import { UpdateRequestButton } from "./_components/update-request-button"
+import { getRequestUIBehavior } from "@/domains/requests/request.behavior"
+import { useRequest } from "@/hooks/use-request"
+import { Parklot } from "./_components/parklot"
 
 export function MainTab() {
-  const { draft } = useRequest();
+  const { draft } = useRequest()
   const { showDeliveryDateTime, showTransitDateTime } =
-    getRequestUIBehavior(draft);
+    getRequestUIBehavior(draft)
   return (
     <div className="pb-10">
       {/* <Parklot /> */}
@@ -63,5 +63,5 @@ export function MainTab() {
         </div>
       </div>
     </div>
-  );
+  )
 }

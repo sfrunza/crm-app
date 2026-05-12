@@ -1,15 +1,15 @@
-import { Button } from "@/components/ui/button";
-import { PlusIcon } from "@/components/icons";
-import { MinusIcon } from "lucide-react";
+import { Button } from "@/components/ui/button"
+import { PlusIcon } from "@/components/icons"
+import { MinusIcon } from "lucide-react"
 
 export function QuantitySelector({
   quantity,
   onChange,
   isLoading,
 }: {
-  quantity: number;
-  onChange: (quantity: number) => void;
-  isLoading?: boolean;
+  quantity: number
+  onChange: (quantity: number) => void
+  isLoading?: boolean
 }) {
   if (quantity < 1) {
     return (
@@ -18,11 +18,11 @@ export function QuantitySelector({
           Add item
         </Button>
       </div>
-    );
+    )
   }
 
   return (
-    <div className="bg-background flex h-9 items-center justify-end rounded-md border px-px">
+    <div className="flex h-9 items-center justify-end rounded-md border bg-background px-px">
       <Button
         type="button"
         variant="ghost"
@@ -46,5 +46,5 @@ export function QuantitySelector({
       </Button>
       {/* </div> */}
     </div>
-  );
+  )
 }

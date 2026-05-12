@@ -1,43 +1,47 @@
 export function paymentStatusVariant(
-  status: string,
+  status: string
 ): "default" | "secondary" | "destructive" | "outline" {
   switch (status) {
     case "succeeded":
     case "paid":
-      return "default";
+      return "default"
     case "pending":
     case "open":
     case "draft":
-      return "secondary";
+      return "secondary"
     case "failed":
     case "void":
-      return "destructive";
+      return "destructive"
+    case "refunded":
+      return "secondary"
+    case "abandoned":
+      return "outline"
     default:
-      return "outline";
+      return "outline"
   }
 }
 
 export function paymentTypeLabel(type: string): string {
   switch (type) {
     case "deposit":
-      return "Deposit";
+      return "Deposit"
     case "charge":
-      return "Card";
+      return "Card"
     case "invoice_payment":
-      return "Invoice";
+      return "Invoice"
     case "cash":
-      return "Cash";
+      return "Cash"
     case "check":
-      return "Check";
+      return "Check"
     case "other":
-      return "Other";
+      return "Other"
     default:
-      return type;
+      return type
   }
 }
 
 export function parseCents(amount: string): number | null {
-  const cents = Math.round(parseFloat(amount.replace(/,/g, "")) * 100);
-  if (isNaN(cents) || cents <= 0) return null;
-  return cents;
+  const cents = Math.round(parseFloat(amount.replace(/,/g, "")) * 100)
+  if (isNaN(cents) || cents <= 0) return null
+  return cents
 }

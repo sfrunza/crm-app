@@ -1,15 +1,20 @@
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { formatPhone } from "@/lib/format-phone";
-import { UserRoundIcon } from "@/components/icons";
-import { EditProfileDialog } from "./edit-profile-dialog";
-import { useAuthStore } from "@/stores/auth-store";
-import { useUser } from "@/hooks/api/use-users";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { formatPhone } from "@/lib/format-phone"
+import { UserRoundIcon } from "@/components/icons"
+import { EditProfileDialog } from "./edit-profile-dialog"
+// import { useAuthStore } from "@/stores/auth-store";
+// import { useUser } from "@/hooks/api/use-users";
+import type { User } from "@/types"
 
-export function CustomerCard() {
-  const { user: sessionUser } = useAuthStore();
-  const { data: user } = useUser(sessionUser?.id!, {
-    enabled: !!sessionUser?.id,
-  });
+interface CustomerCardProps {
+  user?: User
+}
+
+export function CustomerCard({ user }: CustomerCardProps) {
+  // const { user: sessionUser } = useAuthStore();
+  // const { data: user } = useUser(sessionUser?.id!, {
+  //   enabled: !!sessionUser?.id,
+  // });
   return (
     <div className="@container">
       <div className="flex flex-col items-start gap-4 px-4 @sm:flex-row @sm:items-center">
@@ -23,7 +28,7 @@ export function CustomerCard() {
             <p className="font-bold">
               {user?.first_name} {user?.last_name}
             </p>
-            {user && <EditProfileDialog />}
+            {user && <EditProfileDialog user={user} />}
           </div>
           <div className="space-y-1">
             <p className="h-4 text-sm text-muted-foreground">
@@ -36,5 +41,5 @@ export function CustomerCard() {
         </div>
       </div>
     </div>
-  );
+  )
 }

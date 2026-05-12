@@ -1,8 +1,8 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Controller, useForm } from "react-hook-form"
+import { z } from "zod"
 
-import { PasswordInput } from "@/components/inputs/password-input";
+import { PasswordInput } from "@/components/inputs/password-input"
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -12,8 +12,8 @@ import {
   AlertDialogHeader,
   AlertDialogMedia,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
+} from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 import {
   Field,
   FieldContent,
@@ -21,27 +21,27 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
-} from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
-import { LoadingSwap } from "@/components/ui/loading-swap";
-import { PhoneInput } from "@/components/inputs/phone-input";
+} from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { LoadingSwap } from "@/components/ui/loading-swap"
+import { PhoneInput } from "@/components/inputs/phone-input"
 import {
   createCustomer,
   findCustomerByEmail,
   updateCustomer,
-} from "@/domains/customer/customer.api";
-import { useUpdateRequest } from "@/domains/requests/request.mutations";
-import type { Customer } from "@/domains/requests/request.types";
-import { useRequest } from "@/hooks/use-request";
-import { formatPhone } from "@/lib/format-phone";
-import { useMutation } from "@tanstack/react-query";
-import { isValidPhoneNumber } from "libphonenumber-js";
-import { InfoIcon } from "@/components/icons";
-import { useCallback, useState } from "react";
-import { toast } from "sonner";
-import { debounce } from "throttle-debounce";
+} from "@/domains/customer/customer.api"
+import { useUpdateRequest } from "@/domains/requests/request.mutations"
+import type { Customer } from "@/domains/requests/request.types"
+import { useRequest } from "@/hooks/use-request"
+import { formatPhone } from "@/lib/format-phone"
+import { useMutation } from "@tanstack/react-query"
+import { isValidPhoneNumber } from "libphonenumber-js"
+import { InfoIcon } from "@/components/icons"
+import { useCallback, useState } from "react"
+import { toast } from "sonner"
+import { debounce } from "throttle-debounce"
 
-const DEBOUNCE_DELAY = 500;
+const DEBOUNCE_DELAY = 500
 
 const formSchema = z.object({
   first_name: z.string(),
@@ -62,20 +62,20 @@ const formSchema = z.object({
         phoneNumber && isValidPhoneNumber(phoneNumber ?? "", "US"),
       {
         message: "Invalid phone number",
-      },
+      }
     )
     .or(z.literal("")),
   password: z.string().optional(),
-});
+})
 
-type Inputs = z.infer<typeof formSchema>;
+type Inputs = z.infer<typeof formSchema>
 
 export function CustomerForm() {
-  const { draft } = useRequest();
-  const [open, setOpen] = useState(false);
+  const { draft } = useRequest()
+  const [open, setOpen] = useState(false)
   const [existingCustomer, setExistingCustomer] = useState<Customer | null>(
-    null,
-  );
+    null
+  )
 
   const form = useForm<Inputs>({
     resolver: zodResolver(formSchema),
@@ -90,74 +90,74 @@ export function CustomerForm() {
       additional_email: draft?.customer?.additional_email ?? "",
       password: "",
     },
-  });
+  })
 
-  const { mutate: updateRequestMutation } = useUpdateRequest();
+  const { mutate: updateRequestMutation } = useUpdateRequest()
 
   const { mutate: updateCustomerMutation, isPending: isUpdating } = useMutation(
     {
       mutationFn: (values: Partial<Customer>) =>
         updateCustomer(draft?.customer?.id, values),
       onSuccess: (data: Customer) => {
-        if (!draft?.id) return;
+        if (!draft?.id) return
         updateRequestMutation({
           id: draft?.id,
           data: { customer_id: data.id },
-        });
-        toast.success("Customer updated");
+        })
+        toast.success("Customer updated")
       },
-    },
-  );
+    }
+  )
 
   const { mutate: createCustomerMutation, isPending: isCreating } = useMutation(
     {
       mutationFn: (values: Partial<Customer>) => createCustomer(values),
       onSuccess: (data: Partial<Customer>) => {
-        if (!draft?.id) return;
+        if (!draft?.id) return
         updateRequestMutation({
           id: draft?.id,
           data: { customer_id: data?.id },
-        });
+        })
       },
-    },
-  );
+    }
+  )
 
   function onSubmit(values: Inputs) {
     if (draft?.customer?.id) {
-      updateCustomerMutation(values);
+      updateCustomerMutation(values)
     } else {
-      createCustomerMutation(values);
+      createCustomerMutation(values)
     }
   }
 
   const handleFindCustomer = useCallback(
     async (value: string): Promise<Customer | null> => {
-      const isValid = form.getFieldState("email_address").error ? false : true;
-      if (!isValid || !value) return null;
+      const isValid = form.getFieldState("email_address").error ? false : true
+      if (!isValid || !value) return null
 
       try {
-        const user = await findCustomerByEmail(value);
+        const user = await findCustomerByEmail(value)
 
         if (!user) {
-          return null;
+          return null
         }
-        setExistingCustomer(user);
-        setOpen(true);
-        return user;
+        setExistingCustomer(user)
+        setOpen(true)
+        return user
       } catch (error) {
         if (error instanceof Error) {
-          toast.error(error.message);
+          toast.error(error.message)
         }
-        return null;
+        return null
       }
     },
-    [form.getFieldState("email_address").error],
-  );
+    [form.getFieldState("email_address").error]
+  )
 
   const debouncedSearch = useCallback(
     debounce(DEBOUNCE_DELAY, handleFindCustomer, { atBegin: false }),
-    [handleFindCustomer],
-  );
+    [handleFindCustomer]
+  )
 
   return (
     <div>
@@ -212,9 +212,9 @@ export function CustomerForm() {
                     aria-invalid={fieldState.invalid}
                     autoComplete="off"
                     onChange={(e) => {
-                      field.onChange(e);
+                      field.onChange(e)
                       if (!draft?.customer?.id) {
-                        debouncedSearch(e.target.value);
+                        debouncedSearch(e.target.value)
                       }
                     }}
                   />
@@ -335,12 +335,12 @@ export function CustomerForm() {
             <Button
               disabled={isUpdating}
               onClick={() => {
-                if (!draft?.id) return;
+                if (!draft?.id) return
                 updateRequestMutation({
                   id: draft.id,
                   data: { customer_id: existingCustomer?.id },
-                });
-                setOpen(false);
+                })
+                setOpen(false)
               }}
             >
               <LoadingSwap isLoading={isUpdating}>Yes</LoadingSwap>
@@ -349,5 +349,5 @@ export function CustomerForm() {
         </AlertDialogContent>
       </AlertDialog>
     </div>
-  );
+  )
 }

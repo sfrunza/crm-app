@@ -1,14 +1,13 @@
-import { PageContent } from "@/components/page-component";
-import { MoveSizes } from "./move-sizes/page";
-import { EntranceTypes } from "./entrance-types/page";
+import { MoveSizes } from "./move-sizes/page"
+import { EntranceTypes } from "./entrance-types/page"
 
 function CalculatorPage() {
   return (
-    <PageContent className="space-y-8">
+    <div className="space-y-8">
       <MoveSizes />
       <EntranceTypes />
-    </PageContent>
-  );
+    </div>
+  )
 }
 
-export const Component = CalculatorPage;
+export const Component = CalculatorPage

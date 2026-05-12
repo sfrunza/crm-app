@@ -1,26 +1,26 @@
-import type { Request } from "@/domains/requests/request.types";
-import { cn } from "@/lib/utils";
-import { UsersIcon } from "@/components/icons";
+import type { Request } from "@/domains/requests/request.types"
+import { cn } from "@/lib/utils"
+import { UsersIcon } from "@/components/icons"
 
 import {
   Popover,
   PopoverTrigger,
   PopoverContent,
-} from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { formatDate } from "@/lib/format-date";
-import { formatCentsToDollarsString, timeWindowToString } from "@/lib/helpers";
-import { openRequest } from "@/stores/use-open-requests-store";
+} from "@/components/ui/popover"
+import { Button } from "@/components/ui/button"
+import { formatDate } from "@/lib/format-date"
+import { formatCentsToDollarsString, timeWindowToString } from "@/lib/helpers"
+import { openRequest } from "@/stores/use-open-requests-store"
 
 type ParklotJobInfoSmallProps = {
-  request: Request;
-  slotType?: "pickup" | "delivery";
-  isActive: boolean;
-  left: number;
-  width: number;
-  bgClass: string;
-  className?: string;
-};
+  request: Request
+  slotType?: "pickup" | "delivery"
+  isActive: boolean
+  left: number
+  width: number
+  bgClass: string
+  className?: string
+}
 
 export function ParklotJobInfoSmall({
   request,
@@ -31,11 +31,11 @@ export function ParklotJobInfoSmall({
   bgClass,
   className,
 }: ParklotJobInfoSmallProps) {
-  const isDelivery = slotType === "delivery";
+  const isDelivery = slotType === "delivery"
 
   const crewSize = isDelivery
     ? request.crew_size_delivery || request.crew_size
-    : request.crew_size;
+    : request.crew_size
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -45,10 +45,10 @@ export function ParklotJobInfoSmall({
             "cursor-pointer transition select-none",
             bgClass,
             {
-              "after:border-background after:absolute after:inset-0 after:rounded-sm after:border-3 after:border-dashed":
+              "after:absolute after:inset-0 after:rounded-sm after:border-3 after:border-dashed after:border-background":
                 isActive,
             },
-            className,
+            className
           )}
           style={{
             left: `${left}%`,
@@ -57,7 +57,7 @@ export function ParklotJobInfoSmall({
           onMouseDown={(e) => e.stopPropagation()} // important for draggable grids
         >
           <div className="h-full overflow-hidden">
-            <div className="divide-muted/30 flex h-full items-center gap-2 divide-x-2 truncate text-xs font-semibold [&>*:not(:last-child)]:pr-2">
+            <div className="flex h-full items-center gap-2 divide-x-2 divide-muted/30 truncate text-xs font-semibold [&>*:not(:last-child)]:pr-2">
               <div className="flex items-center gap-2">
                 <span>#{request.id}</span>
                 <span className="flex items-center gap-1">
@@ -95,29 +95,29 @@ export function ParklotJobInfoSmall({
         <JobInfoPopover request={request} slotType={slotType} />
       </PopoverContent>
     </Popover>
-  );
+  )
 }
 
 function JobInfoPopover({
   request,
   slotType = "pickup",
 }: {
-  request: Request;
-  slotType?: "pickup" | "delivery";
+  request: Request
+  slotType?: "pickup" | "delivery"
 }) {
-  const isDelivery = slotType === "delivery";
+  const isDelivery = slotType === "delivery"
 
   const crewSize = isDelivery
     ? request.crew_size_delivery || request.crew_size
-    : request.crew_size;
+    : request.crew_size
 
   const startTime = isDelivery
     ? (request.start_time_window_delivery ?? request.start_time_window)
-    : request.start_time_window;
+    : request.start_time_window
 
   const endTime = isDelivery
     ? (request.end_time_window_delivery ?? request.end_time_window)
-    : request.end_time_window;
+    : request.end_time_window
 
   return (
     <div className="space-y-3">
@@ -125,7 +125,7 @@ function JobInfoPopover({
         <div className="flex items-center justify-between">
           <p className="font-semibold">#{request.id}</p>
           {isDelivery && (
-            <span className="bg-muted text-muted-foreground rounded px-1.5 py-0.5 text-[10px] font-semibold uppercase">
+            <span className="rounded bg-muted px-1.5 py-0.5 text-[10px] font-semibold text-muted-foreground uppercase">
               Delivery
             </span>
           )}
@@ -151,12 +151,12 @@ function JobInfoPopover({
         <Button
           size="sm"
           onClick={() => {
-            openRequest(request.id);
+            openRequest(request.id)
           }}
         >
           View request
         </Button>
       </div>
     </div>
-  );
+  )
 }

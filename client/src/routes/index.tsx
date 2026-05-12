@@ -1,12 +1,12 @@
-import { GlobalFallback } from "@/components/global-fallback";
-import { appLoader, rootLoader } from "@/lib/auth";
-import { ErrorPage } from "@/pages/error/page";
-import { ADMIN_ROLES } from "@/types/index";
-import { createBrowserRouter } from "react-router";
-import { accountRoutes } from "./account-routes";
-import { authRoutes } from "./auth-routes";
-import { crmRoutes } from "./crm-routes";
-import { RequireAuth, RequireRole, RootRedirect } from "./guards";
+import { GlobalFallback } from "@/components/global-fallback"
+import { appLoader, rootLoader } from "@/lib/auth"
+import { ErrorPage } from "@/pages/error/page"
+import { ADMIN_ROLES } from "@/types/index"
+import { createBrowserRouter } from "react-router"
+import { accountRoutes } from "./account-routes"
+import { authRoutes } from "./auth-routes"
+import { crmRoutes } from "./crm-routes"
+import { RequireAuth, RequireRole, RootRedirect } from "./guards"
 
 export const router = createBrowserRouter([
   {
@@ -41,4 +41,4 @@ export const router = createBrowserRouter([
       },
     ],
   },
-]);
+])

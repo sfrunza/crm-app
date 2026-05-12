@@ -1,7 +1,7 @@
-import { MessagesFeed } from "@/components/messages-feed";
-import { NotificationSound } from "@/components/notification-sound";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { MessagesFeed } from "@/components/messages-feed"
+import { NotificationSound } from "@/components/notification-sound"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -9,34 +9,34 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
-import type { Status } from "@/domains/requests/request.types";
-import { useAuth } from "@/hooks/use-auth";
-import { useMessagesSubscription } from "@/hooks/use-messages-subscription";
-import { useNotificationsSubscription } from "@/hooks/use-notifications-subscription";
-import { cn } from "@/lib/utils";
-import { MessageCircleMoreIcon } from "@/components/icons";
-import { useCallback, useRef, useState } from "react";
-import { useGetUnreadCount } from "@/hooks/api/use-messages";
-import type { CableMessageEvent } from "@/types/index";
+} from "@/components/ui/dialog"
+import type { Status } from "@/domains/requests/request.types"
+import { useAuth } from "@/hooks/use-auth"
+import { useMessagesSubscription } from "@/hooks/use-messages-subscription"
+import { useNotificationsSubscription } from "@/hooks/use-notifications-subscription"
+import { cn } from "@/lib/utils"
+import { MessageCircleMoreIcon } from "@/components/icons"
+import { useCallback, useRef, useState } from "react"
+import { useGetUnreadCount } from "@/hooks/api/use-messages"
+import type { CableMessageEvent } from "@/types/index"
 
 export function MessagesDialog({
   requestId,
   status,
   isLarge = false,
 }: {
-  requestId: number;
-  status?: Status;
-  isLarge?: boolean;
+  requestId: number
+  status?: Status
+  isLarge?: boolean
 }) {
-  const [open, setOpen] = useState(false);
-  const openRef = useRef(open);
-  openRef.current = open;
+  const [open, setOpen] = useState(false)
+  const openRef = useRef(open)
+  openRef.current = open
 
-  const { user: currentUser } = useAuth();
-  const { data } = useGetUnreadCount(requestId);
+  const { user: currentUser } = useAuth()
+  const { data } = useGetUnreadCount(requestId)
 
-  const unreadCount = data?.unread_count ?? 0;
+  const unreadCount = data?.unread_count ?? 0
 
   const handleMessageReceived = useCallback(
     (data: CableMessageEvent) => {
@@ -49,19 +49,19 @@ export function MessagesDialog({
           .play()
           .catch(() => {
             // Browser may block autoplay until user interacts
-          });
+          })
       }
     },
     [currentUser?.id, openRef]
-  );
+  )
 
-  useNotificationsSubscription(requestId);
+  useNotificationsSubscription(requestId)
 
   useMessagesSubscription({
     requestId,
     onReceived: handleMessageReceived,
     deps: [currentUser?.id],
-  });
+  })
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -98,5 +98,5 @@ export function MessagesDialog({
         </div>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

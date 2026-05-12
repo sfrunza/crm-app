@@ -1,6 +1,6 @@
-import type { ChangeEvent } from "react";
-import { Input } from "@/components/ui/input";
-import { COUNTRY, AsYouType } from "@/lib/format-phone";
+import type { ChangeEvent } from "react"
+import { Input } from "@/components/ui/input"
+import { COUNTRY, AsYouType } from "@/lib/format-phone"
 
 function PhoneInput({
   className,
@@ -8,14 +8,14 @@ function PhoneInput({
   handleValueChange,
   ...props
 }: React.ComponentProps<"input"> & {
-  handleValueChange: (value: string) => void;
+  handleValueChange: (value: string) => void
 }) {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
-    const formatted = new AsYouType(COUNTRY).input(inputValue);
-    const formattedValue = formatted.replace(/[\s\-\(\)]/g, ""); //replace all spaces and dashes and parentheses
-    handleValueChange(formattedValue);
-  };
+    const inputValue = e.target.value
+    const formatted = new AsYouType(COUNTRY).input(inputValue)
+    const formattedValue = formatted.replace(/[\s\-\(\)]/g, "") //replace all spaces and dashes and parentheses
+    handleValueChange(formattedValue)
+  }
 
   return (
     <Input
@@ -28,7 +28,7 @@ function PhoneInput({
       onChange={handleChange}
       maxLength={14}
     />
-  );
+  )
 }
 
-export { PhoneInput };
+export { PhoneInput }

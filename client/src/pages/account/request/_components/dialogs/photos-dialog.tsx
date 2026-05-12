@@ -1,6 +1,6 @@
-import { FileUpload } from '@/components/request/file-upload';
-import { ImageGallery } from '@/components/request/image-gallery';
-import { Button } from '@/components/ui/button';
+import { FileUpload } from "@/components/request/file-upload"
+import { ImageGallery } from "@/components/request/image-gallery"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogClose,
@@ -10,29 +10,29 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { useRequest } from '@/hooks/use-request';
-import { CameraIcon, CheckCircleIcon } from '@/components/icons';
-import { useState } from 'react';
+} from "@/components/ui/dialog"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { useRequest } from "@/hooks/use-request"
+import { CameraIcon, CheckCircleIcon } from "@/components/icons"
+import { useState } from "react"
 
 export function PhotosDialog() {
-  const [isOpen, setIsOpen] = useState(false);
-  const { request } = useRequest();
+  const [isOpen, setIsOpen] = useState(false)
+  const { request } = useRequest()
 
-  if (!request) return null;
+  if (!request) return null
 
-  const hasPhotos = request.image_urls ? request.image_urls.length > 0 : false;
+  const hasPhotos = request.image_urls ? request.image_urls.length > 0 : false
 
   function onCancel() {
-    setIsOpen(false);
+    setIsOpen(false)
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button
-          variant={hasPhotos ? 'default' : 'outline'}
+          variant={hasPhotos ? "default" : "outline"}
           className="h-16 w-full gap-6"
         >
           {hasPhotos ? (
@@ -41,7 +41,7 @@ export function PhotosDialog() {
             <CameraIcon className="size-6" />
           )}
           <span className="flex flex-col items-start">
-            {hasPhotos ? 'View or add photos' : 'Add photos'}
+            {hasPhotos ? "View or add photos" : "Add photos"}
             <span className="text-sm font-normal">Optional</span>
           </span>
         </Button>
@@ -73,5 +73,5 @@ export function PhotosDialog() {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

@@ -1,9 +1,9 @@
-import { cn } from "@/lib/utils";
-import { OpenGoogleMapsButton } from "./open-google-maps-button";
-import { MapIcon } from "@/components/icons";
+import { cn } from "@/lib/utils"
+import { OpenGoogleMapsButton } from "./open-google-maps-button"
+import { MapIcon } from "@/components/icons"
 
 function AddressBox({ className, ...props }: React.ComponentProps<"div">) {
-  return <div className={cn("flex flex-col gap-2", className)} {...props} />;
+  return <div className={cn("flex flex-col gap-2", className)} {...props} />
 }
 
 function AddressBoxHeader({
@@ -15,7 +15,7 @@ function AddressBoxHeader({
       className={cn("grid auto-rows-min items-start", className)}
       {...props}
     />
-  );
+  )
 }
 
 function AddressBoxTitle({
@@ -24,11 +24,11 @@ function AddressBoxTitle({
   destination,
   className,
 }: {
-  title: string;
-  action?: React.ReactNode;
-  origin?: string;
-  destination?: string;
-  className?: string;
+  title: string
+  action?: React.ReactNode
+  origin?: string
+  destination?: string
+  className?: string
 }) {
   return (
     <div className={cn("flex items-center gap-3", className)}>
@@ -40,9 +40,9 @@ function AddressBoxTitle({
         <MapIcon />
       </OpenGoogleMapsButton>
 
-      <p className="text-muted-foreground text-sm font-medium">{title}</p>
+      <p className="text-sm font-medium text-muted-foreground">{title}</p>
     </div>
-  );
+  )
 }
 
 function AddressBoxAction({
@@ -53,18 +53,18 @@ function AddressBoxAction({
     <div
       className={cn(
         "col-start-2 row-span-2 row-start-1 self-start justify-self-end",
-        className,
+        className
       )}
       {...props}
     />
-  );
+  )
 }
 
 function AddressBoxContent({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  return <div className={cn("", className)} {...props} />;
+  return <div className={cn("", className)} {...props} />
 }
 
 function AddressBoxFooter({
@@ -75,11 +75,11 @@ function AddressBoxFooter({
     <div
       className={cn(
         "flex items-center rounded-b-xl px-6 [.border-t]:pt-6",
-        className,
+        className
       )}
       {...props}
     />
-  );
+  )
 }
 
 export {
@@ -89,4 +89,4 @@ export {
   AddressBoxAction,
   AddressBoxContent,
   AddressBoxFooter,
-};
+}

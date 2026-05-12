@@ -2,25 +2,25 @@ import {
   PageAction,
   PageContent,
   PageHeader,
-} from "@/components/page-component";
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
-import { PlusIcon } from "@/components/icons";
-import { Fragment } from "react";
-import { useSearchParams } from "react-router";
-import { EmployeeFormSheet } from "./employee-form-sheet";
-import { EmployeesTable } from "./employees-table";
-import { FilterTabs, type Tab } from "./filter-tabs";
-import { useGetEmployees } from "@/domains/employees/employee.queries";
+} from "@/components/page-component"
+import { Button } from "@/components/ui/button"
+import { Spinner } from "@/components/ui/spinner"
+import { PlusIcon } from "@/components/icons"
+import { Fragment } from "react"
+import { useSearchParams } from "react-router"
+import { EmployeeFormSheet } from "./employee-form-sheet"
+import { EmployeesTable } from "./employees-table"
+import { FilterTabs, type Tab } from "./filter-tabs"
+import { useGetEmployees } from "@/domains/employees/employee.queries"
 
 function DepartmentPage() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const filter = searchParams.get("filter") as Tab;
-  const { data: employees, isLoading, error } = useGetEmployees();
+  const [searchParams, setSearchParams] = useSearchParams()
+  const filter = searchParams.get("role") as Tab
+  const { data: employees, isLoading, error } = useGetEmployees()
 
   const filteredEmployees = employees?.filter((user) =>
-    filter === "all" || !filter ? user : user.role === filter,
-  );
+    filter === "all" || !filter ? user : user.role === filter
+  )
 
   return (
     <Fragment>
@@ -36,9 +36,9 @@ function DepartmentPage() {
             size="sm"
             onClick={() => {
               setSearchParams((prev) => {
-                prev.set("create_employee", "employee");
-                return prev;
-              });
+                prev.set("create_employee", "employee")
+                return prev
+              })
             }}
           >
             <PlusIcon />
@@ -66,7 +66,7 @@ function DepartmentPage() {
         {filteredEmployees && <EmployeesTable employees={filteredEmployees} />}
       </PageContent>
     </Fragment>
-  );
+  )
 }
 
-export const Component = DepartmentPage;
+export const Component = DepartmentPage

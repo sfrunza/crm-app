@@ -57,6 +57,7 @@ export {
   PhoneIcon,
   PointerIcon,
   PlusIcon,
+  PlusCircleIcon,
   PrinterIcon,
   ReceiptIcon,
   RefreshCwIcon,

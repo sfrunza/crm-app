@@ -1,11 +1,11 @@
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react"
 
 interface UseInfiniteScrollOptions {
-  hasNextPage: boolean | undefined;
-  isFetchingNextPage: boolean;
-  fetchNextPage: () => void;
+  hasNextPage: boolean | undefined
+  isFetchingNextPage: boolean
+  fetchNextPage: () => void
   /** Options forwarded to the IntersectionObserver constructor. */
-  observerOptions?: IntersectionObserverInit;
+  observerOptions?: IntersectionObserverInit
 }
 
 /**
@@ -23,26 +23,26 @@ export function useInfiniteScroll({
   fetchNextPage,
   observerOptions,
 }: UseInfiniteScrollOptions) {
-  const sentinelRef = useRef<HTMLDivElement>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null)
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
-      const [entry] = entries;
+      const [entry] = entries
       if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
-        fetchNextPage();
+        fetchNextPage()
       }
     },
-    [hasNextPage, isFetchingNextPage, fetchNextPage],
-  );
+    [hasNextPage, isFetchingNextPage, fetchNextPage]
+  )
 
   useEffect(() => {
-    const el = sentinelRef.current;
-    if (!el) return;
+    const el = sentinelRef.current
+    if (!el) return
 
-    const observer = new IntersectionObserver(handleObserver, observerOptions);
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [handleObserver, observerOptions]);
+    const observer = new IntersectionObserver(handleObserver, observerOptions)
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [handleObserver, observerOptions])
 
-  return sentinelRef;
+  return sentinelRef
 }

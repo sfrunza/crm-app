@@ -1,57 +1,57 @@
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from '@/components/ui/card';
-import { Spinner } from '@/components/ui/spinner';
-import type { Status } from '@/domains/requests/request.types';
-import { useRequest } from '@/hooks/use-request';
-import { formatDate } from '@/lib/format-date';
-import { formatPhone } from '@/lib/format-phone';
+} from "@/components/ui/card"
+import { Spinner } from "@/components/ui/spinner"
+import type { Status } from "@/domains/requests/request.types"
+import { useRequest } from "@/hooks/use-request"
+import { formatDate } from "@/lib/format-date"
+import { formatPhone } from "@/lib/format-phone"
 import {
   Calendar1Icon,
   CheckCircleIcon,
   MailIcon,
   MessageCircleIcon,
   PhoneIcon,
-} from '@/components/icons';
-import { useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router';
-import { Confetti } from './_components/confetti';
-import { useSettings } from '@/hooks/api/use-settings';
+} from "@/components/icons"
+import { useEffect } from "react"
+import { useNavigate, useParams } from "react-router"
+import { Confetti } from "./_components/confetti"
+import { useSettings } from "@/hooks/api/use-settings"
 
-const ALLOWED_STATUSES: Status[] = ['confirmed', 'reserved'];
+const ALLOWED_STATUSES: Status[] = ["confirmed", "reserved"]
 
 function ReservationConfirmationPage() {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>()
+  const navigate = useNavigate()
 
-  const { request, isPending, isError } = useRequest(Number(id));
-  const { data: companySettings } = useSettings();
+  const { request, isPending, isError } = useRequest(Number(id))
+  const { data: companySettings } = useSettings()
 
-  const companyPhone = companySettings?.company_phone;
-  const companyEmail = companySettings?.company_email;
+  const companyPhone = companySettings?.company_phone
+  const companyEmail = companySettings?.company_email
 
   const handleBackToRequest = () => {
-    navigate(`/account/requests/${id}`);
-  };
+    navigate(`/account/requests/${id}`)
+  }
 
   // Redirect if request doesn't have allowed status
   useEffect(() => {
     if (request && !ALLOWED_STATUSES.includes(request.status)) {
-      navigate(`/account/requests/${id}`, { replace: true });
+      navigate(`/account/requests/${id}`, { replace: true })
     }
-  }, [request, navigate, id]);
+  }, [request, navigate, id])
 
   if (!request || isPending || isError) {
     return (
       <div className="flex min-h-[80vh] items-center justify-center">
         <Spinner />
       </div>
-    );
+    )
   }
 
   return (
@@ -78,8 +78,8 @@ function ReservationConfirmationPage() {
           </p>
 
           {request?.moving_date && (
-            <div className="bg-primary/10 border-primary/20 rounded-xl border p-4">
-              <p className="text-primary flex items-center justify-center gap-2 font-semibold">
+            <div className="rounded-xl border border-primary/20 bg-primary/10 p-4">
+              <p className="flex items-center justify-center gap-2 font-semibold text-primary">
                 <Calendar1Icon className="size-5" />
                 See you on {formatDate(request.moving_date)}
               </p>
@@ -94,22 +94,22 @@ function ReservationConfirmationPage() {
           {/* </div> */}
 
           {/* ── What's Next? ───────────────────────────────────── */}
-          <div className="bg-muted/50 rounded-xl border p-4 text-left">
+          <div className="rounded-xl border bg-muted/50 p-4 text-left">
             <h3 className="mb-3 flex items-center gap-2 font-semibold">
               <MailIcon className="h-5 w-5" />
               What's Next?
             </h3>
-            <ul className="text-muted-foreground list-disc space-y-2 pl-4 text-sm">
+            <ul className="list-disc space-y-2 pl-4 text-sm text-muted-foreground">
               <li>
                 <span>
-                  You will receive an email notification{' '}
+                  You will receive an email notification{" "}
                   <strong>5 days before</strong> your move with final details
                   and preparations
                 </span>
               </li>
               <li>
                 <span>
-                  A reminder email will be sent <strong>1 day before</strong>{' '}
+                  A reminder email will be sent <strong>1 day before</strong>{" "}
                   your move with your crew assignment and arrival time
                 </span>
               </li>
@@ -122,17 +122,17 @@ function ReservationConfirmationPage() {
             </ul>
           </div>
 
-          <div className="bg-muted/50 rounded-xl border p-4 text-left">
+          <div className="rounded-xl border bg-muted/50 p-4 text-left">
             <h3 className="mb-3 flex items-center gap-2 font-semibold">
               <MessageCircleIcon className="h-5 w-5" />
               Have Questions?
             </h3>
-            <p className="text-muted-foreground mb-3 text-sm">
+            <p className="mb-3 text-sm text-muted-foreground">
               Our team is here to help! If you have any questions or need to
               make changes to your reservation, don't hesitate to reach out.
             </p>
             <div className="space-y-2 text-sm">
-              <p className="text-muted-foreground flex items-center gap-2">
+              <p className="flex items-center gap-2 text-muted-foreground">
                 <PhoneIcon className="size-4" />
                 Call us at
                 <a
@@ -142,7 +142,7 @@ function ReservationConfirmationPage() {
                   {formatPhone(companyPhone)}
                 </a>
               </p>
-              <p className="text-muted-foreground flex items-center gap-2">
+              <p className="flex items-center gap-2 text-muted-foreground">
                 <MailIcon className="size-4" />
                 Email us at
                 <a
@@ -157,7 +157,7 @@ function ReservationConfirmationPage() {
         </CardContent>
       </Card>
     </>
-  );
+  )
 }
 
-export const Component = ReservationConfirmationPage;
+export const Component = ReservationConfirmationPage

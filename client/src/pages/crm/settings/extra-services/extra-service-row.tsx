@@ -1,25 +1,25 @@
-import { useSortable } from "@dnd-kit/sortable";
-import { CSS } from "@dnd-kit/utilities";
-import { GripVerticalIcon, MoreHorizontalIcon } from "@/components/icons";
+import { useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
+import { GripVerticalIcon, MoreHorizontalIcon } from "@/components/icons"
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Switch } from "@/components/ui/switch";
-import { TableCell, TableRow } from "@/components/ui/table";
-import { useSearchParams } from "react-router";
-import type { ExtraService } from "@/types/index";
+} from "@/components/ui/dropdown-menu"
+import { Switch } from "@/components/ui/switch"
+import { TableCell, TableRow } from "@/components/ui/table"
+import { useSearchParams } from "react-router"
+import type { ExtraService } from "@/types/index"
 
 export function ExtraServiceRow({
   id,
   item,
 }: {
-  id: number;
-  item: ExtraService;
+  id: number
+  item: ExtraService
 }) {
   const {
     attributes,
@@ -28,7 +28,7 @@ export function ExtraServiceRow({
     transform,
     transition,
     isDragging,
-  } = useSortable({ id: id });
+  } = useSortable({ id: id })
 
   return (
     <TableRow
@@ -62,11 +62,11 @@ export function ExtraServiceRow({
         <Actions extraService={item} />
       </TableCell>
     </TableRow>
-  );
+  )
 }
 
 function Actions({ extraService }: { extraService: ExtraService }) {
-  const [_, setSearchParams] = useSearchParams();
+  const [_, setSearchParams] = useSearchParams()
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -84,7 +84,7 @@ function Actions({ extraService }: { extraService: ExtraService }) {
           onClick={() => {
             setSearchParams({
               edit_extra_service: extraService.id.toString(),
-            });
+            })
           }}
         >
           Edit extra service
@@ -94,12 +94,12 @@ function Actions({ extraService }: { extraService: ExtraService }) {
           onClick={() => {
             setSearchParams({
               delete_extra_service: extraService.id.toString(),
-            });
+            })
           }}
         >
           Delete extra service
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

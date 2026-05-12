@@ -1,20 +1,19 @@
 export type UserRole =
-  | 'admin'
-  | 'manager'
-  | 'foreman'
-  | 'driver'
-  | 'helper'
-  | 'customer';
-
+  | "admin"
+  | "manager"
+  | "foreman"
+  | "driver"
+  | "helper"
+  | "customer"
 
 export type ServiceCode =
-  | 'local_move'
-  | 'packing_only'
-  | 'loading_help'
-  | 'unloading_help'
-  | 'moving_with_storage'
-  | 'overnight_truck_storage'
-  | 'flat_rate'
+  | "local_move"
+  | "packing_only"
+  | "loading_help"
+  | "unloading_help"
+  | "moving_with_storage"
+  | "overnight_truck_storage"
+  | "flat_rate"
 
 export type RequestStatus =
   | "pending"
@@ -31,9 +30,9 @@ export type RequestStatus =
   | "closed"
   | "expired"
   | "archived"
-  | "reserved";
+  | "reserved"
 
-export type AddressType = 'pick_up' | 'drop_off';
+export type AddressType = "pick_up" | "drop_off"
 
 export type PaymentType =
   | "deposit"
@@ -41,23 +40,25 @@ export type PaymentType =
   | "invoice_payment"
   | "cash"
   | "check"
-  | "other";
+  | "other"
 
 export type PaymentStatus =
   | "pending"
   | "succeeded"
   | "failed"
-  | "refunded";
+  | "refunded"
+  | "abandoned"
 
-export type InvoiceStatus =
-  | "draft"
-  | "open"
-  | "paid"
-  | "void";
+export type InvoiceStatus = "draft" | "open" | "paid" | "void"
 
+export type CrewRole = "foreman" | "driver" | "helper"
 
-export type CrewRole = 'foreman' | 'driver' | 'helper';
-
-export const STAFF_ROLES: UserRole[] = ['admin', 'manager', 'foreman', 'driver', 'helper'];
-export const ADMIN_ROLES: UserRole[] = ['admin', 'manager'];
-export const CREW_ROLES: UserRole[] = ['foreman', 'driver', 'helper'];
+export const STAFF_ROLES: UserRole[] = [
+  "admin",
+  "manager",
+  "foreman",
+  "driver",
+  "helper",
+]
+export const ADMIN_ROLES: UserRole[] = ["admin", "manager"]
+export const CREW_ROLES: UserRole[] = ["foreman", "driver", "helper"]

@@ -87,7 +87,7 @@ function ResetPasswordPage() {
                     {...field}
                     id={field.name}
                     aria-invalid={fieldState.invalid}
-                    autoComplete="off"
+                    autoComplete="new-password"
                     required
                   />
                   {fieldState.invalid && (

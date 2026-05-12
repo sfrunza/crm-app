@@ -1,82 +1,75 @@
-import { Badge } from '@/components/ui/badge';
-import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useRequest } from '@/hooks/use-request';
-import { useMemo } from 'react';
-import { CalculatorSwitch } from './calculator-switch';
-import { CustomerTab } from './tabs/customer-tab/customer-tab';
-import { DetailsTab } from './tabs/details-tab/details-tab';
-import { InventoryTab } from './tabs/inventory-tab/inventory-tab';
-import { LogsTab } from './tabs/logs-tab/logs-tab';
-import { MainTab } from './tabs/main-tab/main-tab';
-import { MessagesTab } from './tabs/messages-tab/messages-tab';
-import { PhotosTab } from './tabs/photos-tab/photos-tab';
-import { Separator } from '@/components/ui/separator';
+import { Badge } from "@/components/ui/badge"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useRequest } from "@/hooks/use-request"
+import { useMemo } from "react"
+import { CalculatorSwitch } from "./calculator-switch"
+import { CustomerTab } from "./tabs/customer-tab/customer-tab"
+import { DetailsTab } from "./tabs/details-tab/details-tab"
+import { InventoryTab } from "./tabs/inventory-tab/inventory-tab"
+import { LogsTab } from "./tabs/logs-tab/logs-tab"
+import { MainTab } from "./tabs/main-tab/main-tab"
+import { MessagesTab } from "./tabs/messages-tab/messages-tab"
+import { PhotosTab } from "./tabs/photos-tab/photos-tab"
+import { Separator } from "@/components/ui/separator"
 
 export function NavigationTabs() {
-  const { request } = useRequest();
+  const { request } = useRequest()
 
-  const hasDetails = request?.details?.is_touched ?? false;
+  const hasDetails = request?.details?.is_touched ?? false
   const hasPhotos = request?.image_urls
     ? request?.image_urls?.length > 0
-    : false;
+    : false
   const hasRequests = request?.customer
     ? request?.customer?.requests_count > 1
-    : false;
-  const hasMessages = request && request.unread_messages_count > 0;
+    : false
+  const hasMessages = request && request.unread_messages_count > 0
 
   const hasClientInventory = (request?.request_rooms ?? []).some(
     (room) => (room.request_items?.length ?? 0) > 0
-  );
+  )
 
   const inventoryBadge = hasClientInventory
     ? `${Number(request?.totals?.volume || 0).toFixed(2)} cu ft`
-    : null;
+    : null
 
   const tabsData = useMemo(() => {
     return [
       {
-        value: 'request',
+        value: "request",
         label: `Request #${request?.id}`,
       },
       {
-        value: 'customer',
-        label: 'Customer',
+        value: "customer",
+        label: "Customer",
         showDot: hasRequests,
       },
       {
-        value: 'messages',
-        label: 'Messages',
+        value: "messages",
+        label: "Messages",
         showDot: hasMessages,
       },
       {
-        value: 'logs',
-        label: 'Logs',
+        value: "logs",
+        label: "Logs",
       },
       {
-        value: 'details',
-        label: 'Details',
+        value: "details",
+        label: "Details",
         showDot: hasDetails,
       },
       {
-        value: 'photos',
-        label: 'Photos',
+        value: "photos",
+        label: "Photos",
         showDot: hasPhotos,
       },
       {
-        value: 'inventory',
-        label: 'Inventory',
+        value: "inventory",
+        label: "Inventory",
         badge: inventoryBadge,
       },
-    ];
-  }, [
-    request,
-    hasRequests,
-    hasMessages,
-    hasDetails,
-    hasPhotos,
-    inventoryBadge,
-  ]);
+    ]
+  }, [request, hasRequests, hasMessages, hasDetails, hasPhotos, inventoryBadge])
 
   return (
     <Tabs defaultValue="request" className="gap-0">
@@ -133,5 +126,5 @@ export function NavigationTabs() {
         </TabsContent>
       </div>
     </Tabs>
-  );
+  )
 }

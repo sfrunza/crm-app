@@ -1,9 +1,9 @@
-import { AmountInput } from "@/components/inputs/amount-input";
-import { Field, FieldLabel } from "@/components/ui/field";
+import { AmountInput } from "@/components/inputs/amount-input"
+import { Field, FieldLabel } from "@/components/ui/field"
 
 interface AmountFieldProps extends React.ComponentProps<typeof AmountInput> {
-  amount: string;
-  setAmount: (v: string) => void;
+  amount: string
+  setAmount: (v: string) => void
 }
 
 export function AmountField({ amount, setAmount, ...props }: AmountFieldProps) {
@@ -17,5 +17,5 @@ export function AmountField({ amount, setAmount, ...props }: AmountFieldProps) {
         {...props}
       />
     </Field>
-  );
+  )
 }

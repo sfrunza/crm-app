@@ -4,49 +4,49 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
-import { useEffect, useState } from "react";
+} from "@/components/ui/sheet"
+import { useEffect, useState } from "react"
 
-import { Separator } from "@/components/ui/separator";
-import { Spinner } from "@/components/ui/spinner";
-import { useSearchParams } from "react-router";
-import { FolderForm } from "./folder-form";
-import { FoldersList } from "./folder-list";
-import { useFolders } from "@/hooks/api/use-folders";
-import type { Folder } from "@/types/index";
+import { Separator } from "@/components/ui/separator"
+import { Spinner } from "@/components/ui/spinner"
+import { useSearchParams } from "react-router"
+import { FolderForm } from "./folder-form"
+import { FoldersList } from "./folder-list"
+import { useFolders } from "@/hooks/api/use-folders"
+import type { Folder } from "@/types/index"
 
 export function FoldersEditSheet() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [isOpen, setIsOpen] = useState<boolean>(false)
 
   const { data: folders, isLoading } = useFolders({
     enabled: !!isOpen,
-  });
+  })
 
-  const [items, setItems] = useState<Folder[]>([]);
+  const [items, setItems] = useState<Folder[]>([])
 
   useEffect(() => {
-    const editParam = searchParams.get("edit_folders");
+    const editParam = searchParams.get("edit_folders")
     if (editParam) {
-      setIsOpen(true);
+      setIsOpen(true)
     }
-  }, [searchParams]);
+  }, [searchParams])
 
   useEffect(() => {
     if (folders) {
-      setItems(folders);
+      setItems(folders)
     }
-  }, [folders]);
+  }, [folders])
 
   function handleCancel() {
     if (folders) {
-      setItems(folders);
+      setItems(folders)
     }
-    setIsOpen(false);
+    setIsOpen(false)
     setSearchParams((prev) => {
-      prev.delete("edit_folders");
-      return prev;
-    });
+      prev.delete("edit_folders")
+      return prev
+    })
   }
 
   return (
@@ -71,5 +71,5 @@ export function FoldersEditSheet() {
         </div>
       </SheetContent>
     </Sheet>
-  );
+  )
 }

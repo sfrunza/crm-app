@@ -1,22 +1,22 @@
-import { cn } from "@/lib/utils";
-import type { InventoryRoom } from "./build-inventory";
-import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils"
+import type { InventoryRoom } from "./build-inventory"
+import { Badge } from "@/components/ui/badge"
 import {
   ChatInfo,
   ChatInfoContent,
   ChatInfoDescription,
   ChatInfoHeader,
   ChatInfoTitle,
-} from "@/components/chat-info/chat-info";
+} from "@/components/chat-info/chat-info"
 
 export function RoomRow({
   room,
   active,
   onClick,
 }: {
-  room: InventoryRoom;
-  active: boolean;
-  onClick: () => void;
+  room: InventoryRoom
+  active: boolean
+  onClick: () => void
 }) {
   return (
     <button
@@ -26,7 +26,7 @@ export function RoomRow({
         "mb-2 flex w-full items-center justify-between rounded-lg border text-left transition",
         active
           ? "border-primary bg-primary/5"
-          : "border-border hover:border-primary/40 hover:bg-primary/5",
+          : "border-border hover:border-primary/40 hover:bg-primary/5"
       )}
     >
       <ChatInfo>
@@ -43,13 +43,13 @@ export function RoomRow({
           <ChatInfoHeader>
             <ChatInfoTitle>
               <div className="flex items-center gap-2">
-                <p className="text-foreground truncate text-sm font-medium">
+                <p className="truncate text-sm font-medium text-foreground">
                   {room.name}
                 </p>
                 {room.is_suggested && (
                   <Badge
                     variant="outline"
-                    className="text-muted-foreground h-5 px-1.5 text-[10px]"
+                    className="h-5 px-1.5 text-[10px] text-muted-foreground"
                   >
                     suggested
                   </Badge>
@@ -57,7 +57,7 @@ export function RoomRow({
                 {room.is_custom && (
                   <Badge
                     variant="outline"
-                    className="text-muted-foreground h-5 px-1.5 text-[10px]"
+                    className="h-5 px-1.5 text-[10px] text-muted-foreground"
                   >
                     custom
                   </Badge>
@@ -101,5 +101,5 @@ export function RoomRow({
         <Badge variant="outline">{room.totals.items}</Badge>
       </div>
     </button>
-  );
+  )
 }

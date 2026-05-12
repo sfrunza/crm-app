@@ -1,15 +1,15 @@
-import { Outlet, useParams } from "react-router";
-import { ChatList } from "./_components/chat-list";
+import { Outlet, useParams } from "react-router"
+import { ChatList } from "./_components/chat-list"
 import {
   Empty,
   EmptyDescription,
   EmptyHeader,
   EmptyMedia,
-} from "@/components/ui/empty";
-import { MessagesSquareIcon } from "@/components/icons";
+} from "@/components/ui/empty"
+import { MessagesSquareIcon } from "@/components/icons"
 
 function MessagesPage() {
-  const { requestId } = useParams();
+  const { requestId } = useParams()
 
   return (
     <div className="mx-auto h-full max-w-7xl overflow-hidden">
@@ -31,7 +31,7 @@ function MessagesPage() {
         )}
       </div>
     </div>
-  );
+  )
 }
 
-export const Component = MessagesPage;
+export const Component = MessagesPage

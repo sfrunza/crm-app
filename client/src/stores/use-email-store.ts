@@ -1,6 +1,5 @@
-import type { EmailTemplate } from '@/types/index'
-import { create } from 'zustand'
-
+import type { EmailTemplate } from "@/types/index"
+import { create } from "zustand"
 
 type EmailStore = {
   emailData: EmailTemplate | null
@@ -14,10 +13,10 @@ export const useEmailStore = create<EmailStore>((set, get) => ({
     const updated = {
       ...get().emailData,
       ...payload,
-    };
-    set({ emailData: updated as EmailTemplate });
+    }
+    set({ emailData: updated as EmailTemplate })
   },
   resetEmailData: () => {
-    set({ emailData: null });
+    set({ emailData: null })
   },
 }))

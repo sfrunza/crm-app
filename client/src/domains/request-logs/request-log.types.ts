@@ -1,18 +1,18 @@
 export interface RequestLog {
-  id: number;
-  action: RequestLogAction;
-  details: Record<string, unknown>;
-  created_at: string;
+  id: number
+  action: RequestLogAction
+  details: Record<string, unknown>
+  created_at: string
   user: {
-    id: number;
-    first_name: string;
-    last_name: string;
-  } | null;
-  ip_address: string | null;
-  device_type: string | null;
-  browser: string | null;
-  platform: string | null;
-  user_agent: string | null;
+    id: number
+    first_name: string
+    last_name: string
+  } | null
+  ip_address: string | null
+  device_type: string | null
+  browser: string | null
+  platform: string | null
+  user_agent: string | null
 }
 
 export type RequestLogAction =
@@ -23,10 +23,10 @@ export type RequestLogAction =
   | "email_sent"
 
 export interface RequestLogsPage {
-  logs: RequestLog[];
+  logs: RequestLog[]
   pagination: {
-    total_pages: number;
-    current_page: number;
-    total_count: number;
-  };
+    total_pages: number
+    current_page: number
+    total_count: number
+  }
 }

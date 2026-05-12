@@ -1,7 +1,7 @@
-import type { ComponentProps, ChangeEventHandler } from "react";
-import { useEffect, useRef, useState } from "react";
-import { debounce } from "throttle-debounce";
-import type { Address } from "@/domains/requests/request.types";
+import type { ComponentProps, ChangeEventHandler } from "react"
+import { useEffect, useRef, useState } from "react"
+import { debounce } from "throttle-debounce"
+import type { Address } from "@/domains/requests/request.types"
 import {
   Combobox,
   ComboboxContent,
@@ -9,61 +9,61 @@ import {
   ComboboxInput,
   ComboboxItem,
   ComboboxList,
-} from "@/components/ui/combobox";
-import { importLibrary } from "@/lib/maps-loader";
-import { Spinner } from "../ui/spinner";
+} from "@/components/ui/combobox"
+import { importLibrary } from "@/lib/maps-loader"
+import { Spinner } from "../ui/spinner"
 
 interface AddressAutocompleteInputProps extends ComponentProps<"input"> {
-  onAddressSelect: (address: Partial<Address>) => void;
+  onAddressSelect: (address: Partial<Address>) => void
 }
 
 function parseAddress(components: google.maps.places.AddressComponent[]) {
-  let streetNumber = "";
-  let route = "";
-  let city = "";
-  let state = "";
-  let zip = "";
-  let country = "";
+  let streetNumber = ""
+  let route = ""
+  let city = ""
+  let state = ""
+  let zip = ""
+  let country = ""
 
   for (const component of components) {
-    const types = component.types;
+    const types = component.types
 
     if (types.includes("street_number")) {
-      streetNumber = component.longText ?? "";
+      streetNumber = component.longText ?? ""
     }
 
     if (types.includes("route")) {
-      route = component.longText ?? "";
+      route = component.longText ?? ""
     }
 
     if (types.includes("locality") && !city) {
-      city = component.longText ?? "";
+      city = component.longText ?? ""
     }
 
     if (types.includes("sublocality_level_1") && !city) {
-      city = component.longText ?? "";
+      city = component.longText ?? ""
     }
 
     if (types.includes("administrative_area_level_2") && !city) {
-      city = component.longText ?? "";
+      city = component.longText ?? ""
     }
 
     if (types.includes("administrative_area_level_1")) {
-      state = component.shortText ?? "";
+      state = component.shortText ?? ""
     }
 
     if (types.includes("postal_code")) {
-      zip = component.longText ?? "";
+      zip = component.longText ?? ""
     }
 
     if (types.includes("country")) {
-      country = component.shortText ?? "";
+      country = component.shortText ?? ""
     }
   }
 
   // 🔒 Enforce US-only safety
   if (country && country !== "US") {
-    throw new Error("Non-US address detected");
+    throw new Error("Non-US address detected")
   }
 
   return {
@@ -71,7 +71,7 @@ function parseAddress(components: google.maps.places.AddressComponent[]) {
     city,
     state,
     zip,
-  };
+  }
 }
 
 export function AddressAutocompleteInput({
@@ -81,56 +81,56 @@ export function AddressAutocompleteInput({
   onBlur,
   ...props
 }: AddressAutocompleteInputProps) {
-  const [query, setQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [query, setQuery] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
   const [autocompleteSuggestions, setAutocompleteSuggestions] = useState<
     Partial<Address>[] | null
-  >(null);
+  >(null)
 
   // Debounced setter — only updates `query` after 300ms of inactivity
-  const debouncedSetQuery = useRef(debounce(300, setQuery)).current;
+  const debouncedSetQuery = useRef(debounce(300, setQuery)).current
 
   useEffect(() => {
     if (!query) {
-      setAutocompleteSuggestions(null);
-      setIsLoading(false);
-      return;
+      setAutocompleteSuggestions(null)
+      setIsLoading(false)
+      return
     }
 
-    let cancelled = false;
+    let cancelled = false
 
     async function fetchSuggestions() {
-      setIsLoading(true);
+      setIsLoading(true)
 
       const request: google.maps.places.AutocompleteRequest = {
         input: query,
         includedRegionCodes: ["US"],
-      };
+      }
 
-      let addresses: Partial<Address>[] = [];
+      let addresses: Partial<Address>[] = []
 
       try {
-        const { AutocompleteSuggestion } = await importLibrary("places");
+        const { AutocompleteSuggestion } = await importLibrary("places")
         const autocompleteResponse =
-          await AutocompleteSuggestion.fetchAutocompleteSuggestions(request);
+          await AutocompleteSuggestion.fetchAutocompleteSuggestions(request)
 
-        const { suggestions } = autocompleteResponse;
+        const { suggestions } = autocompleteResponse
 
         for (const suggestion of suggestions) {
-          const placePrediction = suggestion.placePrediction;
+          const placePrediction = suggestion.placePrediction
           if (!placePrediction) {
-            return null;
+            return null
           }
 
-          const place = placePrediction.toPlace();
+          const place = placePrediction.toPlace()
           const fields = await place.fetchFields({
             fields: ["addressComponents", "location"],
-          });
+          })
 
           if (!fields.place.addressComponents) {
-            throw new Error("No address components found");
+            throw new Error("No address components found")
           }
-          const address = parseAddress(fields.place.addressComponents);
+          const address = parseAddress(fields.place.addressComponents)
 
           const addressObj = {
             ...address,
@@ -138,34 +138,34 @@ export function AddressAutocompleteInput({
               lat: fields.place.location?.lat(),
               lng: fields.place.location?.lng(),
             },
-          };
+          }
 
-          addresses.push(addressObj as Partial<Address>);
+          addresses.push(addressObj as Partial<Address>)
         }
 
         if (!cancelled) {
-          setAutocompleteSuggestions(addresses);
+          setAutocompleteSuggestions(addresses)
         }
       } catch (error) {
-        console.error("Failed to initialize Google Maps", error);
+        console.error("Failed to initialize Google Maps", error)
       } finally {
         if (!cancelled) {
-          setIsLoading(false);
+          setIsLoading(false)
         }
       }
     }
 
-    fetchSuggestions();
+    fetchSuggestions()
 
     return () => {
-      cancelled = true;
-    };
-  }, [query]);
+      cancelled = true
+    }
+  }, [query])
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = (event) => {
-    onChange?.(event);
-    debouncedSetQuery(event.target.value);
-  };
+    onChange?.(event)
+    debouncedSetQuery(event.target.value)
+  }
 
   return (
     <Combobox<google.maps.places.AutocompleteSuggestion>
@@ -173,7 +173,7 @@ export function AddressAutocompleteInput({
       inputValue={value}
       onOpenChange={(nextOpen, details) => {
         if (!nextOpen && details.reason !== "input-change") {
-          setAutocompleteSuggestions(null);
+          setAutocompleteSuggestions(null)
         }
       }}
       open={!!autocompleteSuggestions?.length}
@@ -201,14 +201,14 @@ export function AddressAutocompleteInput({
         <ComboboxEmpty>No suggestions yet.</ComboboxEmpty>
         <ComboboxList>
           {(item: Partial<Address>) => {
-            const { street, city, state, zip } = item;
+            const { street, city, state, zip } = item
             return (
               <ComboboxItem
                 key={`${street}-${city}-${state}-${zip}`}
                 value={`${street}-${city}-${state}-${zip}`}
                 onClick={async (e) => {
-                  e.stopPropagation();
-                  onAddressSelect(item);
+                  e.stopPropagation()
+                  onAddressSelect(item)
                 }}
                 className="z-9999! items-start gap-1 truncate text-xs"
               >
@@ -232,13 +232,13 @@ export function AddressAutocompleteInput({
                   </div>
                 </div>
               </ComboboxItem>
-            );
+            )
           }}
         </ComboboxList>
         <PoweredByGoogle />
       </ComboboxContent>
     </Combobox>
-  );
+  )
 }
 
 function PoweredByGoogle() {
@@ -265,5 +265,5 @@ function PoweredByGoogle() {
         </text>
       </svg>
     </div>
-  );
+  )
 }

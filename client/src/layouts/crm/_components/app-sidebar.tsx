@@ -4,15 +4,15 @@ import {
   MessageCircleMoreIcon,
   SettingsIcon,
   TruckIcon,
-} from "@/components/icons";
+} from "@/components/icons"
 import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
   SidebarRail,
-} from "@/components/ui/sidebar";
-import { NavMain } from "./nav-main";
-import { NavUser } from "./nav-user";
+} from "@/components/ui/sidebar"
+import { NavMain } from "./nav-main"
+import { NavUser } from "./nav-user"
 
 const items = [
   {
@@ -40,7 +40,7 @@ const items = [
     url: "transactions",
     icon: ArrowLeftRightIcon,
   },
-];
+]
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -53,5 +53,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
-  );
+  )
 }

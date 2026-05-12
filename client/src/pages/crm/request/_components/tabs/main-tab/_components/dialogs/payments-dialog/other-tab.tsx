@@ -1,14 +1,14 @@
-import { Button } from "@/components/ui/button";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { Textarea } from "@/components/ui/textarea";
-import { useCreatePayment } from "@/domains/payments/payment.mutations";
-import { paymentKeys } from "@/domains/payments/payment.keys";
-import { requestKeys } from "@/domains/requests/request.keys";
-import { useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { parseCents } from "./utils";
-import { AmountField } from "./amount-field";
-import type { PaymentType } from "@/domains/payments/payment.types";
+import { Button } from "@/components/ui/button"
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { Textarea } from "@/components/ui/textarea"
+import { useCreatePayment } from "@/domains/payments/payment.mutations"
+import { paymentKeys } from "@/domains/payments/payment.keys"
+import { requestKeys } from "@/domains/requests/request.keys"
+import { useState } from "react"
+import { useQueryClient } from "@tanstack/react-query"
+import { parseCents } from "./utils"
+import { AmountField } from "./amount-field"
+import type { PaymentType } from "@/domains/payments/payment.types"
 
 export function OtherTab({
   requestId,
@@ -16,46 +16,46 @@ export function OtherTab({
   defaultAmount,
   onSuccess,
 }: {
-  requestId: number;
-  paymentType: PaymentType;
-  defaultAmount: number;
-  onSuccess: () => void;
+  requestId: number
+  paymentType: PaymentType
+  defaultAmount: number
+  onSuccess: () => void
 }) {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
   const [amount, setAmount] = useState(
-    defaultAmount > 0 ? (defaultAmount / 100).toString() : "",
-  );
-  const [notes, setNotes] = useState("");
-  const [error, setError] = useState<string | null>(null);
+    defaultAmount > 0 ? (defaultAmount / 100).toString() : ""
+  )
+  const [notes, setNotes] = useState("")
+  const [error, setError] = useState<string | null>(null)
 
-  const isDeposit = paymentType === "deposit";
+  const isDeposit = paymentType === "deposit"
 
   const createPayment = useCreatePayment({
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: paymentKeys.forRequest(requestId),
-      });
+      })
       queryClient.invalidateQueries({
         queryKey: requestKeys.detail(requestId),
-      });
+      })
       if (isDeposit) {
         queryClient.invalidateQueries({
           queryKey: requestKeys.bookingStats(),
-        });
+        })
       }
-      onSuccess();
+      onSuccess()
     },
     onError: (err) => setError(err.message || "Failed to record payment"),
-  });
+  })
 
   function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setError(null);
+    e.preventDefault()
+    setError(null)
 
-    const cents = parseCents(amount);
+    const cents = parseCents(amount)
     if (cents === null) {
-      setError("Please enter a valid amount");
-      return;
+      setError("Please enter a valid amount")
+      return
     }
 
     createPayment.mutate({
@@ -67,7 +67,7 @@ export function OtherTab({
         description: notes || "Other payment",
         is_deposit: isDeposit || undefined,
       },
-    });
+    })
   }
 
   return (
@@ -87,7 +87,7 @@ export function OtherTab({
         </Field>
       </FieldGroup>
 
-      {error && <p className="text-destructive text-sm">{error}</p>}
+      {error && <p className="text-sm text-destructive">{error}</p>}
 
       <Button
         type="submit"
@@ -97,5 +97,5 @@ export function OtherTab({
         {createPayment.isPending ? "Saving..." : "Record Payment"}
       </Button>
     </form>
-  );
+  )
 }

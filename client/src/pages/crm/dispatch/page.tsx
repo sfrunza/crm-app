@@ -1,71 +1,71 @@
-import { useEffect, useState } from "react";
-import { ParklotDay } from "./_components/parklot-day";
-import { SidebarRight } from "./_components/sidebar-right";
-import { formatDate } from "@/lib/format-date";
-import { useSearchParams } from "react-router";
-import type { Request } from "@/domains/requests/request.types";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react"
+import { ParklotDay } from "./_components/parklot-day"
+import { SidebarRight } from "./_components/sidebar-right"
+import { formatDate } from "@/lib/format-date"
+import { useSearchParams } from "react-router"
+import type { Request } from "@/domains/requests/request.types"
+import { Button } from "@/components/ui/button"
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet";
-import { CalendarIcon, UsersIcon } from "@/components/icons";
-import { useIsMobile } from "@/hooks/use-mobile";
-import { openRequest } from "@/stores/use-open-requests-store";
+} from "@/components/ui/sheet"
+import { CalendarIcon, UsersIcon } from "@/components/icons"
+import { useIsMobile } from "@/hooks/use-mobile"
+import { openRequest } from "@/stores/use-open-requests-store"
 
 function DispatchPage() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const date = searchParams.get("date");
-  const month = searchParams.get("month");
-  const requestId = searchParams.get("requestId");
+  const [searchParams, setSearchParams] = useSearchParams()
+  const date = searchParams.get("date")
+  const month = searchParams.get("month")
+  const requestId = searchParams.get("requestId")
 
-  const isMobile = useIsMobile();
-  const [sheetOpen, setSheetOpen] = useState(false);
+  const isMobile = useIsMobile()
+  const [sheetOpen, setSheetOpen] = useState(false)
 
   useEffect(() => {
     if (!date && !month) {
       setSearchParams({
         date: formatDate(new Date(), "yyyy-MM-dd"),
         month: formatDate(new Date(), "yyyy-MM"),
-      });
+      })
     }
-  }, []);
+  }, [])
 
   function handleDateChange(date: Date) {
-    const formattedMonth = formatDate(date, "yyyy-MM");
+    const formattedMonth = formatDate(date, "yyyy-MM")
 
     setSearchParams((prev) => {
-      prev.set("date", formatDate(date, "yyyy-MM-dd"));
-      month !== formattedMonth && prev.set("month", formattedMonth);
-      return prev;
-    });
+      prev.set("date", formatDate(date, "yyyy-MM-dd"))
+      month !== formattedMonth && prev.set("month", formattedMonth)
+      return prev
+    })
   }
 
   function handleMonthChange(month: Date) {
     setSearchParams((prev) => {
-      prev.set("month", formatDate(month, "yyyy-MM"));
-      return prev;
-    });
+      prev.set("month", formatDate(month, "yyyy-MM"))
+      return prev
+    })
   }
 
   function handleRequestClick(request: Request) {
     if (requestId && requestId === request.id.toString()) {
-      openRequest(request.id);
+      openRequest(request.id)
     } else {
       setSearchParams((prev) => {
-        prev.set("requestId", request.id.toString());
-        return prev;
-      });
+        prev.set("requestId", request.id.toString())
+        return prev
+      })
       // Auto-open sheet only on mobile
       if (isMobile) {
-        setSheetOpen(true);
+        setSheetOpen(true)
       }
     }
   }
 
-  const selectedRequestId = requestId ? Number(requestId) : null;
+  const selectedRequestId = requestId ? Number(requestId) : null
 
   const sidebarProps = {
     selectedDate: date,
@@ -73,7 +73,7 @@ function DispatchPage() {
     selectedMonth: month,
     setSelectedMonth: handleMonthChange,
     selectedRequestId,
-  };
+  }
 
   return (
     <div className="grid h-full lg:grid-cols-[auto_320px]">
@@ -116,7 +116,7 @@ function DispatchPage() {
         </SheetContent>
       </Sheet>
     </div>
-  );
+  )
 }
 
-export const Component = DispatchPage;
+export const Component = DispatchPage
