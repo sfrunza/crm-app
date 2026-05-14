@@ -21,7 +21,6 @@
     "@dnd-kit/modifiers": "^9.0.0",
     "@dnd-kit/react": "^0.4.0",
     "@dnd-kit/sortable": "^10.0.0",
-    "@editex/react-email-editor": "^1.0.9",
     "@fontsource-variable/dm-sans": "^5.2.8",
     "@googlemaps/js-api-loader": "^2.0.2",
     "@hookform/resolvers": "^5.2.2",
@@ -35,16 +34,13 @@
     "@tiptap/extension-text-style": "^3.22.4",
     "@tiptap/react": "^3.22.4",
     "@tiptap/starter-kit": "^3.22.4",
-    "@vis.gl/react-google-maps": "^1.8.3",
     "axios": "^1.15.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
-    "js-cookie": "^3.0.5",
     "libphonenumber-js": "^1.12.42",
     "lucide-react": "^1.11.0",
-    "maplibre-gl": "^5.24.0",
     "next-themes": "^0.4.6",
     "radix-ui": "^1.4.3",
     "react": "^19.2.5",
@@ -64,10 +60,7 @@
     "zustand": "^5.0.12"
   },
   "overrides": {
-    "@fortawesome/react-fontawesome": "3.3.1",
-    "@editex/react-email-editor": {
-      "framer-motion": "^11.18.0"
-    }
+    "@fortawesome/react-fontawesome": "3.3.1"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

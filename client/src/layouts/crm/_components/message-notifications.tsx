@@ -47,10 +47,7 @@ export function MessageNotifications() {
       <MessageCircleMoreIcon />
       <span className="sr-only">Notifications</span>
       {count > 0 && (
-        <Badge
-          variant="destructive"
-          className="absolute -top-2.5 -right-2.5 h-5 min-w-5 px-1 tabular-nums"
-        >
+        <Badge className="absolute -top-2.5 -right-2.5 h-5 min-w-5 px-1 tabular-nums">
           {count > 99 ? "99+" : count}
         </Badge>
       )}

@@ -79,6 +79,7 @@ export function useDeleteFolder(
     ...mutationOptions,
     onSuccess: (data, variables, onMutateResult, context) => {
       queryClient.invalidateQueries({ queryKey: queryKeys.folders.all })
+      queryClient.invalidateQueries({ queryKey: queryKeys.emailTemplates.all })
       mutationOptions?.onSuccess?.(data, variables, onMutateResult, context)
     },
     onError: (error, variables, onMutateResult, context) => {
