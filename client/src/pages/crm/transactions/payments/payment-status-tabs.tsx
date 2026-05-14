@@ -1,14 +1,12 @@
-import { TABLE_CONFIG } from "@/components/data-table/table.config"
 import {
   ContentHeader,
   ContentTab,
   ContentTabCount,
-  ContentTabIndicator,
   ContentTabs,
   ContentTabTitle,
 } from "@/components/content-tabs"
+import { TABLE_CONFIG } from "@/components/data-table/table.config"
 import {
-  PAYMENT_STATUS_BG_COLOR,
   PAYMENT_TAB_OPTIONS,
   type PaymentTabValue,
 } from "@/domains/payments/payment.constants"
@@ -18,7 +16,6 @@ import type {
   PaymentStatusFilter,
 } from "@/domains/payments/payment.types"
 import { PAYMENT_STATUSES } from "@/lib/constants"
-import { cn } from "@/lib/utils"
 import { useCallback, useMemo } from "react"
 import { useSearchParams } from "react-router"
 
@@ -82,14 +79,6 @@ export function PaymentStatusTabs() {
           <ContentHeader>
             <ContentTabTitle>{tab.label}</ContentTabTitle>
             <ContentTabCount>{tab.count}</ContentTabCount>
-            <ContentTabIndicator>
-              <div
-                className={cn(
-                  "size-2 rounded-full",
-                  PAYMENT_STATUS_BG_COLOR[tab.value]
-                )}
-              />
-            </ContentTabIndicator>
           </ContentHeader>
         </ContentTab>
       ))}

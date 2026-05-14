@@ -30,4 +30,7 @@ export const queryKeys = {
     all: ["conversations"] as const,
     list: () => ["conversations", "list"] as const,
   },
+  onlineCustomers: {
+    all: ["online-customers"] as const,
+  },
 }

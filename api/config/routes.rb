@@ -45,6 +45,8 @@ Rails.application.routes.draw do
         get :unread_messages_count, on: :collection
       end
 
+      resources :online_customers, only: %i[index]
+
       resources :conversations, only: %i[index]
 
       resources :email_templates, only: %i[index create update destroy] do

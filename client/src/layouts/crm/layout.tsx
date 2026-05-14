@@ -12,6 +12,7 @@ import { AppSidebar } from "./_components/app-sidebar"
 import { CreateRequestButton } from "./_components/create-request-button"
 import { GlobalSearch } from "./_components/global-search"
 import { MessageNotifications } from "./_components/message-notifications"
+import { OnlineCustomersMenu } from "./_components/online-customers-menu"
 
 export function CrmLayout() {
   const sidebarState = document.cookie.includes("sidebar_state=true")
@@ -35,6 +36,7 @@ function CrmMain() {
             <GlobalSearch />
           </div>
           <div className="flex items-center gap-2">
+            <OnlineCustomersMenu />
             <MessageNotifications />
             <ModeToggle />
           </div>

@@ -93,3 +93,21 @@ export interface ConversationsResponse {
     total_pages: number
   }
 }
+
+export interface OnlineCustomerRequest {
+  id: number
+  status: RequestStatus
+}
+
+export interface OnlineCustomer {
+  id: number
+  first_name: string
+  last_name: string
+  email_address: string
+  last_seen_at: string | null
+  requests: OnlineCustomerRequest[]
+}
+
+export interface OnlineCustomersResponse {
+  online_customers: OnlineCustomer[]
+}

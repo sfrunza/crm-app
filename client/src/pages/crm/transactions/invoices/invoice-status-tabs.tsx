@@ -1,14 +1,12 @@
-import { TABLE_CONFIG } from "@/components/data-table/table.config"
 import {
   ContentHeader,
   ContentTab,
   ContentTabCount,
-  ContentTabIndicator,
   ContentTabs,
   ContentTabTitle,
 } from "@/components/content-tabs"
+import { TABLE_CONFIG } from "@/components/data-table/table.config"
 import {
-  INVOICE_STATUS_BG_COLOR,
   INVOICE_TAB_OPTIONS,
   type InvoiceTabValue,
 } from "@/domains/payments/invoice.constants"
@@ -18,7 +16,6 @@ import type {
   InvoiceStatusFilter,
 } from "@/domains/payments/payment.types"
 import { INVOICE_STATUSES } from "@/lib/constants"
-import { cn } from "@/lib/utils"
 import { useCallback, useMemo } from "react"
 import { useSearchParams } from "react-router"
 
@@ -82,14 +79,6 @@ export function InvoiceStatusTabs() {
           <ContentHeader>
             <ContentTabTitle>{tab.label}</ContentTabTitle>
             <ContentTabCount>{tab.count}</ContentTabCount>
-            <ContentTabIndicator>
-              <div
-                className={cn(
-                  "size-2 rounded-full",
-                  INVOICE_STATUS_BG_COLOR[tab.value]
-                )}
-              />
-            </ContentTabIndicator>
           </ContentHeader>
         </ContentTab>
       ))}
