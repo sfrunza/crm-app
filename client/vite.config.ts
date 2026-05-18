@@ -38,6 +38,9 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
+      // React Compiler runs through @rolldown/plugin-babel; Rolldown warns when plugin
+      // time dominates the link stage. Safe to silence — not a misconfiguration.
+      checks: { pluginTimings: false },
       output: {
         manualChunks(id) {
           if (!id.includes("node_modules")) return

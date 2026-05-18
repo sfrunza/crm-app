@@ -7,6 +7,7 @@ import { accountRoutes } from "./account-routes"
 import { authRoutes } from "./auth-routes"
 import { crmRoutes } from "./crm-routes"
 import { RequireAuth, RequireRole, RootRedirect } from "./guards"
+import { BookingForm } from "@/components/booking-form/booking-form"
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +25,16 @@ export const router = createBrowserRouter([
     hydrateFallbackElement: <GlobalFallback />,
     errorElement: <ErrorPage />,
     children: [
+      {
+        path: "book",
+        element: <RequireRole allowedRoles={["customer", ...ADMIN_ROLES]} />,
+        children: [
+          {
+            index: true,
+            element: <BookingForm />,
+          },
+        ],
+      },
       {
         path: "account",
         element: <RequireRole allowedRoles={["customer", ...ADMIN_ROLES]} />,
