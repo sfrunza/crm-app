@@ -56,18 +56,20 @@ function RequestsPage() {
             <Spinner />
           </div>
         )}
-        <DataTable<TableRequest>
-          columns={columns}
-          data={data?.requests ?? []}
-          isFetching={isFetching}
-          totalCount={data?.pagination.total_count ?? 0}
-          page={page}
-          pageSize={20}
-          sortBy={sortBy}
-          sortOrder={sortOrder}
-          setPage={setPage}
-          setSort={setSort}
-        />
+        {!isPending && !error && (
+          <DataTable<TableRequest>
+            columns={columns}
+            data={data?.requests ?? []}
+            isFetching={isFetching}
+            totalCount={data?.pagination.total_count ?? 0}
+            page={page}
+            pageSize={20}
+            sortBy={sortBy}
+            sortOrder={sortOrder}
+            setPage={setPage}
+            setSort={setSort}
+          />
+        )}
       </PageContent>
     </PageContainer>
   )
