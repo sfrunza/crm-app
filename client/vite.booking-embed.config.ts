@@ -5,7 +5,13 @@ import path from "path"
 import { defineConfig } from "vite"
 
 // Single-file IIFE for pasting into static / marketing pages (custom element self-registers).
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
+  // Dependencies compare process.env.NODE_ENV; browsers have no `process` unless inlined here.
+  define: {
+    "process.env.NODE_ENV": JSON.stringify(
+      mode === "production" ? "production" : "development"
+    ),
+  },
   publicDir: false,
   plugins: [
     react(),
@@ -31,4 +37,4 @@ export default defineConfig({
       fileName: () => "booking-form.js",
     },
   },
-})
+}))
