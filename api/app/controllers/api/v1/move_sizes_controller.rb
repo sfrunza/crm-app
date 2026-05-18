@@ -1,7 +1,7 @@
 class Api::V1::MoveSizesController < ApplicationController
   include Pundit::Authorization
-  allow_unauthenticated_access only: %i[index]
-  before_action :set_move_size, only: %i[update destroy]
+  allow_unauthenticated_access only: %i[ index ]
+  before_action :set_move_size, only: %i[ update destroy ]
 
   CACHE_KEY = "#{Rails.env}/move_sizes_v1"
 

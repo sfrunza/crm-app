@@ -1,5 +1,6 @@
 class Api::V1::RatesController < ApplicationController
   include Pundit::Authorization
+  allow_unauthenticated_access only: %i[ index ]
   before_action :set_rate, only: %i[update]
 
   CACHE_KEY = "#{Rails.env}/rates_v1"
