@@ -1,5 +1,6 @@
 class Api::V1::ServicesController < ApplicationController
   include Pundit::Authorization
+  allow_unauthenticated_access only: %i[ index ]
   before_action :set_service, only: %i[ update destroy ]
 
   CACHE_KEY = "#{Rails.env}/services_v1"

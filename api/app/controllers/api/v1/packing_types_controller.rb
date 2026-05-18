@@ -1,5 +1,6 @@
 class Api::V1::PackingTypesController < ApplicationController
   include Pundit::Authorization
+  allow_unauthenticated_access only: %i[ index ]
   before_action :set_packing_type, only: %i[ update destroy ]
 
   CACHE_KEY = "#{Rails.env}/packing_types_v1"
