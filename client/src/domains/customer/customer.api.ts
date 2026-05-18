@@ -3,13 +3,21 @@ import type { Customer } from "@/domains/requests/request.types"
 
 const ENDPOINT = "/users"
 
-export async function findCustomerByEmail(email: string): Promise<Customer> {
-  const res = await api.get(`${ENDPOINT}/find_by_email?email_address=${email}`)
+export async function findCustomerByEmail(
+  email: string
+): Promise<Customer | null> {
+  const res = await api.get<Customer | null>(
+    `${ENDPOINT}/find_by_email?email_address=${encodeURIComponent(email)}`
+  )
   return res.data
 }
 
+export type CreateCustomerPayload = Partial<Customer> & {
+  password?: string
+}
+
 export async function createCustomer(
-  customer: Partial<Customer>
+  customer: CreateCustomerPayload
 ): Promise<Customer> {
   const res = await api.post(ENDPOINT, { user: customer })
   return res.data

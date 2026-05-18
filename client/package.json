@@ -10,7 +10,7 @@
     "dev": "vite --host",
     "build": "tsc -b && vite build",
     "build:booking-embed": "vite build --config vite.booking-embed.config.ts",
-    "build:vercel": "npm run build && npm run build:booking-embed && mkdir -p dist/embed && cp dist-embed/booking-form.js dist/embed/booking-form.js",
+    "build:vercel": "npm run build && npm run build:booking-embed",
     "lint": "eslint .",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",

@@ -25,7 +25,7 @@ export default defineConfig(({ mode }) => ({
   },
   build: {
     emptyOutDir: true,
-    outDir: "dist-embed",
+    outDir: "dist/embed",
     cssCodeSplit: false,
     rollupOptions: {
       checks: { pluginTimings: false },

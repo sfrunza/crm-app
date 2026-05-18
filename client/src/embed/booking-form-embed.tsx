@@ -1,9 +1,12 @@
 /// <reference types="vite/client" />
 
+import { QueryClientProvider } from "@tanstack/react-query"
 import { StrictMode } from "react"
 import { createRoot, type Root } from "react-dom/client"
 
 import { BookingForm } from "@/components/booking-form/booking-form"
+import { Toaster } from "@/components/ui/sonner"
+import { queryClient } from "@/lib/query-client"
 
 import embedStyles from "@/index.css?inline"
 
@@ -55,7 +58,10 @@ class CrmBookingFormElement extends HTMLElement {
     this.#reactRoot = createRoot(this.#mount)
     this.#reactRoot.render(
       <StrictMode>
-        <BookingForm />
+        <QueryClientProvider client={queryClient}>
+          <BookingForm />
+          <Toaster position="top-center" />
+        </QueryClientProvider>
       </StrictMode>,
     )
 
