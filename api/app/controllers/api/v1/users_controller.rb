@@ -1,10 +1,11 @@
 class Api::V1::UsersController < ApplicationController
   include Pundit::Authorization
+  allow_unauthenticated_access only: %i[ create find_by_email ]
   before_action :set_user, only: %i[ show update ]
 
   def create
     @user = User.new(user_params)
-    authorize @user
+    # authorize @user
 
     if @user.save
       # broadcast_customer_update(@user)
@@ -37,7 +38,7 @@ class Api::V1::UsersController < ApplicationController
 
   # GET /api/v1/users/:id/requests
   def find_by_email
-    authorize User, :find_by_email?
+    # authorize User, :find_by_email?
 
     email_address = params[:email_address]
     user = User.find_by(email_address: email_address, role: "customer")

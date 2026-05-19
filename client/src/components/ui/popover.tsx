@@ -1,9 +1,7 @@
-"use client"
-
-import * as React from "react"
-import { Popover as PopoverPrimitive } from "radix-ui"
-
+import { useShadowRoot } from "@/book-form-widget"
 import { cn } from "@/lib/utils"
+import { Popover as PopoverPrimitive } from "radix-ui"
+import * as React from "react"
 
 function Popover({
   ...props
@@ -23,8 +21,10 @@ function PopoverContent({
   sideOffset = 4,
   ...props
 }: React.ComponentProps<typeof PopoverPrimitive.Content>) {
+  const shadowRoot = useShadowRoot()
+
   return (
-    <PopoverPrimitive.Portal>
+    <PopoverPrimitive.Portal container={shadowRoot}>
       <PopoverPrimitive.Content
         data-slot="popover-content"
         align={align}

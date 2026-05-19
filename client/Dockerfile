@@ -8,7 +8,9 @@ RUN npm ci
 
 #ENV variables
 ARG VITE_API_URL
+ARG VITE_APP_URL
 ENV VITE_API_URL=${VITE_API_URL}
+ENV VITE_APP_URL=${VITE_APP_URL}
 
 COPY . .
 RUN npm run build

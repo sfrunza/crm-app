@@ -1,33 +1,32 @@
-import { CalendarDaysIcon } from "lucide-react"
-import { Controller, useFormContext } from "react-hook-form"
 import { format, startOfToday } from "date-fns"
+import { CalendarDaysIcon } from "lucide-react"
 import { useMemo, useState } from "react"
+import { Controller, useFormContext } from "react-hook-form"
 
 import { CalendarWithRates } from "@/components/calendar-with-rates"
+import { Button } from "@/components/ui/button"
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { Spinner } from "@/components/ui/spinner"
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Spinner } from "@/components/ui/spinner"
 import { useCalendarRates } from "@/hooks/api/use-calendar-rates"
-import { usePackingTypes } from "@/hooks/api/use-packing-types"
 import { useRates } from "@/hooks/api/use-rates"
 import { useServices } from "@/hooks/api/use-services"
 import { parseDateOnly } from "@/lib/format-date"
@@ -44,9 +43,7 @@ export function BookingStepMoveDetails() {
   const disabledDates = useMemo(() => {
     const blocked = Object.values(calendarRates ?? {})
       .map((rate) =>
-        rate.is_blocked
-          ? (parseDateOnly(rate.formatted_date) ?? null)
-          : null
+        rate.is_blocked ? (parseDateOnly(rate.formatted_date) ?? null) : null
       )
       .filter((date): date is Date => date !== null)
 
@@ -56,9 +53,6 @@ export function BookingStepMoveDetails() {
   const { data: services } = useServices({
     select: (rows) =>
       rows.filter((s) => s.active).sort((a, b) => a.position - b.position),
-  })
-  const { data: packingTypes } = usePackingTypes({
-    select: (rows) => rows.sort((a, b) => a.position - b.position),
   })
 
   return (
@@ -116,61 +110,48 @@ export function BookingStepMoveDetails() {
                 ) : null}
               </PopoverContent>
             </Popover>
-            <FieldDescription>
-              Rates and blocked days match your CRM calendar; dates before today
-              cannot be selected.
-            </FieldDescription>
-            {fieldState.invalid && (
-              <FieldError errors={[fieldState.error]} />
-            )}
+            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
         )}
       />
 
-      <div className="grid gap-6 sm:grid-cols-2">
-        <Controller
-          name="origin_zip"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>Origin ZIP code</FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                inputMode="numeric"
-                autoComplete="postal-code"
-                aria-invalid={fieldState.invalid}
-                placeholder="10001"
-              />
-              {fieldState.invalid && (
-                <FieldError errors={[fieldState.error]} />
-              )}
-            </Field>
-          )}
-        />
-        <Controller
-          name="destination_zip"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>
-                Destination ZIP code
-              </FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                inputMode="numeric"
-                autoComplete="postal-code"
-                aria-invalid={fieldState.invalid}
-                placeholder="10002"
-              />
-              {fieldState.invalid && (
-                <FieldError errors={[fieldState.error]} />
-              )}
-            </Field>
-          )}
-        />
-      </div>
+      <Controller
+        name="origin_zip"
+        control={form.control}
+        render={({ field, fieldState }) => (
+          <Field data-invalid={fieldState.invalid}>
+            <FieldLabel htmlFor={field.name}>Origin ZIP code</FieldLabel>
+            <Input
+              {...field}
+              id={field.name}
+              inputMode="numeric"
+              autoComplete="postal-code"
+              aria-invalid={fieldState.invalid}
+              placeholder="10001"
+            />
+            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+          </Field>
+        )}
+      />
+
+      <Controller
+        name="destination_zip"
+        control={form.control}
+        render={({ field, fieldState }) => (
+          <Field data-invalid={fieldState.invalid}>
+            <FieldLabel htmlFor={field.name}>Destination ZIP code</FieldLabel>
+            <Input
+              {...field}
+              id={field.name}
+              inputMode="numeric"
+              autoComplete="postal-code"
+              aria-invalid={fieldState.invalid}
+              placeholder="10002"
+            />
+            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+          </Field>
+        )}
+      />
 
       <Controller
         name="service_id"
@@ -190,52 +171,16 @@ export function BookingStepMoveDetails() {
                 <SelectValue placeholder="Select service" />
               </SelectTrigger>
               <SelectContent>
-                {services?.map((service) => (
-                  <SelectItem key={service.id} value={String(service.id)}>
-                    {service.name}
-                  </SelectItem>
-                ))}
+                <SelectGroup>
+                  {services?.map((service) => (
+                    <SelectItem key={service.id} value={String(service.id)}>
+                      {service.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
               </SelectContent>
             </Select>
-            <FieldDescription>
-              Same catalog as your CRM (local move, loading help, storage,
-              etc.).
-            </FieldDescription>
-            {fieldState.invalid && (
-              <FieldError errors={[fieldState.error]} />
-            )}
-          </Field>
-        )}
-      />
-
-      <Controller
-        name="packing_type_id"
-        control={form.control}
-        render={({ field, fieldState }) => (
-          <Field data-invalid={fieldState.invalid}>
-            <FieldLabel>Packing</FieldLabel>
-            <Select
-              value={field.value > 0 ? String(field.value) : ""}
-              onValueChange={(v) => field.onChange(Number(v))}
-              disabled={!packingTypes?.length}
-            >
-              <SelectTrigger
-                className="w-full"
-                aria-invalid={fieldState.invalid}
-              >
-                <SelectValue placeholder="Select packing option" />
-              </SelectTrigger>
-              <SelectContent>
-                {packingTypes?.map((packing) => (
-                  <SelectItem key={packing.id} value={String(packing.id)}>
-                    {packing.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {fieldState.invalid && (
-              <FieldError errors={[fieldState.error]} />
-            )}
+            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
         )}
       />

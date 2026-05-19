@@ -5,7 +5,7 @@
   "outputDirectory": "dist",
   "rewrites": [
     {
-      "source": "/(.*)",
+      "source": "/((?!book-form-widget\\.js$).*)",
       "destination": "/index.html"
     }
   ]

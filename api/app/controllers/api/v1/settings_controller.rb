@@ -1,6 +1,5 @@
 class Api::V1::SettingsController < ApplicationController
   include Pundit::Authorization
-
   allow_unauthenticated_access only: %i[ show ]
 
   CACHE_VERSION = "v1"

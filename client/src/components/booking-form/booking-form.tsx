@@ -16,14 +16,20 @@ import {
 } from "@/components/ui/card"
 import { LoadingSwap } from "@/components/ui/loading-swap"
 import { extractError } from "@/lib/axios"
+import { buildCrmLoginUrl } from "@/lib/crm-app-url"
 
 import {
   BOOKING_FORM_STEP_FIELDS,
   createBookingFormSchema,
+  createBookingFormStepSchema,
   type BookingFormStepIndex,
   type BookingFormValues,
 } from "./booking-form-schema"
-import { submitBookingRequest } from "./booking-form-submit"
+import { BookingFormSuccess } from "./booking-form-success"
+import {
+  submitBookingRequest,
+  type BookingSubmitResult,
+} from "./booking-form-submit"
 import { BookingStepContact } from "./steps/booking-step-contact"
 import { BookingStepMoveDetails } from "./steps/booking-step-move-details"
 import { BookingStepMoveSize } from "./steps/booking-step-move-size"
@@ -35,8 +41,7 @@ function buildDefaults(): BookingFormValues {
     moving_date: "",
     origin_zip: "",
     destination_zip: "",
-    service_id: 0,
-    packing_type_id: 0,
+    service_id: 1,
     move_size_id: 0,
     origin_floor_id: 0,
     destination_floor_id: 0,
@@ -49,102 +54,140 @@ function buildDefaults(): BookingFormValues {
 
 export function BookingForm() {
   const [step, setStep] = useState<BookingFormStepIndex>(0)
+  const [submission, setSubmission] = useState<BookingSubmitResult | null>(null)
 
   const schema = useMemo(() => createBookingFormSchema(), [])
 
   const form = useForm<BookingFormValues>({
     resolver: zodResolver(schema),
     defaultValues: buildDefaults(),
-    mode: "onTouched",
+    mode: "onChange",
+    reValidateMode: "onChange",
   })
 
   const { mutateAsync: submitBooking, isPending } = useMutation({
     mutationFn: (values: BookingFormValues) => submitBookingRequest(values),
-    onSuccess: async (created) => {
-      toast.success(`Booking submitted — request #${created.id}`)
-      form.reset(buildDefaults())
-      setStep(0)
+    onSuccess: (result) => {
+      setSubmission(result)
     },
     onError: (error: unknown) => {
       toast.error(extractError(error))
     },
   })
 
-  async function goNext() {
-    const fields = BOOKING_FORM_STEP_FIELDS[
-      step
-    ] as unknown as FieldPath<BookingFormValues>[]
-    const ok = await form.trigger(fields)
-    if (!ok) return
-    setStep((s) => (s < 2 ? ((s + 1) as BookingFormStepIndex) : s))
+  function goNext() {
+    const fields = BOOKING_FORM_STEP_FIELDS[step]
+    const stepSchema = createBookingFormStepSchema(step)
+    const result = stepSchema.safeParse(form.getValues())
+
+    if (!result.success) {
+      form.clearErrors(fields as unknown as FieldPath<BookingFormValues>[])
+      for (const issue of result.error.issues) {
+        const name = issue.path[0]
+        if (typeof name === "string") {
+          form.setError(name as FieldPath<BookingFormValues>, {
+            message: issue.message,
+          })
+        }
+      }
+      return
+    }
+
+    const nextStep = (step + 1) as BookingFormStepIndex
+    form.clearErrors(
+      BOOKING_FORM_STEP_FIELDS[
+        nextStep
+      ] as unknown as FieldPath<BookingFormValues>[]
+    )
+    setStep(nextStep)
   }
 
   function goBack() {
     setStep((s) => (s > 0 ? ((s - 1) as BookingFormStepIndex) : s))
   }
 
+  if (submission) {
+    if (!submission.magicLoginToken) {
+      return (
+        <Card className="mx-auto w-full max-w-lg rounded-3xl p-6 text-center shadow-md">
+          <p className="text-sm text-muted-foreground">
+            Your request was submitted (reference #{submission.request.id}), but
+            we couldn&apos;t start your account session. Please sign in with
+            your email to view it.
+          </p>
+          <Button asChild className="mt-4">
+            <a href={buildCrmLoginUrl()}>Sign in</a>
+          </Button>
+        </Card>
+      )
+    }
+
+    return (
+      <BookingFormSuccess
+        requestId={submission.request.id}
+        magicLoginToken={submission.magicLoginToken}
+      />
+    )
+  }
+
   return (
-    <div className="mx-auto max-w-7xl py-10">
-      <Card className="mx-auto w-full max-w-lg">
-        <CardHeader>
-          <CardTitle>Book a move</CardTitle>
-          <CardDescription>
-            Step {step + 1} of 3 — {STEP_LABELS[step]}
-          </CardDescription>
-          <ol className="mt-4 flex gap-2 text-xs font-medium text-muted-foreground">
-            {STEP_LABELS.map((label, index) => (
-              <li
-                key={label}
-                className={
-                  index === step
-                    ? "rounded-md bg-primary/10 px-2 py-1 text-primary"
-                    : "rounded-md px-2 py-1"
-                }
-              >
-                {index + 1}. {label}
-              </li>
-            ))}
-          </ol>
-        </CardHeader>
+    <Card className="mx-auto w-full max-w-lg rounded-3xl shadow-md">
+      <CardHeader>
+        <CardTitle>Book a move</CardTitle>
+        <CardDescription>
+          Step {step + 1} of 3 — {STEP_LABELS[step]}
+        </CardDescription>
+        <ol className="mt-4 flex gap-2 text-xs font-medium text-muted-foreground">
+          {STEP_LABELS.map((label, index) => (
+            <li
+              key={label}
+              className={
+                index === step
+                  ? "rounded-md bg-primary/10 px-2 py-1 text-primary"
+                  : "rounded-md px-2 py-1"
+              }
+            >
+              {index + 1}. {label}
+            </li>
+          ))}
+        </ol>
+      </CardHeader>
 
-        <FormProvider {...form}>
-          <form
-            onSubmit={form.handleSubmit((values) => submitBooking(values))}
-            className="contents"
-          >
-            <CardContent className="space-y-6">
-              {step === 0 ? <BookingStepMoveDetails /> : null}
-              {step === 1 ? <BookingStepMoveSize /> : null}
-              {step === 2 ? <BookingStepContact /> : null}
-            </CardContent>
+      <FormProvider {...form}>
+        <form
+          onSubmit={form.handleSubmit((values) => submitBooking(values))}
+          className="contents"
+        >
+          <CardContent className="space-y-6">
+            {step === 0 ? <BookingStepMoveDetails /> : null}
+            {step === 1 ? <BookingStepMoveSize /> : null}
+            {step === 2 ? <BookingStepContact /> : null}
+          </CardContent>
 
-            <CardFooter className="flex flex-wrap justify-between gap-3 border-t pt-6">
-              <Button
-                type="button"
-                variant="outline"
-                disabled={step === 0 || isPending}
-                onClick={goBack}
-              >
-                <ChevronLeftIcon />
-                Back
+          <CardFooter className="flex justify-between gap-4">
+            <Button
+              type="button"
+              variant="outline"
+              disabled={step === 0 || isPending}
+              onClick={goBack}
+            >
+              <ChevronLeftIcon />
+              Back
+            </Button>
+
+            {step < 2 ? (
+              <Button type="button" onClick={goNext} disabled={isPending}>
+                Next
+                <ChevronRightIcon />
               </Button>
-
-              {step < 2 ? (
-                <Button type="button" onClick={goNext} disabled={isPending}>
-                  Next
-                  <ChevronRightIcon />
-                </Button>
-              ) : (
-                <Button type="submit" disabled={isPending}>
-                  <LoadingSwap isLoading={isPending}>
-                    Submit booking
-                  </LoadingSwap>
-                </Button>
-              )}
-            </CardFooter>
-          </form>
-        </FormProvider>
-      </Card>
-    </div>
+            ) : (
+              <Button type="submit" disabled={isPending}>
+                <LoadingSwap isLoading={isPending}>Submit booking</LoadingSwap>
+              </Button>
+            )}
+          </CardFooter>
+        </form>
+      </FormProvider>
+    </Card>
   )
 }

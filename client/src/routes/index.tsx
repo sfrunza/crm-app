@@ -17,6 +17,10 @@ export const router = createBrowserRouter([
     hydrateFallbackElement: <GlobalFallback />,
     errorElement: <ErrorPage />,
   },
+  {
+    path: "book",
+    element: <BookingForm />,
+  },
   ...authRoutes,
   {
     loader: appLoader,
@@ -25,16 +29,6 @@ export const router = createBrowserRouter([
     hydrateFallbackElement: <GlobalFallback />,
     errorElement: <ErrorPage />,
     children: [
-      {
-        path: "book",
-        element: <RequireRole allowedRoles={["customer", ...ADMIN_ROLES]} />,
-        children: [
-          {
-            index: true,
-            element: <BookingForm />,
-          },
-        ],
-      },
       {
         path: "account",
         element: <RequireRole allowedRoles={["customer", ...ADMIN_ROLES]} />,

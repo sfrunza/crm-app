@@ -1,8 +1,7 @@
-"use client"
-
 import * as React from "react"
 import { Select as SelectPrimitive } from "radix-ui"
 
+import { useShadowRoot } from "@/book-form-widget"
 import { cn } from "@/lib/utils"
 import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "lucide-react"
 
@@ -64,8 +63,10 @@ function SelectContent({
   align = "center",
   ...props
 }: React.ComponentProps<typeof SelectPrimitive.Content>) {
+  const shadowRoot = useShadowRoot()
+
   return (
-    <SelectPrimitive.Portal>
+    <SelectPrimitive.Portal container={shadowRoot}>
       <SelectPrimitive.Content
         data-slot="select-content"
         data-align-trigger={position === "item-aligned"}
