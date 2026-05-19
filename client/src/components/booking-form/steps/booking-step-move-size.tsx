@@ -10,6 +10,7 @@ import {
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
   SelectTrigger,
   SelectValue,
@@ -47,20 +48,20 @@ export function BookingStepMoveSize() {
                 <SelectValue placeholder="Select move size" />
               </SelectTrigger>
               <SelectContent>
-                {moveSizes?.map((size) => (
-                  <SelectItem key={size.id} value={String(size.id)}>
-                    {size.name}
-                  </SelectItem>
-                ))}
+                <SelectGroup>
+                  {moveSizes?.map((size) => (
+                    <SelectItem key={size.id} value={String(size.id)}>
+                      {size.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
               </SelectContent>
             </Select>
             <FieldDescription>
               Pick the option that best matches the home or office you are
               moving.
             </FieldDescription>
-            {fieldState.invalid && (
-              <FieldError errors={[fieldState.error]} />
-            )}
+            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
         )}
       />
@@ -84,16 +85,16 @@ export function BookingStepMoveSize() {
                   <SelectValue placeholder="Origin floor / access" />
                 </SelectTrigger>
                 <SelectContent>
-                  {entranceTypes?.map((entrance) => (
-                    <SelectItem key={entrance.id} value={String(entrance.id)}>
-                      {entrance.name}
-                    </SelectItem>
-                  ))}
+                  <SelectGroup>
+                    {entranceTypes?.map((entrance) => (
+                      <SelectItem key={entrance.id} value={String(entrance.id)}>
+                        {entrance.name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
                 </SelectContent>
               </Select>
-              {fieldState.invalid && (
-                <FieldError errors={[fieldState.error]} />
-              )}
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
         />
@@ -116,16 +117,16 @@ export function BookingStepMoveSize() {
                   <SelectValue placeholder="Destination floor / access" />
                 </SelectTrigger>
                 <SelectContent>
-                  {entranceTypes?.map((entrance) => (
-                    <SelectItem key={entrance.id} value={String(entrance.id)}>
-                      {entrance.name}
-                    </SelectItem>
-                  ))}
+                  <SelectGroup>
+                    {entranceTypes?.map((entrance) => (
+                      <SelectItem key={entrance.id} value={String(entrance.id)}>
+                        {entrance.name}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
                 </SelectContent>
               </Select>
-              {fieldState.invalid && (
-                <FieldError errors={[fieldState.error]} />
-              )}
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
         />

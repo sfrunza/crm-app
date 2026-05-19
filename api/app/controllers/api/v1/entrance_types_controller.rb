@@ -1,5 +1,6 @@
 class Api::V1::EntranceTypesController < ApplicationController
   include Pundit::Authorization
+  allow_unauthenticated_access only: %i[ index ]
   before_action :set_entrance_type, only: %i[ update destroy ]
 
   CACHE_KEY = "#{Rails.env}/entrance_types_v1"

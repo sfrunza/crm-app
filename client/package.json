@@ -9,8 +9,8 @@
   "scripts": {
     "dev": "vite --host",
     "build": "tsc -b && vite build",
-    "build:booking-embed": "vite build --config vite.booking-embed.config.ts",
-    "build:vercel": "npm run build && npm run build:booking-embed",
+    "build:book-form-widget": "vite build --config vite.book-form-widget.config.ts",
+    "build:vercel": "npm run build && npm run build:book-form-widget",
     "lint": "eslint .",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",

@@ -5,6 +5,8 @@ import tailwindcss from "@tailwindcss/vite"
 import babel from "@rolldown/plugin-babel"
 import { VitePWA } from "vite-plugin-pwa"
 
+const isDev = process.env.NODE_ENV === 'development';
+
 // https://vite.dev/config/
 export default defineConfig({
   base: "/",
@@ -12,7 +14,8 @@ export default defineConfig({
     react(),
     babel({ presets: [reactCompilerPreset()] }),
     tailwindcss(),
-    VitePWA({
+    !isDev &&
+    (VitePWA({
       registerType: "autoUpdate",
       manifest: {
         name: "Crm App",
@@ -29,7 +32,7 @@ export default defineConfig({
           },
         ],
       },
-    }),
+    })),
   ],
   resolve: {
     alias: {

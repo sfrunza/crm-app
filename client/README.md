@@ -2,16 +2,11 @@
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+Booking form available
 
 ```html
-<script src="https://your-domain.com/path/crm-booking-form.js" defer></script>
-<crm-booking-form></crm-booking-form>
-<script
-  src="https://crm-app-client-six.vercel.app/embed/booking-form.js"
-  defer
-></script>
-<booking-form></booking-form>
+<script is:inline src="url/book-form-widget.js" defer></script>
+<div class="booking-widget-container"></div>
 ```
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh

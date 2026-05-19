@@ -15,7 +15,6 @@ export function createBookingFormSchema() {
     origin_zip: usZip,
     destination_zip: usZip,
     service_id: positiveId("Service type"),
-    packing_type_id: positiveId("Packing option"),
     move_size_id: positiveId("Move size"),
     origin_floor_id: positiveId("Floors at origin"),
     destination_floor_id: positiveId("Floors at destination"),
@@ -38,10 +37,18 @@ export const BOOKING_FORM_STEP_FIELDS = [
     "origin_zip",
     "destination_zip",
     "service_id",
-    "packing_type_id",
   ],
   ["move_size_id", "origin_floor_id", "destination_floor_id"],
   ["first_name", "last_name", "email_address", "phone"],
 ] as const satisfies readonly (readonly (keyof BookingFormValues)[])[]
 
 export type BookingFormStepIndex = 0 | 1 | 2
+
+export function createBookingFormStepSchema(step: BookingFormStepIndex) {
+  const fields = BOOKING_FORM_STEP_FIELDS[step]
+  return createBookingFormSchema().pick(
+    Object.fromEntries(fields.map((key) => [key, true])) as {
+      [K in (typeof fields)[number]]: true
+    },
+  )
+}

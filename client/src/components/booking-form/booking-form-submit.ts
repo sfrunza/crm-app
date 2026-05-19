@@ -40,7 +40,6 @@ export function buildBookingRequestPayload(
   return {
     moving_date: values.moving_date,
     service_id: values.service_id,
-    packing_type_id: values.packing_type_id,
     move_size_id: values.move_size_id,
     customer_id: customerId,
     origin: emptyAddress(values.origin_zip, values.origin_floor_id),
@@ -82,10 +81,22 @@ async function resolveCustomerId(values: BookingFormValues): Promise<number> {
   return created.id
 }
 
+export type BookingSubmitResult = {
+  request: Request
+  magicLoginToken: string | null
+}
+
+type CreateRequestResponse = Request & { magic_login_token?: string }
+
 export async function submitBookingRequest(
   values: BookingFormValues
-): Promise<Request> {
+): Promise<BookingSubmitResult> {
   const customerId = await resolveCustomerId(values)
   const payload = buildBookingRequestPayload(values, customerId)
-  return createRequest(payload)
+  const created = (await createRequest(payload)) as CreateRequestResponse
+
+  return {
+    request: created,
+    magicLoginToken: created.magic_login_token ?? null,
+  }
 }

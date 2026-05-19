@@ -4,12 +4,11 @@ import react, { reactCompilerPreset } from "@vitejs/plugin-react"
 import path from "path"
 import { defineConfig } from "vite"
 
-// Single-file IIFE for pasting into static / marketing pages (custom element self-registers).
 export default defineConfig(({ mode }) => ({
-  // Dependencies compare process.env.NODE_ENV; browsers have no `process` unless inlined here.
+  envDir: path.resolve(__dirname),
   define: {
     "process.env.NODE_ENV": JSON.stringify(
-      mode === "production" ? "production" : "development"
+      mode === "production" ? "production" : "development",
     ),
   },
   publicDir: false,
@@ -24,17 +23,20 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
-    emptyOutDir: true,
-    outDir: "dist/embed",
+    emptyOutDir: false,
+    outDir: "dist",
     cssCodeSplit: false,
     rollupOptions: {
       checks: { pluginTimings: false },
+      output: {
+        globals: {},
+      }
     },
     lib: {
-      entry: path.resolve(__dirname, "src/embed/booking-form-embed.tsx"),
-      name: "BookingFormEmbed",
-      formats: ["iife"],
-      fileName: () => "booking-form.js",
+      entry: path.resolve(__dirname, 'src/book-form-widget/index.tsx'),
+      name: 'BookingWidget',
+      fileName: () => "book-form-widget.js",
+      formats: ['iife'],           // Best for direct <script> tag
     },
   },
 }))

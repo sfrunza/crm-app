@@ -1,5 +1,6 @@
 class Api::V1::RequestsController < ApplicationController
   include Pundit::Authorization
+  allow_unauthenticated_access only: %i[ create ]
   before_action :set_request,
                 only: %i[show update pair clone delete_image images attach_signature customer_requests calculate calculate_routes]
 
@@ -43,7 +44,7 @@ class Api::V1::RequestsController < ApplicationController
     result = RequestSaveService.call(@request, action: :create)
 
     if result[:success]
-      render json: @request, status: :created
+      render_booking_create_response
     else
       render json: result[:errors], status: :unprocessable_entity
     end
@@ -279,6 +280,17 @@ class Api::V1::RequestsController < ApplicationController
   end
 
   private
+
+  def render_booking_create_response
+    payload = RequestSerializer.new(@request).as_json
+
+    customer = @request.customer
+    if !authenticated? && customer&.customer?
+      payload[:magic_login_token] = customer.generate_magic_link!
+    end
+
+    render json: payload, status: :created
+  end
 
   def filter_requests(requests, status_filter, date_filter)
     today = Date.today
