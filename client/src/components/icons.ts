@@ -47,6 +47,7 @@ export {
   MailIcon,
   MailsIcon,
   MapIcon,
+  MapPinIcon,
   MessageCircleIcon,
   MessageCircleMoreIcon,
   MessagesSquareIcon,

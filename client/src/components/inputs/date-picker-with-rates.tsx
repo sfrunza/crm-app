@@ -50,7 +50,7 @@ export function DatePickerWithRates({
         <CalendarWithRates
           rates={rates}
           calendarRates={calendarRates}
-          showFooter={true}
+          showFooter
           selected={selected}
           isLoading={!calendarRates}
           onDayClick={(date) => {

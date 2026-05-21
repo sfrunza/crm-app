@@ -10,8 +10,9 @@ import { Skeleton } from "../ui/skeleton"
 import type { CalendarRateMap, Rate } from "@/types/index"
 import { hexToRgb } from "@/lib/helpers"
 import { formatDate } from "@/lib/format-date"
+import { CalendarFooter } from "./calendar-footer"
 
-type CalendarWithRatesProps = CalendarProps & {
+export type CalendarWithRatesProps = CalendarProps & {
   rates: Rate[] | undefined
   calendarRates: CalendarRateMap | undefined
   isLoading: boolean
@@ -96,6 +97,7 @@ export const CalendarWithRates = memo(function ({
       mode="single"
       showOutsideDays={false}
       className={cn(className)}
+      footer={showFooter ? <CalendarFooter rates={rates} /> : undefined}
       components={{
         DayButton: ({ children, modifiers, day, ...props }) => {
           const date = day.date

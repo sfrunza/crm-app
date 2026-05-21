@@ -1,64 +1,114 @@
 import { InfoIcon } from "@/components/icons"
-import { memo, useMemo } from "react"
+import { useState } from "react"
 
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import { useIsMobile } from "@/hooks/use-mobile"
 import { formatCentsToDollarsString, hexToRgb } from "@/lib/helpers"
-import { useRates } from "@/hooks/api/use-rates"
+import { cn } from "@/lib/utils"
+import type { Rate } from "@/types/index"
 
-// Memoize the CalendarFooter component
-function CalendarFooter() {
-  const { data: dbRates } = useRates()
+const MOVER_KEYS = ["2", "3", "4"] as const
 
-  const rateElements = useMemo(() => {
-    if (!dbRates) return null
+function MoverRatesList({ rate }: { rate: Rate }) {
+  return (
+    <div className="w-full space-y-1">
+      {MOVER_KEYS.map((key) => {
+        const hourly = rate.movers_rates[key]?.hourly_rate
+        if (hourly == null) return null
+        return (
+          <div
+            key={key}
+            className="flex w-full justify-between gap-4 py-0.5 text-xs"
+          >
+            <span>{key} movers & truck</span>
+            <span className="font-semibold">
+              {formatCentsToDollarsString(hourly)}
+            </span>
+          </div>
+        )
+      })}
+    </div>
+  )
+}
 
-    return dbRates.map((rate) => (
-      <TooltipProvider key={rate.id}>
-        <Tooltip delayDuration={20}>
-          <TooltipTrigger asChild className="cursor-help">
-            <div
-              className="flex items-center gap-2 rounded-md px-1.5 py-1"
-              style={{
-                color: rate.color,
-                backgroundColor: `rgba(${hexToRgb(rate.color)}, 0.1)`,
-              }}
-            >
-              {rate.name}
-              <InfoIcon className="size-4" />
-            </div>
-          </TooltipTrigger>
-          <TooltipContent className="min-w-60" side="top">
-            {Object.keys(rate.movers_rates)
-              .slice(0, 3)
-              .map((key) => {
-                const hRate = rate.movers_rates[key].hourly_rate
-                return (
-                  <div
-                    key={key}
-                    className="flex justify-between py-1 font-medium"
-                  >
-                    <span>{key} movers & truck</span>
-                    <span>{formatCentsToDollarsString(hRate)}</span>
-                  </div>
-                )
-              })}
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    ))
-  }, [dbRates])
+function RateFooterLabel({ rate }: { rate: Rate }) {
+  return (
+    <div
+      className="flex items-center gap-1.5 rounded-md px-1.5 py-1 text-xs font-semibold"
+      style={{
+        color: rate.color,
+        backgroundColor: `rgba(${hexToRgb(rate.color)}, 0.1)`,
+      }}
+    >
+      {rate.name}
+      <InfoIcon className="size-3.5 opacity-70" />
+    </div>
+  )
+}
+
+function RateFooterItem({ rate }: { rate: Rate }) {
+  const isMobile = useIsMobile()
+  const [open, setOpen] = useState(false)
+  const ratesPanel = <MoverRatesList rate={rate} />
+
+  if (isMobile) {
+    return (
+      <Popover open={open} onOpenChange={setOpen} modal={false}>
+        <PopoverTrigger>
+          <RateFooterLabel rate={rate} />
+        </PopoverTrigger>
+        <PopoverContent
+          side="top"
+          align="center"
+          className="w-56 p-3"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
+          {ratesPanel}
+        </PopoverContent>
+      </Popover>
+    )
+  }
 
   return (
-    <div className="w-62 rounded-b-md border-t bg-muted">
-      <div className="flex w-full flex-wrap items-center justify-center gap-2 p-4 text-xs font-semibold">
-        {rateElements}
+    <HoverCard openDelay={10} closeDelay={100}>
+      <HoverCardTrigger className="cursor-help">
+        <RateFooterLabel rate={rate} />
+      </HoverCardTrigger>
+      <HoverCardContent side="top" align="center" className="w-56 p-3">
+        {ratesPanel}
+      </HoverCardContent>
+    </HoverCard>
+  )
+}
+
+type CalendarFooterProps = {
+  rates: Rate[] | undefined
+  className?: string
+}
+
+export function CalendarFooter({ rates, className }: CalendarFooterProps) {
+  const activeRates = rates?.filter((r) => r.active) ?? []
+
+  return (
+    <div className="@container mt-6 border-t">
+      <div className="flex flex-wrap items-center gap-3 pt-4">
+        {activeRates.map((rate) => (
+          <RateFooterItem key={rate.id} rate={rate} />
+        ))}
         <div
-          className="flex items-center gap-2 rounded-md px-1.5 py-1"
+          className={cn(
+            "flex items-center gap-1.5 rounded-md px-1.5 py-1 text-xs font-semibold",
+            className
+          )}
           style={{
             color: "#000000",
             backgroundColor: "#dcdcdc",
@@ -67,14 +117,10 @@ function CalendarFooter() {
           Blocked
           <span
             className="size-1.5 rounded-full"
-            style={{
-              backgroundColor: "#000000",
-            }}
+            style={{ backgroundColor: "#000000" }}
           />
         </div>
       </div>
     </div>
   )
 }
-
-export const MemoizedCalendarFooter = memo(CalendarFooter)

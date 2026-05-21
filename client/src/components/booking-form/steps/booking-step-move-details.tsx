@@ -1,9 +1,9 @@
 import { format, startOfToday } from "date-fns"
-import { CalendarDaysIcon } from "lucide-react"
 import { useMemo, useState } from "react"
 import { Controller, useFormContext } from "react-hook-form"
 
 import { CalendarWithRates } from "@/components/calendar-with-rates"
+import { CalendarDaysIcon, MapPinIcon } from "@/components/icons"
 import { Button } from "@/components/ui/button"
 import {
   Field,
@@ -11,7 +11,11 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group"
 import {
   Popover,
   PopoverContent,
@@ -30,7 +34,6 @@ import { useCalendarRates } from "@/hooks/api/use-calendar-rates"
 import { useRates } from "@/hooks/api/use-rates"
 import { useServices } from "@/hooks/api/use-services"
 import { parseDateOnly } from "@/lib/format-date"
-import { cn } from "@/lib/utils"
 import type { BookingFormValues } from "../booking-form-schema"
 
 export function BookingStepMoveDetails() {
@@ -56,22 +59,19 @@ export function BookingStepMoveDetails() {
   })
 
   return (
-    <FieldGroup className="gap-6">
+    <FieldGroup>
       <Controller
         name="moving_date"
         control={form.control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid}>
-            <FieldLabel>Moving date</FieldLabel>
+            <FieldLabel htmlFor={field.name}>Moving date</FieldLabel>
             <Popover open={movingDateOpen} onOpenChange={setMovingDateOpen}>
-              <PopoverTrigger asChild>
+              <PopoverTrigger id={field.name} asChild>
                 <Button
                   type="button"
                   variant="outline"
-                  className={cn(
-                    "h-9 w-full justify-start px-2.5 font-normal md:text-sm",
-                    !field.value && "text-muted-foreground"
-                  )}
+                  className="justify-start"
                   aria-invalid={fieldState.invalid}
                 >
                   <CalendarDaysIcon className="mr-2 size-4 opacity-70" />
@@ -80,11 +80,10 @@ export function BookingStepMoveDetails() {
                     : "Pick a date"}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="relative w-auto p-0" align="start">
+              <PopoverContent align="start" className="w-auto overflow-hidden">
                 <CalendarWithRates
                   rates={rates}
                   calendarRates={calendarRates}
-                  showFooter
                   selected={parseDateOnly(field.value)}
                   isLoading={calendarLoading}
                   onDayClick={(date) => {
@@ -98,10 +97,13 @@ export function BookingStepMoveDetails() {
                   }}
                   modifiersClassNames={{
                     disabled:
-                      "[&>button]:line-through opacity-50 hover:cursor-not-allowed",
+                      "[&>button]:grayscale opacity-70 hover:cursor-not-allowed",
                   }}
-                  defaultMonth={parseDateOnly(field.value)}
+                  className="p-0 [--cell-size:--spacing(9)]"
+                  startMonth={startOfToday()}
+                  defaultMonth={parseDateOnly(field.value) ?? startOfToday()}
                   showOutsideDays={false}
+                  showFooter
                 />
                 {calendarLoading ? (
                   <div className="absolute inset-0 flex items-center justify-center rounded-md bg-background/80">
@@ -120,15 +122,20 @@ export function BookingStepMoveDetails() {
         control={form.control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid}>
-            <FieldLabel htmlFor={field.name}>Origin ZIP code</FieldLabel>
-            <Input
-              {...field}
-              id={field.name}
-              inputMode="numeric"
-              autoComplete="postal-code"
-              aria-invalid={fieldState.invalid}
-              placeholder="10001"
-            />
+            <FieldLabel htmlFor={field.name}>From ZIP</FieldLabel>
+            <InputGroup>
+              <InputGroupInput
+                {...field}
+                id={field.name}
+                inputMode="numeric"
+                autoComplete="postal-code"
+                aria-invalid={fieldState.invalid}
+                placeholder="10002"
+              />
+              <InputGroupAddon align="inline-start">
+                <MapPinIcon className="text-muted-foreground" />
+              </InputGroupAddon>
+            </InputGroup>
             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
         )}
@@ -139,15 +146,20 @@ export function BookingStepMoveDetails() {
         control={form.control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid}>
-            <FieldLabel htmlFor={field.name}>Destination ZIP code</FieldLabel>
-            <Input
-              {...field}
-              id={field.name}
-              inputMode="numeric"
-              autoComplete="postal-code"
-              aria-invalid={fieldState.invalid}
-              placeholder="10002"
-            />
+            <FieldLabel htmlFor={field.name}>To ZIP</FieldLabel>
+            <InputGroup>
+              <InputGroupInput
+                {...field}
+                id={field.name}
+                inputMode="numeric"
+                autoComplete="postal-code"
+                aria-invalid={fieldState.invalid}
+                placeholder="10002"
+              />
+              <InputGroupAddon align="inline-start">
+                <MapPinIcon className="text-muted-foreground" />
+              </InputGroupAddon>
+            </InputGroup>
             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
         )}
@@ -158,13 +170,14 @@ export function BookingStepMoveDetails() {
         control={form.control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid}>
-            <FieldLabel>Service type</FieldLabel>
+            <FieldLabel htmlFor={field.name}>Service type</FieldLabel>
             <Select
               value={field.value > 0 ? String(field.value) : ""}
               onValueChange={(v) => field.onChange(Number(v))}
               disabled={!services?.length}
             >
               <SelectTrigger
+                id={field.name}
                 className="w-full"
                 aria-invalid={fieldState.invalid}
               >
