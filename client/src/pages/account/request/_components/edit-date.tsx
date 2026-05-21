@@ -49,11 +49,14 @@ export function EditDate({
           Edit date
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="relative w-auto p-0" align="start">
+      <PopoverContent
+        align="start"
+        className="w-fit max-w-[273px] overflow-hidden p-0"
+      >
         <CalendarWithRates
           rates={rates}
           calendarRates={calendarRates}
-          showFooter={true}
+          showFooter
           selected={selected}
           isLoading={!calendarRates}
           onDayClick={(date) => {

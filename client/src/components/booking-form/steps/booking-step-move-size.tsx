@@ -2,7 +2,6 @@ import { Controller, useFormContext } from "react-hook-form"
 
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -15,8 +14,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { useMoveSizes } from "@/hooks/api/use-move-sizes"
 import { useEntranceTypes } from "@/hooks/api/use-entrance-types"
+import { useMoveSizes } from "@/hooks/api/use-move-sizes"
 import type { BookingFormValues } from "../booking-form-schema"
 
 export function BookingStepMoveSize() {
@@ -29,19 +28,20 @@ export function BookingStepMoveSize() {
   })
 
   return (
-    <FieldGroup className="gap-6">
+    <FieldGroup>
       <Controller
         name="move_size_id"
         control={form.control}
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid}>
-            <FieldLabel>Size of move</FieldLabel>
+            <FieldLabel htmlFor={field.name}>Size of move</FieldLabel>
             <Select
               value={field.value > 0 ? String(field.value) : ""}
               onValueChange={(v) => field.onChange(Number(v))}
               disabled={!moveSizes?.length}
             >
               <SelectTrigger
+                id={field.name}
                 className="w-full"
                 aria-invalid={fieldState.invalid}
               >
@@ -57,80 +57,76 @@ export function BookingStepMoveSize() {
                 </SelectGroup>
               </SelectContent>
             </Select>
-            <FieldDescription>
-              Pick the option that best matches the home or office you are
-              moving.
-            </FieldDescription>
             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
         )}
       />
 
-      <div className="grid gap-6 sm:grid-cols-2">
-        <Controller
-          name="origin_floor_id"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>Floors at origin</FieldLabel>
-              <Select
-                value={field.value > 0 ? String(field.value) : ""}
-                onValueChange={(v) => field.onChange(Number(v))}
-                disabled={!entranceTypes?.length}
+      <Controller
+        name="origin_floor_id"
+        control={form.control}
+        render={({ field, fieldState }) => (
+          <Field data-invalid={fieldState.invalid}>
+            <FieldLabel htmlFor={field.name}>Floors at origin</FieldLabel>
+            <Select
+              value={field.value > 0 ? String(field.value) : ""}
+              onValueChange={(v) => field.onChange(Number(v))}
+              disabled={!entranceTypes?.length}
+            >
+              <SelectTrigger
+                id={field.name}
+                className="w-full"
+                aria-invalid={fieldState.invalid}
               >
-                <SelectTrigger
-                  className="w-full"
-                  aria-invalid={fieldState.invalid}
-                >
-                  <SelectValue placeholder="Origin floor / access" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {entranceTypes?.map((entrance) => (
-                      <SelectItem key={entrance.id} value={String(entrance.id)}>
-                        {entrance.name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
+                <SelectValue placeholder="Origin floor / access" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {entranceTypes?.map((entrance) => (
+                    <SelectItem key={entrance.id} value={String(entrance.id)}>
+                      {entrance.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+          </Field>
+        )}
+      />
 
-        <Controller
-          name="destination_floor_id"
-          control={form.control}
-          render={({ field, fieldState }) => (
-            <Field data-invalid={fieldState.invalid}>
-              <FieldLabel>Floors at destination</FieldLabel>
-              <Select
-                value={field.value > 0 ? String(field.value) : ""}
-                onValueChange={(v) => field.onChange(Number(v))}
-                disabled={!entranceTypes?.length}
+      <Controller
+        name="destination_floor_id"
+        control={form.control}
+        render={({ field, fieldState }) => (
+          <Field data-invalid={fieldState.invalid}>
+            <FieldLabel htmlFor={field.name}>Floors at destination</FieldLabel>
+            <Select
+              value={field.value > 0 ? String(field.value) : ""}
+              onValueChange={(v) => field.onChange(Number(v))}
+              disabled={!entranceTypes?.length}
+            >
+              <SelectTrigger
+                id={field.name}
+                className="w-full"
+                aria-invalid={fieldState.invalid}
               >
-                <SelectTrigger
-                  className="w-full"
-                  aria-invalid={fieldState.invalid}
-                >
-                  <SelectValue placeholder="Destination floor / access" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    {entranceTypes?.map((entrance) => (
-                      <SelectItem key={entrance.id} value={String(entrance.id)}>
-                        {entrance.name}
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-            </Field>
-          )}
-        />
-      </div>
+                <SelectValue placeholder="Destination floor / access" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {entranceTypes?.map((entrance) => (
+                    <SelectItem key={entrance.id} value={String(entrance.id)}>
+                      {entrance.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+          </Field>
+        )}
+      />
     </FieldGroup>
   )
 }

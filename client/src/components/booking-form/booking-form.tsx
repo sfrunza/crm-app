@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react"
+import { ChevronLeftIcon } from "lucide-react"
 import { useMemo, useState } from "react"
 import { FormProvider, useForm, type FieldPath } from "react-hook-form"
 import { toast } from "sonner"
@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button"
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -25,16 +24,14 @@ import {
   type BookingFormStepIndex,
   type BookingFormValues,
 } from "./booking-form-schema"
-import { BookingFormSuccess } from "./booking-form-success"
 import {
   submitBookingRequest,
   type BookingSubmitResult,
 } from "./booking-form-submit"
+import { BookingFormSuccess } from "./booking-form-success"
 import { BookingStepContact } from "./steps/booking-step-contact"
 import { BookingStepMoveDetails } from "./steps/booking-step-move-details"
 import { BookingStepMoveSize } from "./steps/booking-step-move-size"
-
-const STEP_LABELS = ["Move basics", "Move size & access", "Contact"]
 
 function buildDefaults(): BookingFormValues {
   return {
@@ -131,26 +128,9 @@ export function BookingForm() {
   }
 
   return (
-    <Card className="mx-auto w-full max-w-lg rounded-3xl shadow-md">
+    <Card className="mx-auto w-full max-w-sm rounded-3xl shadow-md">
       <CardHeader>
-        <CardTitle>Book a move</CardTitle>
-        <CardDescription>
-          Step {step + 1} of 3 — {STEP_LABELS[step]}
-        </CardDescription>
-        <ol className="mt-4 flex gap-2 text-xs font-medium text-muted-foreground">
-          {STEP_LABELS.map((label, index) => (
-            <li
-              key={label}
-              className={
-                index === step
-                  ? "rounded-md bg-primary/10 px-2 py-1 text-primary"
-                  : "rounded-md px-2 py-1"
-              }
-            >
-              {index + 1}. {label}
-            </li>
-          ))}
-        </ol>
+        <CardTitle>Get instant online quote</CardTitle>
       </CardHeader>
 
       <FormProvider {...form}>
@@ -165,23 +145,37 @@ export function BookingForm() {
           </CardContent>
 
           <CardFooter className="flex justify-between gap-4">
-            <Button
-              type="button"
-              variant="outline"
-              disabled={step === 0 || isPending}
-              onClick={goBack}
-            >
-              <ChevronLeftIcon />
-              Back
-            </Button>
+            {step > 0 && (
+              <Button
+                type="button"
+                variant="outline"
+                disabled={step === 0 || isPending}
+                onClick={goBack}
+                className="flex-1"
+                size="lg"
+              >
+                <ChevronLeftIcon />
+                Back
+              </Button>
+            )}
 
             {step < 2 ? (
-              <Button type="button" onClick={goNext} disabled={isPending}>
-                Next
-                <ChevronRightIcon />
+              <Button
+                type="button"
+                size="lg"
+                className="flex-1"
+                onClick={goNext}
+                disabled={isPending}
+              >
+                Continue
               </Button>
             ) : (
-              <Button type="submit" disabled={isPending}>
+              <Button
+                type="submit"
+                size="lg"
+                className="flex-1"
+                disabled={isPending}
+              >
                 <LoadingSwap isLoading={isPending}>Submit booking</LoadingSwap>
               </Button>
             )}
