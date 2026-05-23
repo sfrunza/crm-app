@@ -121,6 +121,7 @@ Rails.application.routes.draw do
 
       post "webhooks/stripe", to: "webhooks#stripe"
       get "config/stripe", to: "config#stripe"
+      post "lookup_city", to: "lookup_cities#create"
     end
   end
 

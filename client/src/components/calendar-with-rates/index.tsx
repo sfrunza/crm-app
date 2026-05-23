@@ -28,7 +28,6 @@ const BLOCKED_DAY_STYLES = {
 const BASE_DAY_STYLES: CSSProperties = {
   color: "inherit",
   backgroundColor: "inherit",
-  opacity: 1,
 }
 
 /**
@@ -50,6 +49,8 @@ function getDayStyles(
       ...BASE_DAY_STYLES,
       color: rateColor,
       backgroundColor: `rgba(${hexToRgb(rateColor)}, 0.1)`,
+      // color: `color-mix(in srgb, rgb(${hexToRgb(rateColor)}) 50%, black)`,
+      // backgroundColor: `rgba(${hexToRgb(rateColor)}, 0.4)`,
     }
   }
 
@@ -96,8 +97,14 @@ export const CalendarWithRates = memo(function ({
     <Calendar
       mode="single"
       showOutsideDays={false}
-      className={cn(className)}
+      className={cn("p-0 [--cell-size:--spacing(9)]", className)}
       footer={showFooter ? <CalendarFooter rates={rates} /> : undefined}
+      modifiersClassNames={{
+        disabled: cn(
+          "[&>button]:border-none! [&>button]:bg-transparent! [&>button]:text-inherit! [&>button]:opacity-40! [&>button]:outline-inherit!",
+          "hover:cursor-not-allowed"
+        ),
+      }}
       components={{
         DayButton: ({ children, modifiers, day, ...props }) => {
           const date = day.date
@@ -113,7 +120,7 @@ export const CalendarWithRates = memo(function ({
               day={day}
               modifiers={modifiers}
               style={dayStyles}
-              className="transition-all duration-150 ease-in-out hover:ring"
+              className="font-medium transition-all duration-150 ease-in-out hover:ring"
             >
               {isLoading ? <Skeleton className="h-full w-full" /> : children}
             </CalendarDayButton>

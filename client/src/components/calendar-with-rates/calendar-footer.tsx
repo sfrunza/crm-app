@@ -111,7 +111,7 @@ export function CalendarFooter({ rates, className }: CalendarFooterProps) {
           )}
           style={{
             color: "#000000",
-            backgroundColor: "#dcdcdc",
+            backgroundColor: "rgba(0, 0, 0, 0.1)",
           }}
         >
           Blocked

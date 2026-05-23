@@ -1,29 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
-import { ChevronLeftIcon } from "lucide-react"
-import { useMemo, useState } from "react"
+import { useRef, useState } from "react"
 import { FormProvider, useForm, type FieldPath } from "react-hook-form"
 import { toast } from "sonner"
+import { AnimatePresence, motion } from "framer-motion"
 
 import { Button } from "@/components/ui/button"
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { LoadingSwap } from "@/components/ui/loading-swap"
+import { Card } from "@/components/ui/card"
 import { extractError } from "@/lib/axios"
 import { buildCrmLoginUrl } from "@/lib/crm-app-url"
 
-import {
-  BOOKING_FORM_STEP_FIELDS,
-  createBookingFormSchema,
-  createBookingFormStepSchema,
-  type BookingFormStepIndex,
-  type BookingFormValues,
-} from "./booking-form-schema"
+import { formSchema, type FormSchema } from "./booking-form-schema"
 import {
   submitBookingRequest,
   type BookingSubmitResult,
@@ -33,15 +20,27 @@ import { BookingStepContact } from "./steps/booking-step-contact"
 import { BookingStepMoveDetails } from "./steps/booking-step-move-details"
 import { BookingStepMoveSize } from "./steps/booking-step-move-size"
 
-function buildDefaults(): BookingFormValues {
+function buildDefaults(): FormSchema {
   return {
-    moving_date: "",
-    origin_zip: "",
-    destination_zip: "",
+    moving_date: null,
+    origin: {
+      street: "",
+      zip: "",
+      city: "",
+      state: "",
+      floor_id: null,
+    },
+    destination: {
+      street: "",
+      zip: "",
+      city: "",
+      state: "",
+      floor_id: null,
+    },
+    delivery_date: null,
     service_id: 1,
+    service_code: "local_move",
     move_size_id: 0,
-    origin_floor_id: 0,
-    destination_floor_id: 0,
     first_name: "",
     last_name: "",
     email_address: "",
@@ -49,21 +48,34 @@ function buildDefaults(): BookingFormValues {
   }
 }
 
+export const stepFields = {
+  1: [
+    "moving_date",
+    "delivery_date",
+    "service_id",
+    "origin.zip",
+    "destination.zip",
+  ],
+  2: ["move_size_id", "origin.floor_id", "destination.floor_id"],
+  3: ["first_name", "last_name", "email_address", "phone"],
+} as const satisfies Record<number, readonly FieldPath<FormSchema>[]>
+
 export function BookingForm() {
-  const [step, setStep] = useState<BookingFormStepIndex>(0)
+  const animationRef = useRef(null)
+
+  const [direction, setDirection] = useState(1)
+  const [step, setStep] = useState(1)
   const [submission, setSubmission] = useState<BookingSubmitResult | null>(null)
 
-  const schema = useMemo(() => createBookingFormSchema(), [])
-
-  const form = useForm<BookingFormValues>({
-    resolver: zodResolver(schema),
+  const form = useForm<FormSchema>({
+    resolver: zodResolver(formSchema),
     defaultValues: buildDefaults(),
     mode: "onChange",
     reValidateMode: "onChange",
   })
 
   const { mutateAsync: submitBooking, isPending } = useMutation({
-    mutationFn: (values: BookingFormValues) => submitBookingRequest(values),
+    mutationFn: (values: FormSchema) => submitBookingRequest(values),
     onSuccess: (result) => {
       setSubmission(result)
     },
@@ -72,35 +84,58 @@ export function BookingForm() {
     },
   })
 
-  function goNext() {
-    const fields = BOOKING_FORM_STEP_FIELDS[step]
-    const stepSchema = createBookingFormStepSchema(step)
-    const result = stepSchema.safeParse(form.getValues())
+  async function goNext() {
+    const fieldsToValidate = stepFields[step as keyof typeof stepFields]
+    const isValid = await form.trigger([...fieldsToValidate])
 
-    if (!result.success) {
-      form.clearErrors(fields as unknown as FieldPath<BookingFormValues>[])
-      for (const issue of result.error.issues) {
-        const name = issue.path[0]
-        if (typeof name === "string") {
-          form.setError(name as FieldPath<BookingFormValues>, {
-            message: issue.message,
-          })
-        }
-      }
+    if (!isValid) return
+
+    if (step === 3) {
+      await submitBooking(form.getValues())
       return
     }
 
-    const nextStep = (step + 1) as BookingFormStepIndex
-    form.clearErrors(
-      BOOKING_FORM_STEP_FIELDS[
-        nextStep
-      ] as unknown as FieldPath<BookingFormValues>[]
-    )
-    setStep(nextStep)
+    setStep((s) => s + 1)
+    setDirection(1)
   }
 
   function goBack() {
-    setStep((s) => (s > 0 ? ((s - 1) as BookingFormStepIndex) : s))
+    setStep((s) => (s > 1 ? s - 1 : s))
+    setDirection(-1)
+  }
+
+  const getCurrentForm = () => {
+    switch (step) {
+      case 1:
+        return <BookingStepMoveDetails goNext={goNext} />
+      case 2:
+        return <BookingStepMoveSize goNext={goNext} goBack={goBack} />
+      case 3:
+        return (
+          <BookingStepContact
+            goNext={goNext}
+            goBack={goBack}
+            isSubmitting={isPending}
+          />
+        )
+      default:
+        return null
+    }
+  }
+
+  const variants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 200 : -200,
+      opacity: 0,
+    }),
+    center: {
+      x: 0,
+      opacity: 1,
+    },
+    exit: (direction: number) => ({
+      x: direction > 0 ? -200 : 200,
+      opacity: 0,
+    }),
   }
 
   if (submission) {
@@ -128,60 +163,21 @@ export function BookingForm() {
   }
 
   return (
-    <Card className="mx-auto w-full max-w-sm rounded-3xl shadow-md">
-      <CardHeader>
-        <CardTitle>Get instant online quote</CardTitle>
-      </CardHeader>
-
-      <FormProvider {...form}>
-        <form
-          onSubmit={form.handleSubmit((values) => submitBooking(values))}
-          className="contents"
+    <FormProvider {...form}>
+      <AnimatePresence mode="wait" custom={direction}>
+        <motion.div
+          ref={animationRef}
+          key={step}
+          variants={variants}
+          custom={direction}
+          initial={animationRef.current ? "enter" : false}
+          animate="center"
+          exit="exit"
+          transition={{ duration: 0.35, ease: "easeInOut" }}
         >
-          <CardContent className="space-y-6">
-            {step === 0 ? <BookingStepMoveDetails /> : null}
-            {step === 1 ? <BookingStepMoveSize /> : null}
-            {step === 2 ? <BookingStepContact /> : null}
-          </CardContent>
-
-          <CardFooter className="flex justify-between gap-4">
-            {step > 0 && (
-              <Button
-                type="button"
-                variant="outline"
-                disabled={step === 0 || isPending}
-                onClick={goBack}
-                className="flex-1"
-                size="lg"
-              >
-                <ChevronLeftIcon />
-                Back
-              </Button>
-            )}
-
-            {step < 2 ? (
-              <Button
-                type="button"
-                size="lg"
-                className="flex-1"
-                onClick={goNext}
-                disabled={isPending}
-              >
-                Continue
-              </Button>
-            ) : (
-              <Button
-                type="submit"
-                size="lg"
-                className="flex-1"
-                disabled={isPending}
-              >
-                <LoadingSwap isLoading={isPending}>Submit booking</LoadingSwap>
-              </Button>
-            )}
-          </CardFooter>
-        </form>
-      </FormProvider>
-    </Card>
+          {getCurrentForm()}
+        </motion.div>
+      </AnimatePresence>
+    </FormProvider>
   )
 }

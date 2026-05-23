@@ -6,10 +6,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { Spinner } from "@/components/ui/spinner"
 import type { CalendarRateMap, Rate } from "@/types/index"
 import { parseDateOnly } from "@/lib/format-date"
 import { useMemo, useState } from "react"
+import { startOfToday } from "date-fns"
 
 interface EditDateProps {
   rates: Rate[] | undefined
@@ -32,13 +32,13 @@ export function EditDate({
   const [open, setOpen] = useState(false)
 
   const disabledDates = useMemo(() => {
-    return Object.values(calendarRates ?? {})
+    const blocked = Object.values(calendarRates ?? {})
       .map((rate) =>
-        rate.is_blocked
-          ? (parseDateOnly(rate.formatted_date) ?? new Date())
-          : null
+        rate.is_blocked ? (parseDateOnly(rate.formatted_date) ?? null) : null
       )
-      .filter((date) => date !== null)
+      .filter((date): date is Date => date !== null)
+
+    return [{ before: startOfToday() }, ...blocked]
   }, [calendarRates])
 
   return (
@@ -49,14 +49,10 @@ export function EditDate({
           Edit date
         </Button>
       </PopoverTrigger>
-      <PopoverContent
-        align="start"
-        className="w-fit max-w-[273px] overflow-hidden p-0"
-      >
+      <PopoverContent align="start" className="w-auto overflow-hidden">
         <CalendarWithRates
           rates={rates}
           calendarRates={calendarRates}
-          showFooter
           selected={selected}
           isLoading={!calendarRates}
           onDayClick={(date) => {
@@ -68,19 +64,11 @@ export function EditDate({
           modifiers={{
             disabled: disabledDates,
           }}
-          modifiersClassNames={{
-            disabled:
-              "[&>button]:line-through opacity-50 hover:cursor-not-allowed",
-          }}
-          defaultMonth={selected}
-          showOutsideDays={false}
+          startMonth={startOfToday()}
+          defaultMonth={selected ?? startOfToday()}
+          showFooter
           {...props}
         />
-        {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <Spinner />
-          </div>
-        )}
       </PopoverContent>
     </Popover>
   )

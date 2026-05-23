@@ -1,14 +1,14 @@
 import { BookingForm } from "@/components/booking-form/booking-form"
-import { Toaster } from "@/components/ui/sonner"
 import {
   applyBookingWidgetContainerConfig,
   applyBookingWidgetScriptConfig,
 } from "@/lib/crm-app-url"
-import shadowStyles from "@/index.css?inline"
 import { queryClient } from "@/lib/query-client"
 import { QueryClientProvider } from "@tanstack/react-query"
 import { createContext, StrictMode, useContext } from "react"
 import { createRoot } from "react-dom/client"
+import { buildShadowStyles } from "./shadow-styles"
+import { Toaster } from "@/components/ui/sonner"
 
 type ShadowRootContextType = ShadowRoot | null
 export const ShadowRootContext = createContext<ShadowRootContextType>(null)
@@ -25,16 +25,8 @@ function mountWidget(container: HTMLElement) {
 
   const shadowRoot = host.attachShadow({ mode: "open" })
 
-  // Inject Tailwind + ShadCN styles
   const style = document.createElement("style")
-  // style.textContent = shadowStyles
-  style.textContent = `
-    ${shadowStyles}
-
-    :host {
-      font-family: inherit !important;
-    }
-  `
+  style.textContent = buildShadowStyles()
   shadowRoot.appendChild(style)
 
   const shadowContainer = document.createElement("div")
@@ -46,7 +38,7 @@ function mountWidget(container: HTMLElement) {
       <QueryClientProvider client={queryClient}>
         <ShadowRootContext.Provider value={shadowRoot}>
           <BookingForm />
-          <Toaster position="top-center" theme="light" />
+          <Toaster position="top-center" />
         </ShadowRootContext.Provider>
       </QueryClientProvider>
     </StrictMode>

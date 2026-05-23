@@ -1,5 +1,6 @@
 import * as React from "react"
 import { HoverCard as HoverCardPrimitive } from "radix-ui"
+import { useShadowRoot } from "@/book-form-widget"
 
 import { cn } from "@/lib/utils"
 
@@ -23,8 +24,12 @@ function HoverCardContent({
   sideOffset = 4,
   ...props
 }: React.ComponentProps<typeof HoverCardPrimitive.Content>) {
+  const shadowRoot = useShadowRoot()
   return (
-    <HoverCardPrimitive.Portal data-slot="hover-card-portal">
+    <HoverCardPrimitive.Portal
+      data-slot="hover-card-portal"
+      container={shadowRoot}
+    >
       <HoverCardPrimitive.Content
         data-slot="hover-card-content"
         align={align}

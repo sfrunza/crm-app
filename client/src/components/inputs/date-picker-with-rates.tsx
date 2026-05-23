@@ -46,7 +46,7 @@ export function DatePickerWithRates({
           <ChevronDownIcon />
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0" align="start">
+      <PopoverContent align="start" className="w-auto overflow-hidden">
         <CalendarWithRates
           rates={rates}
           calendarRates={calendarRates}
@@ -59,10 +59,6 @@ export function DatePickerWithRates({
           }}
           modifiers={{
             disabled: disabledDates,
-          }}
-          modifiersClassNames={{
-            disabled:
-              "[&>button]:line-through opacity-50 hover:cursor-not-allowed",
           }}
           defaultMonth={selected}
           showOutsideDays={false}

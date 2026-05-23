@@ -285,7 +285,7 @@ class Api::V1::RequestsController < ApplicationController
     payload = RequestSerializer.new(@request).as_json
 
     customer = @request.customer
-    if !authenticated? && customer&.customer?
+    if customer&.customer?
       payload[:magic_login_token] = customer.generate_magic_link!
     end
 

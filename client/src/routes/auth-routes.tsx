@@ -34,6 +34,7 @@ export const authRoutes = [
   {
     path: "/auth/auto-login",
     hydrateFallbackElement: <GlobalFallback />,
+    element: <GlobalFallback />,
     loader: async ({ request }: LoaderFunctionArgs) => {
       const url = new URL(request.url)
       const searchParams = url.searchParams
