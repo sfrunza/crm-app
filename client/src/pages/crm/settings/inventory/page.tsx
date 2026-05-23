@@ -26,7 +26,7 @@ import { queryClient } from "@/lib/query-client"
 import { itemKeys } from "@/domains/items/item.keys"
 import { roomKeys } from "@/domains/rooms/room.keys"
 import { itemRoomCategoryKeys } from "@/domains/item-room-categories/item-room-category.keys"
-import { PencilLine } from "lucide-react"
+import { PencilLine } from "@/components/icons"
 import { useCallback, useMemo, useState } from "react"
 import { toast } from "sonner"
 import {

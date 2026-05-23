@@ -3,7 +3,7 @@ import { Select as SelectPrimitive } from "radix-ui"
 
 import { useShadowRoot } from "@/book-form-widget"
 import { cn } from "@/lib/utils"
-import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "lucide-react"
+import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "@/components/icons"
 
 function Select({
   ...props

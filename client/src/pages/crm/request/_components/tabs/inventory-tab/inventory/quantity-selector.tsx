@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { PlusIcon } from "@/components/icons"
-import { MinusIcon } from "lucide-react"
+import { MinusIcon } from "@/components/icons"
 
 export function QuantitySelector({
   quantity,

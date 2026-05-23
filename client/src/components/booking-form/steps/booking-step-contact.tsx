@@ -1,5 +1,6 @@
 import { Controller, useFormContext } from "react-hook-form"
 
+import { MailIcon, PhoneIcon, UserIcon } from "@/components/icons"
 import { PhoneInput } from "@/components/inputs/phone-input"
 import {
   Field,
@@ -7,7 +8,11 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
-import { Input } from "@/components/ui/input"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group"
 import { formatPhone } from "@/lib/format-phone"
 import type { FormSchema } from "../booking-form-schema"
 import { FormCard } from "../form-card"
@@ -40,12 +45,18 @@ export function BookingStepContact({
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor={field.name}>First name</FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                autoComplete="given-name"
-                aria-invalid={fieldState.invalid}
-              />
+              <InputGroup>
+                <InputGroupInput
+                  {...field}
+                  id={field.name}
+                  autoComplete="given-name"
+                  placeholder="First name"
+                  aria-invalid={fieldState.invalid}
+                />
+                <InputGroupAddon align="inline-start">
+                  <UserIcon className="text-muted-foreground" />
+                </InputGroupAddon>
+              </InputGroup>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
@@ -57,12 +68,18 @@ export function BookingStepContact({
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor={field.name}>Last name</FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                autoComplete="family-name"
-                aria-invalid={fieldState.invalid}
-              />
+              <InputGroup>
+                <InputGroupInput
+                  {...field}
+                  id={field.name}
+                  autoComplete="family-name"
+                  placeholder="Last name"
+                  aria-invalid={fieldState.invalid}
+                />
+                <InputGroupAddon align="inline-start">
+                  <UserIcon className="text-muted-foreground" />
+                </InputGroupAddon>
+              </InputGroup>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
@@ -74,13 +91,19 @@ export function BookingStepContact({
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-              <Input
-                {...field}
-                id={field.name}
-                type="email"
-                autoComplete="email"
-                aria-invalid={fieldState.invalid}
-              />
+              <InputGroup>
+                <InputGroupInput
+                  {...field}
+                  id={field.name}
+                  type="email"
+                  autoComplete="email"
+                  placeholder="Your email address"
+                  aria-invalid={fieldState.invalid}
+                />
+                <InputGroupAddon align="inline-start">
+                  <MailIcon className="text-muted-foreground" />
+                </InputGroupAddon>
+              </InputGroup>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}
@@ -92,13 +115,21 @@ export function BookingStepContact({
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel htmlFor={field.name}>Phone</FieldLabel>
-              <PhoneInput
-                {...field}
-                id={field.name}
-                value={formatPhone(field.value ?? "")}
-                handleValueChange={field.onChange}
-                aria-invalid={fieldState.invalid}
-              />
+              <InputGroup>
+                <PhoneInput
+                  {...field}
+                  id={field.name}
+                  value={formatPhone(field.value ?? "")}
+                  handleValueChange={field.onChange}
+                  aria-invalid={fieldState.invalid}
+                  placeholder="(000) 000-0000"
+                  data-slot="input-group-control"
+                  className="flex-1 rounded-none border-0 bg-transparent shadow-none ring-0 focus-visible:ring-0 aria-invalid:ring-0 dark:bg-transparent"
+                />
+                <InputGroupAddon align="inline-start">
+                  <PhoneIcon className="text-muted-foreground" />
+                </InputGroupAddon>
+              </InputGroup>
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}

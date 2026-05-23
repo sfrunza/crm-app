@@ -14,7 +14,7 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   ChevronDownIcon,
-} from "lucide-react"
+} from "@/components/icons"
 
 type CalendarProps = React.ComponentProps<typeof DayPicker>
 

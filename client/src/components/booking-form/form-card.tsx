@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card"
 import { Field } from "@/components/ui/field"
 import { LoadingSwap } from "@/components/ui/loading-swap"
-import { ArrowLeftIcon } from "lucide-react"
+import { ChevronLeftIcon } from "@/components/icons"
 import type { ReactNode } from "react"
 
 interface FormCardProps {
@@ -32,20 +32,16 @@ export function FormCard({
     <div className="mx-auto max-w-sm rounded-[2rem] bg-background/10 p-3 backdrop-blur-sm">
       <Card className="rounded-3xl shadow-md">
         <CardHeader>
-          <CardTitle className="text-2xl font-bold text-primary">
+          <CardTitle className="text-xl font-bold text-primary">
             {title}
           </CardTitle>
         </CardHeader>
-        <CardContent
-        // className="flex-1 overflow-y-auto"
-        >
-          {children}
-        </CardContent>
+        <CardContent>{children}</CardContent>
         <CardFooter>
-          <Field orientation="horizontal" className="">
+          <Field orientation="horizontal">
             {handleBack && (
               <Button size="lg" variant="outline" onClick={handleBack}>
-                <ArrowLeftIcon />
+                <ChevronLeftIcon />
                 Back
               </Button>
             )}

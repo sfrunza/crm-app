@@ -15,14 +15,18 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Empty, EmptyMedia } from "@/components/ui/empty"
-import { ImageOff, Minus, PencilLine, Plus, Search, Trash2 } from "lucide-react"
+import {
+  ImageOff,
+  Minus,
+  PencilLine,
+  Plus,
+  Search,
+  Trash2,
+} from "@/components/icons"
 import { useState } from "react"
 import type { Item } from "@/domains/items/item.types"
-// import type { ItemTypeFilter } from "@/pages/crm/settings/inventory/_components/inventory-settings.utils"
-// import type { ItemTypeFilter } from "@/types/index"
-import { Spinner } from "../ui/spinner"
-
-type ItemTypeFilter = "all" | "furniture" | "box"
+import { Spinner } from "@/components/ui/spinner"
+import type { InventoryTypeFilter } from "./types"
 
 function ItemImage({
   imageUrl,
@@ -96,8 +100,8 @@ type InventoryItemGridProps =
       isLoading: boolean
       search: string
       onSearchChange: (value: string) => void
-      typeFilter: ItemTypeFilter
-      onTypeFilterChange: (value: ItemTypeFilter) => void
+      typeFilter: InventoryTypeFilter
+      onTypeFilterChange: (value: InventoryTypeFilter) => void
       onEdit: (item: Item) => void
       onDelete?: (item: Item) => void
       emptyText?: string
@@ -109,8 +113,8 @@ type InventoryItemGridProps =
       isLoading: boolean
       search: string
       onSearchChange: (value: string) => void
-      typeFilter: ItemTypeFilter
-      onTypeFilterChange: (value: ItemTypeFilter) => void
+      typeFilter: InventoryTypeFilter
+      onTypeFilterChange: (value: InventoryTypeFilter) => void
       getQuantity: (item: Item) => number
       onIncrement: (item: Item) => void
       onDecrement: (item: Item) => void
@@ -144,7 +148,7 @@ export function InventoryItemGrid(props: InventoryItemGridProps) {
         </div>
         <Select
           value={typeFilter}
-          onValueChange={(value) => onTypeFilterChange(value as ItemTypeFilter)}
+          onValueChange={(value) => onTypeFilterChange(value as InventoryTypeFilter)}
         >
           <SelectTrigger>
             <SelectValue placeholder="Filter by type" />

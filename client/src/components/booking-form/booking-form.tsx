@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useMutation } from "@tanstack/react-query"
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { FormProvider, useForm, type FieldPath } from "react-hook-form"
 import { toast } from "sonner"
 import { AnimatePresence, motion } from "framer-motion"
@@ -19,8 +19,17 @@ import { BookingFormSuccess } from "./booking-form-success"
 import { BookingStepContact } from "./steps/booking-step-contact"
 import { BookingStepMoveDetails } from "./steps/booking-step-move-details"
 import { BookingStepMoveSize } from "./steps/booking-step-move-size"
+import type { Service } from "@/types"
+import { useServices } from "@/hooks/api/use-services"
+import { queryClient } from "@/lib/query-client"
+import { queryKeys } from "@/lib/query-keys"
+import { getMoveSizes } from "@/api/endpoints/move-sizes"
+import { getEntranceTypes } from "@/api/endpoints/entrance-types"
 
-function buildDefaults(): FormSchema {
+function buildDefaults(services: Service[]): FormSchema {
+  const defaultService = services.find(
+    (service) => service.code === "local_move"
+  )
   return {
     moving_date: null,
     origin: {
@@ -38,8 +47,8 @@ function buildDefaults(): FormSchema {
       floor_id: null,
     },
     delivery_date: null,
-    service_id: 1,
-    service_code: "local_move",
+    service_id: defaultService?.id ?? 0,
+    service_code: defaultService?.code,
     move_size_id: 0,
     first_name: "",
     last_name: "",
@@ -61,6 +70,20 @@ export const stepFields = {
 } as const satisfies Record<number, readonly FieldPath<FormSchema>[]>
 
 export function BookingForm() {
+  useEffect(() => {
+    queryClient.prefetchQuery({
+      queryKey: queryKeys.moveSizes.all,
+      queryFn: getMoveSizes,
+    })
+    queryClient.prefetchQuery({
+      queryKey: queryKeys.entranceTypes.all,
+      queryFn: getEntranceTypes,
+    })
+  }, [])
+
+  const { data: services } = useServices({
+    select: (rows) => rows.filter((s) => s.active),
+  })
   const animationRef = useRef(null)
 
   const [direction, setDirection] = useState(1)
@@ -69,7 +92,7 @@ export function BookingForm() {
 
   const form = useForm<FormSchema>({
     resolver: zodResolver(formSchema),
-    defaultValues: buildDefaults(),
+    values: buildDefaults(services ?? []),
     mode: "onChange",
     reValidateMode: "onChange",
   })
@@ -161,6 +184,8 @@ export function BookingForm() {
       />
     )
   }
+
+  if (!services) return null
 
   return (
     <FormProvider {...form}>

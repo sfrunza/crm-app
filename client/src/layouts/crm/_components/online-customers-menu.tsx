@@ -23,7 +23,7 @@ import { useOnlineCustomers } from "@/hooks/api/use-online-customers"
 import { cn } from "@/lib/utils"
 import { openRequest } from "@/stores/use-open-requests-store"
 import type { OnlineCustomer } from "@/types/api"
-import { UsersIcon } from "lucide-react"
+import { UsersIcon } from "@/components/icons"
 import { useState } from "react"
 
 function requestStatusClasses(

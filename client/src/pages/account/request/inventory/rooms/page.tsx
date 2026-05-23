@@ -31,7 +31,7 @@ import {
   type InventoryRoom,
 } from "@/pages/crm/request/_components/tabs/inventory-tab/inventory/build-inventory"
 import { cn } from "@/lib/utils"
-import { MinusIcon } from "lucide-react"
+import { MinusIcon } from "@/components/icons"
 import { useEffect, useMemo, useRef, useState } from "react"
 import { useOutletContext, useParams } from "react-router"
 import type { InventoryOutletContext } from "../page"

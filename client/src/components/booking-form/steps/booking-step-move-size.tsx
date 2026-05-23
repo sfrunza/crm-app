@@ -2,9 +2,14 @@ import { Controller, useFormContext, useWatch } from "react-hook-form"
 
 import {
   Field,
+  FieldContent,
+  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
+  FieldLegend,
+  FieldSet,
+  FieldTitle,
 } from "@/components/ui/field"
 import {
   Select,
@@ -22,6 +27,8 @@ import {
   serviceCodesForOriginZip,
   type FormSchema,
 } from "../booking-form-schema"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { HouseIcon } from "@/components/icons"
 
 interface BookingStepMoveSizeProps {
   goNext: () => void
@@ -32,12 +39,8 @@ export function BookingStepMoveSize({
   goNext,
   goBack,
 }: BookingStepMoveSizeProps) {
-  const { data: moveSizes } = useMoveSizes({
-    select: (rows) => [...rows].sort((a, b) => a.position - b.position),
-  })
-  const { data: entranceTypes } = useEntranceTypes({
-    select: (rows) => [...rows].sort((a, b) => a.position - b.position),
-  })
+  const { data: moveSizes } = useMoveSizes()
+  const { data: entranceTypes } = useEntranceTypes()
 
   const { control } = useFormContext<FormSchema>()
   const movingServiceCode = useWatch({
@@ -69,7 +72,10 @@ export function BookingStepMoveSize({
                   className="w-full"
                   aria-invalid={fieldState.invalid}
                 >
-                  <SelectValue placeholder="Select move size" />
+                  <div className="flex items-center gap-2">
+                    <HouseIcon className="text-muted-foreground" />
+                    <SelectValue placeholder="Select move size" />
+                  </div>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
@@ -90,42 +96,104 @@ export function BookingStepMoveSize({
             name="origin.floor_id"
             control={control}
             render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Floors at origin</FieldLabel>
-                <Select
-                  value={field.value?.toString() ?? ""}
+              <FieldSet data-invalid={fieldState.invalid}>
+                <FieldLegend variant="label" className="mb-1">
+                  Origin floor / access
+                </FieldLegend>
+                <FieldDescription>
+                  What floor are you moving from?
+                </FieldDescription>
+                <RadioGroup
+                  name={field.name}
+                  value={field.value?.toString()}
                   onValueChange={(v) => field.onChange(Number(v))}
-                  disabled={!entranceTypes?.length}
+                  aria-invalid={fieldState.invalid}
+                  className="flex flex-row flex-wrap gap-2"
                 >
-                  <SelectTrigger
-                    id={field.name}
-                    className="w-full"
-                    aria-invalid={fieldState.invalid}
-                  >
-                    <SelectValue placeholder="Origin floor / access" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectGroup>
-                      {entranceTypes?.map((entrance) => (
-                        <SelectItem
-                          key={entrance.id}
-                          value={String(entrance.id)}
-                        >
-                          {entrance.name}
-                        </SelectItem>
-                      ))}
-                    </SelectGroup>
-                  </SelectContent>
-                </Select>
+                  {entranceTypes?.map((entrance) => (
+                    <FieldLabel
+                      key={entrance.id}
+                      htmlFor={`origin-${entrance.id}`}
+                      className="has-[>[data-slot=field]]:h-9 has-[>[data-slot=field]]:w-fit has-[>[data-slot=field]]:flex-1 has-[>[data-slot=field]]:px-4 *:data-[slot=field]:p-0"
+                    >
+                      <Field
+                        orientation="horizontal"
+                        data-invalid={fieldState.invalid}
+                        className="h-full"
+                      >
+                        <FieldContent className="h-full items-center justify-center">
+                          <FieldTitle>{entrance.form_name}</FieldTitle>
+                        </FieldContent>
+                        <RadioGroupItem
+                          value={entrance.id.toString()}
+                          id={`origin-${entrance.id}`}
+                          aria-invalid={fieldState.invalid}
+                          className="hidden"
+                        />
+                      </Field>
+                    </FieldLabel>
+                  ))}
+                </RadioGroup>
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
-              </Field>
+              </FieldSet>
             )}
           />
         )}
 
         {showDestinationFloor && (
+          <Controller
+            name="destination.floor_id"
+            control={control}
+            render={({ field, fieldState }) => (
+              <FieldSet data-invalid={fieldState.invalid}>
+                <FieldLegend variant="label" className="mb-1">
+                  Destination floor / access
+                </FieldLegend>
+                <FieldDescription>
+                  What floor are you moving to?
+                </FieldDescription>
+                <RadioGroup
+                  name={field.name}
+                  value={field.value?.toString()}
+                  onValueChange={(v) => field.onChange(Number(v))}
+                  aria-invalid={fieldState.invalid}
+                  className="flex flex-row flex-wrap gap-2"
+                >
+                  {entranceTypes?.map((entrance) => (
+                    <FieldLabel
+                      key={entrance.id}
+                      htmlFor={`destination-${entrance.id}`}
+                      className="has-[>[data-slot=field]]:h-9 has-[>[data-slot=field]]:w-fit has-[>[data-slot=field]]:flex-1 has-[>[data-slot=field]]:px-4 *:data-[slot=field]:p-0"
+                    >
+                      <Field
+                        orientation="horizontal"
+                        data-invalid={fieldState.invalid}
+                        className="h-full"
+                      >
+                        <FieldContent className="h-full items-center justify-center">
+                          <FieldTitle>{entrance.form_name}</FieldTitle>
+                        </FieldContent>
+                        <RadioGroupItem
+                          value={entrance.id.toString()}
+                          id={`destination-${entrance.id}`}
+                          aria-invalid={fieldState.invalid}
+                          className="hidden"
+                        />
+                      </Field>
+                    </FieldLabel>
+                  ))}
+                </RadioGroup>
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </FieldSet>
+            )}
+          />
+        )}
+
+        {/* {showDestinationFloor && (
           <Controller
             name="destination.floor_id"
             control={control}
@@ -165,7 +233,7 @@ export function BookingStepMoveSize({
               </Field>
             )}
           />
-        )}
+        )} */}
       </FieldGroup>
     </FormCard>
   )

@@ -26,7 +26,7 @@ import {
 } from "@/components/ui/popover"
 import type { Item } from "@/domains/items/item.types"
 import type { Room } from "@/domains/rooms/room.types"
-import { ChevronDown, Plus, X } from "lucide-react"
+import { ChevronDown, Plus, X } from "@/components/icons"
 import { useState } from "react"
 
 type DefaultItemsFieldProps = {

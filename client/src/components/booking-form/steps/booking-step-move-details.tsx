@@ -3,7 +3,7 @@ import { useMemo, useState } from "react"
 import { Controller, useFormContext, useWatch } from "react-hook-form"
 
 import { CalendarWithRates } from "@/components/calendar-with-rates"
-import { CalendarDaysIcon, MapPinIcon } from "@/components/icons"
+import { CalendarDaysIcon, MapPinIcon, TruckIcon } from "@/components/icons"
 import { Button } from "@/components/ui/button"
 import {
   Field,
@@ -64,8 +64,7 @@ export function BookingStepMoveDetails({
   const { data: calendarRates } = useCalendarRates()
   const { data: rates } = useRates()
   const { data: services } = useServices({
-    select: (rows) =>
-      rows.filter((s) => s.active).sort((a, b) => a.position - b.position),
+    select: (rows) => rows.filter((s) => s.active && s.code !== "flat_rate"),
   })
   const calendarLoading = !calendarRates
 
@@ -171,10 +170,10 @@ export function BookingStepMoveDetails({
                   <Button
                     type="button"
                     variant="outline"
-                    className="justify-start"
+                    className="justify-start gap-2"
                     aria-invalid={fieldState.invalid}
                   >
-                    <CalendarDaysIcon className="mr-2 size-4 opacity-70" />
+                    <CalendarDaysIcon className="text-muted-foreground" />
                     {field.value ? format(field.value, "PPP") : "Pick a date"}
                   </Button>
                 </PopoverTrigger>
@@ -223,6 +222,7 @@ export function BookingStepMoveDetails({
                     inputMode="numeric"
                     pattern="[0-9]*"
                     maxLength={5}
+                    aria-invalid={fieldState.invalid}
                     onChange={async (e) => {
                       field.onChange(e)
                       const newZip = e.target.value
@@ -260,6 +260,7 @@ export function BookingStepMoveDetails({
                     inputMode="numeric"
                     pattern="[0-9]*"
                     maxLength={5}
+                    aria-invalid={fieldState.invalid}
                     onChange={async (e) => {
                       field.onChange(e)
                       const newZip = e.target.value
@@ -296,11 +297,11 @@ export function BookingStepMoveDetails({
                     <Button
                       type="button"
                       variant="outline"
-                      className="justify-start"
+                      className="justify-start gap-2"
                       aria-invalid={fieldState.invalid}
                       disabled={!moveDate}
                     >
-                      <CalendarDaysIcon className="mr-2 size-4 opacity-70" />
+                      <CalendarDaysIcon className="text-muted-foreground" />
                       {field.value ? format(field.value, "PPP") : "Pick a date"}
                     </Button>
                   </PopoverTrigger>
@@ -358,7 +359,10 @@ export function BookingStepMoveDetails({
                   className="w-full"
                   aria-invalid={fieldState.invalid}
                 >
-                  <SelectValue placeholder="Select service" />
+                  <div className="flex items-center gap-2">
+                    <TruckIcon className="text-muted-foreground" />
+                    <SelectValue placeholder="Select service" />
+                  </div>
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
