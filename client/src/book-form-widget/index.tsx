@@ -38,7 +38,7 @@ function mountWidget(container: HTMLElement) {
       <QueryClientProvider client={queryClient}>
         <ShadowRootContext.Provider value={shadowRoot}>
           <BookingForm />
-          <Toaster position="top-center" />
+          <Toaster position="bottom-right" />
         </ShadowRootContext.Provider>
       </QueryClientProvider>
     </StrictMode>

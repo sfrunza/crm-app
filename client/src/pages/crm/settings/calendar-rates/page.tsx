@@ -1,11 +1,11 @@
-import { PageContent, PageHeader, PageTitle } from "@/components/page-component"
+import { CalendarWithRates } from "@/components/calendar-with-rates"
+import { PageContent } from "@/components/page-component"
+import { useCalendarRates } from "@/hooks/api/use-calendar-rates"
+import { useRates } from "@/hooks/api/use-rates"
+import { formatDate } from "@/lib/format-date"
+import { Fragment } from "react"
 import { useSearchParams } from "react-router"
 import { EditCalendarRateDialog } from "./edit-calendar-rate-dialog"
-import { CalendarWithRates } from "@/components/calendar-with-rates"
-import { useCalendarRates } from "@/hooks/api/use-calendar-rates"
-import { Fragment } from "react"
-import { formatDate } from "@/lib/format-date"
-import { useRates } from "@/hooks/api/use-rates"
 
 function CalendarRatesPage() {
   const [_, setSearchParams] = useSearchParams()
@@ -18,11 +18,7 @@ function CalendarRatesPage() {
       {/* Actions based on search params */}
       <EditCalendarRateDialog />
 
-      <PageHeader>
-        <PageTitle>Calendar rates</PageTitle>
-      </PageHeader>
-
-      <PageContent className="flex justify-center">
+      <PageContent className="flex justify-center pt-6">
         <CalendarWithRates
           rates={rates}
           calendarRates={calendarRates}

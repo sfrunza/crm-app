@@ -76,7 +76,7 @@ function DispatchPage() {
   }
 
   return (
-    <div className="grid h-full lg:grid-cols-[auto_320px]">
+    <div className="grid h-full lg:grid-cols-[auto_max-content]">
       <div className="grid grid-rows-[max-content_auto] overflow-y-auto">
         <ParklotDay
           selectedDate={date}

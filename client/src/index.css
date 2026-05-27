@@ -135,7 +135,6 @@
   html {
     @apply font-sans;
     color-scheme: light dark;
-    /* overscroll-behavior-y: none; */
   }
   .maplibregl-popup-content {
     @apply rounded-none! bg-transparent! p-0! shadow-none!;
