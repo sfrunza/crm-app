@@ -45,5 +45,4 @@ class Api::V1::MoveSizeRoomsController < ApplicationController
       h[:items] = (h[:items] || {}).to_h.transform_values(&:to_i)
     end
   end
-
 end

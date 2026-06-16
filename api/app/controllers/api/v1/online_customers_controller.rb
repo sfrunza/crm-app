@@ -42,7 +42,7 @@ class Api::V1::OnlineCustomersController < ApplicationController
         requests: requests.map do |req|
           {
             id: req.id,
-            status: req.status,
+            status: req.status
           }
         end
       }

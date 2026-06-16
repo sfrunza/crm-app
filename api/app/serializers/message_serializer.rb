@@ -18,5 +18,3 @@ class MessageSerializer < ActiveModel::Serializer
     object.updated_at.iso8601
   end
 end
-
-

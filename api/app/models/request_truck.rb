@@ -3,7 +3,7 @@ class RequestTruck < ApplicationRecord
   validates :request_id, presence: true
   validates :truck_id, presence: true
   validates :purpose, presence: true, inclusion: { in: %w[pickup delivery] }
-  validates :truck_id, uniqueness: { scope: [:request_id, :purpose], message: "is already assigned to this request for this purpose" }
+  validates :truck_id, uniqueness: { scope: [ :request_id, :purpose ], message: "is already assigned to this request for this purpose" }
 
   # Associations
   belongs_to :request
